@@ -20,8 +20,7 @@
 # include <readline/history.h>
 # include <unistd.h>
 # include <stdbool.h>
-# include <limits.h>
-
+asdasdas
 typedef struct s_env
 {
 	char			*val;
@@ -29,7 +28,7 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
-typedef struct s_block
+
 {
 	int				in_fd;
 	int				out_fd;
@@ -55,7 +54,7 @@ typedef enum e_tokens
 } ;
 
 // BUILTIN
-
+adsds
 int	*pwd(void);
 
 #endif
