@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:14:10 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/18 14:51:33 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/03/18 15:01:32 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ typedef struct s_data
 	int		cmd_count;
 }	t_data;
 
-typedef enum e_tokens
+enum e_tokens
 {
 	UNDEFINED,
 	PIPE,
