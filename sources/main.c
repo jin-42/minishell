@@ -6,34 +6,51 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 15:54:35 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/18 13:45:26 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/03/18 17:13:49 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+void	print_env(t_env *env);
+int	parse_env(t_data *data, char **env);
 
 int	status;
 
-int	main(void)
+t_data	*init_data(char **env)
+{
+	t_data	data;
+
+	data.block = NULL;
+	data.cmd_count = 0;
+	data.env = NULL;
+	data.paths = NULL;
+	if (parse_env(&data, env) != 0)
+		exit(EXIT_FAILURE);
+	printf("hey\n");
+	print_env(data.env);
+	return (&data);
+}
+
+int	main(int argc, char **argv, char **env)
 {
 	char	*line;
-	char	*dir;
+	t_data	*data;
 
-	// printf("%d %d", PIPE, GREATER);
+	data = init_data(env);
 	while (42)
 	{
-		dir = get_dir();
-		if (dir == NULL)
-			dir = ft_strdup("minishell");
-		printf("%s", dir);
-		line = readline("> ");
-		// if (line)
-		// 	add_history(line);
-		if (ft_strncmp(line, "stop", 5) == 0)
-			break ;
-		printf("%s\n", line);
-		free(line);
-		free(dir);
+		line = readline("minishell> ");
+		if (line)
+		{
+			add_history(line);
+			if (ft_strncmp(line, "stop", 5) == 0)
+				break ;
+			else if (ft_strncmp(line, "pwd", 4) == 0)
+				pwd();
+			else
+				printf("%s\n", line);
+			free(line);
+		}
 	}
 	if (line)
 		free(line);

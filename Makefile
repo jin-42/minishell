@@ -15,7 +15,9 @@ HEADER = includes/minishell.h
 SRC_DIR = sources/
 #SRC_BON_DIR = bonus/
 
-SRC = $(SRC_DIR)main.c
+SRC = $(SRC_DIR)main.c \
+	$(SRC_DIR)env.c \
+	$(SRC_DIR)pwd.c
 
 #SRC_BON = 
 

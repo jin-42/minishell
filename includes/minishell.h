@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:14:10 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/18 15:01:32 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/03/18 15:19:46 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,6 @@ enum e_tokens
 
 // BUILTIN
 
-int	*pwd(void);
+int	pwd(void);
 
 #endif

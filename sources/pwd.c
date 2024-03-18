@@ -6,16 +6,16 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 13:34:32 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/18 13:44:43 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/03/18 16:15:38 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	*pwd(void)
+int	pwd(void)
 {
 	char	dir[PATH_MAX];
-	int		val;
+	char	*val;
 
 	val = NULL;
 	val = getcwd(dir, PATH_MAX);
@@ -24,7 +24,7 @@ int	*pwd(void)
 		perror("pwd: ");
 		return (1);
 	}
-	printf("%s", dir);
+	printf("%s\n", dir);
 	return (0);
 }
 
