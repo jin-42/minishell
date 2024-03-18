@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 15:54:35 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/18 12:46:06 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/03/18 13:45:26 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,12 @@
 
 int	status;
 
-char	*get_dir(void)
-{
-	char	*dir;
-	int		size;
-	char	*val;
-
-	dir = NULL;
-	val = NULL;
-	size = 1;
-	while (val == NULL)
-	{
-		dir = malloc((size + 1) * sizeof (char));
-		if (!dir)
-			return (NULL);
-		val = getcwd(dir, size);
-		//printf("val = %x, size = %d\n", val, size);
-		if (val != NULL)
-			break;
-		free(dir);
-		size++;
-	}
-	return (dir);
-}
-
 int	main(void)
 {
 	char	*line;
 	char	*dir;
 
+	// printf("%d %d", PIPE, GREATER);
 	while (42)
 	{
 		dir = get_dir();
