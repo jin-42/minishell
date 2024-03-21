@@ -1,39 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/18 13:34:32 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/21 16:47:05 by sponthus         ###   ########lyon.fr   */
+/*   Created: 2024/03/20 12:53:34 by sponthus          #+#    #+#             */
+/*   Updated: 2024/03/20 14:12:20 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../includes/minishell.h" // utiliser chdir
 
-int	pwd(t_data *data, char **args) // Fully working
+int	cd(t_data *data, char *path)
 {
-	char	*val;
-	int		i;
-
-	(void)data;
-	val = getcwd(NULL, 0);
-	if (val == NULL)
+	// pwd(); // A retirer
+	if (ft_strlen(path) == 0)
 	{
-		perror("pwd: ");
-		return (1);
-	}
-	printf("%s\n", val);
-	free(val);
-	while (args && args[i])
-	{
-		if (i == 1)
+		path = search_env(data, "HOME");
+		if (path == NULL)
 		{
-			if (ft_strchr(args[i], '-') != NULL)
-				printf("pwd: %s: invalid option\n", args[i]);
+			write(2, "cd: HOME not set\n", 17);
+			return (1);
 		}
-		i++;
 	}
+	if (chdir(path) != 0)
+		perror("cd");
+	// MAJ du OLDPATH a ajouter
+	// pwd(); // A retirer
 	return (0);
 }

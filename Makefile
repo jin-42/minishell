@@ -4,7 +4,7 @@ NAME = minishell
 #NAME_BON = minishell_bonus
 
 CC = cc
-CFLAGS = -g3
+CFLAGS = -Wall -fsanitize=address
 LIBS = -lreadline -lncurses
 
 LIBRARY = full_libft/libft.a
@@ -16,8 +16,14 @@ SRC_DIR = sources/
 #SRC_BON_DIR = bonus/
 
 SRC = $(SRC_DIR)main.c \
+	$(SRC_DIR)exit.c \
+	$(SRC_DIR)env_parsing.c \
+	$(SRC_DIR)env_manip.c \
 	$(SRC_DIR)env.c \
-	$(SRC_DIR)pwd.c
+	$(SRC_DIR)pwd.c \
+	$(SRC_DIR)cd.c \
+	$(SRC_DIR)unset.c \
+	$(SRC_DIR)export.c
 
 #SRC_BON = 
 
