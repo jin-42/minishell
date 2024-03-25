@@ -6,11 +6,14 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 14:06:46 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/21 16:34:54 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/03/25 11:51:31 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+// Prend en compte arg[0] = unset
+// verifier maintenant que traite une liste, marche pour 1 arg
 
 void	env_delone(t_data *data, t_env *node)
 {
@@ -55,12 +58,12 @@ t_env	*search_env_node(t_env *env, char *name)
 	return (NULL);
 }
 
-int	unset(t_data *data, char *args)
+int	unset(t_data *data, char **args)
 {
 	t_env	*node;
 	int		i;
 
-	i = 0;
+	i = 1;
 	if (!args)
 	{
 		write(2, "unset: not enough arguments\n", 28);
@@ -77,4 +80,4 @@ int	unset(t_data *data, char *args)
 		i++;
 	}
 	return (0);
-} // a verifier maintenant que traite une liste
+}

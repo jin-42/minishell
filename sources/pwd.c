@@ -6,13 +6,16 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 13:34:32 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/21 16:49:54 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/03/25 11:37:36 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	pwd(t_data *data, char **args) // A check depuis les ajouts des args
+// A check depuis les ajouts des args
+// prend en compte arg[0] = pwd
+
+int	pwd(t_data *data, char **args)
 {
 	char	*val;
 	int		i;
@@ -38,4 +41,3 @@ int	pwd(t_data *data, char **args) // A check depuis les ajouts des args
 	free(val);
 	return (0);
 }
-

@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 16:35:12 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/21 16:38:50 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/03/25 13:44:32 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,25 @@
 // Si plusieurs arg traite tous les arg individuellement ...
 // Accepte en 1er caractere un alpha ou unixcase, pas un chiffre
 
-int	check_name(char *name, char *function)
+// prend en compte arg[0] = export
+// a verifier avec la PEC de plusieurs args
+
+// ATTENTION : ajouter le fait que i on a VAL="    hey le monde    " on enleve les espaces a la fin et au debut
+
+int	check_name(char *name, char *f)
 {
 	int	i;
 
 	i = 0;
 	if (ft_isdigit(name[0]) == 1 || ft_strlen(name) == 0)
 	{
-		printf("%s: `%s': not a valid identifier\n", function, name);
+		printf("%s: `%s': not a valid identifier\n", f, name);
 		return (1);
 	}
 	while (name[i])
 	{
 		if (ft_strchr(EXP_CHAR, name[i]) == NULL)
-			return (printf("%s: `%s': not a valid identifier\n", function, name), 1);
+			return (printf("%s: `%s': not a valid identifier\n", f, name), 1);
 		i++;
 	}
 	return (0);
@@ -41,7 +46,6 @@ int	check_name(char *name, char *function)
 int	apply_export(t_data *data, char *name, char *val)
 {
 	t_env	*env_node;
-	int		i;
 
 	env_node = search_env_node(data->env, name);
 	if (env_node)
@@ -53,7 +57,7 @@ int	apply_export(t_data *data, char *name, char *val)
 	}
 	else
 	{
-		if (check_name(name, export) == 0)
+		if (check_name(name, "export") == 0)
 			return (env_add_back(&data->env, env_new(val, name)));
 		else
 		{
@@ -115,24 +119,21 @@ int	print_export(t_data *data)
 	return (0);
 }
 
-int	export(t_data *data, char **arg)
+int	export(t_data *data, char **args)
 {
 	int	i;
 
-	i = 0;
-	if (arg == NULL)
+	i = 1;
+	while (args[i])
+	{
+		if (args[i] && export_arg(data, args[i]) != 0)
+			return (1);
+		i++;
+	}
+	if (i == 1)
 	{
 		if (print_export(data) != 0)
 			return (1);
-	}
-	else
-	{
-		while (arg[i])
-		{
-			if (arg[i] && export_arg(data, arg[i]) != 0)
-				return (1);
-			i++;
-		}
 	}
 	return (0);
 }

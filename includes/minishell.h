@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:14:10 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/21 16:38:36 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/03/25 13:56:35 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_data
 	char	**paths;
 	t_block	*block;
 	int		cmd_count;
+	int		ret_val;
 }	t_data;
 
 // enum e_tokens
@@ -71,24 +72,28 @@ char	*search_env(t_data *data, char *name); // Permet de chercher une variable d
 int		env_size(t_data *data);
 char	*env_join(t_env *env, bool exp);
 char	**env_to_char(t_data *data, bool exp);
+char	**sort_env(t_data *data);
 
 // BUILTIN
-int		pwd(void);
+int		pwd(t_data *data, char **args);
 
-int		cd(t_data *data, char *path);
+int		cd(t_data *data, char **args);
+int	maj_pwd(t_data *data, char *path, char *old_path);
+void	free_pwd_args(char **args);
+char	*search_cd_path(t_data *data, char *arg);
 
-int		unset(t_data *data, char *name);
+
+int		unset(t_data *data, char **args);
 t_env	*search_env_node(t_env *env, char *name);
 void	env_delone(t_data *data, t_env *node);
 
-int		env(t_data *data);
+int		env(t_data *data, char **args);
 
-int	export(t_data *data, char **arg);
-int	print_export(t_data *data);
-int	export_arg(t_data *data, char *arg);
-char	**sort_env(t_data *data);
-
-
+int		export(t_data *data, char **args);
+int		print_export(t_data *data);
+int		export_arg(t_data *data, char *arg);
+int		apply_export(t_data *data, char *name, char *val);
+int		check_name(char *name, char *f);
 
 // EXIT
 void	free_env(t_env *env);
