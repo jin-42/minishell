@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:14:10 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/25 13:56:35 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/03/26 12:17:04 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct s_block
 typedef struct s_data
 {
 	t_env	*env;
+	char	**environ;
 	char	**paths;
 	t_block	*block;
 	int		cmd_count;
@@ -78,10 +79,9 @@ char	**sort_env(t_data *data);
 int		pwd(t_data *data, char **args);
 
 int		cd(t_data *data, char **args);
-int	maj_pwd(t_data *data, char *path, char *old_path);
+int		maj_pwd(t_data *data, char *path, char *old_path);
 void	free_pwd_args(char **args);
 char	*search_cd_path(t_data *data, char *arg);
-
 
 int		unset(t_data *data, char **args);
 t_env	*search_env_node(t_env *env, char *name);

@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 15:54:35 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/25 12:04:58 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/03/26 12:17:16 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ t_data	init_data(char **env)
 	data.cmd_count = 0;
 	data.env = NULL;
 	data.paths = NULL;
+	data.environ = NULL;
 	if (parse_env(&data, env) != 0)
 		error_parsing(&data, "env");
 	return (data);

@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 14:06:46 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/25 11:51:31 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/03/26 11:04:38 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 // Prend en compte arg[0] = unset
 // verifier maintenant que traite une liste, marche pour 1 arg
+// Securiser le fait de vider l'environnement
 
 void	env_delone(t_data *data, t_env *node)
 {
