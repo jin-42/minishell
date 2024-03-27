@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 16:16:02 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/26 12:08:21 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/03/27 11:03:45 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	parse_paths(t_data *data)
 		return (0);
 	}
 	path_split = ft_split(path_str, ':');
-	if (path_plit == NULL)
+	if (path_split == NULL)
 		return (2);
 	data->paths = path_split;
 	return (0);

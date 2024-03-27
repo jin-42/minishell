@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:14:10 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/26 12:17:04 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/03/27 15:37:18 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,12 @@
 # include <unistd.h>
 # include <stdbool.h>
 # include <limits.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 
 # define EXP_CHAR "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\
 0123456789_"
+# define SUCCESS 0
 
 typedef struct s_env
 {
@@ -39,6 +42,7 @@ typedef struct s_block
 	int				in_fd;
 	int				out_fd;
 	bool			here_doc;
+	bool			builtin;
 	char			*path;
 	char			**args;
 	struct s_block	*next;
@@ -75,6 +79,25 @@ char	*env_join(t_env *env, bool exp);
 char	**env_to_char(t_data *data, bool exp);
 char	**sort_env(t_data *data);
 
+// EXEC
+
+void	exec(t_data *data);
+
+// EXEC : PATHS
+char	**append_cmd(char **paths, char *name);
+int		look_in_env(t_data *data, char **paths);
+int		search_path(t_data *data);
+int		maj_env_paths(t_data *data);
+
+// EXEC : PIPES
+void	pipe_manager(int *old_pipe, int *new_pipe);
+void	pipe_initializer(int *old_pipe, int *new_pipe);
+
+// EXEC : FILES
+void	child_infile(t_data *data, int i, int *old_pipe, int *new_pipe);
+void	child_outfile(t_data *data, int i, int *old_pipe, int *new_pipe);
+int		check_files(t_data *data, int i, int *old_pipe, int *new_pipe);
+
 // BUILTIN
 int		pwd(t_data *data, char **args);
 
@@ -99,6 +122,7 @@ int		check_name(char *name, char *f);
 void	free_env(t_env *env);
 void	free_data(t_data *data);
 void	error_parsing(t_data *data, char *type);
+void	error_exec(t_data *data, int *old_pipe, int *new_pipe, char *str);
 
 // test
 void	print_data(t_data *data); // A RETIRER

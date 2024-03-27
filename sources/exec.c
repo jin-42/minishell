@@ -6,94 +6,11 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 13:46:22 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/26 12:52:13 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/03/27 15:47:20 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-void	error_file(t_data *data) // ferme le programme en erreur
-
-char	**append_cmd(char **paths, char *name)
-{
-	int		i;
-	char	*tmp;
-
-	i = 0;
-	while (paths[i])
-	{
-		tmp = ft_strjoin(paths[i], "/");
-		if (!tmp)
-			return (free_full_split(paths), NULL);
-		free(paths[i]);
-		paths[i] = tmp;
-		tmp = ft_strjoin(paths[i], name);
-		if (!tmp)
-			return (free_full_split(paths), NULL);
-		free(paths[i]);
-		paths[i] = tmp;
-		i++;
-	}
-	return (paths);
-}
-
-int	exec_builtin() // WIP
-
-int	search_path(t_data *data)
-{
-	char	**paths;
-
-	// Commncer par chercher si c'est un builtin, si ca en est un, return path = cpy du nom
-	paths = append_cmd(data->paths, data->block->args[0]);
-	// continue
-	return (0);
-}
-
-void	child_infile(t_data *data, int i, int *old_pipe, int *new_pipe)
-{
-	if (i == 0)
-	{
-		if (data->block->in_fd == -2)
-			data->block->in_fd = 0;
-	}
-	else
-	{
-		if (data->block->in_fd == -2)
-			data->block->in_fd = old_pipe[1];
-	}
-}
-
-void	child_outfile(t_data *data, int i, int *old_pipe, int *new_pipe)
-{
-	if (i == data->cmd_count - 1)
-	{
-		if (data->block->out_fd == -2)
-			data->block->out_fd = 1;
-	}
-	else
-	{
-		if (data->block->out_fd == -2)
-			data->block->out_fd = new_pipe[0];
-	}
-}
-
-int	check_files(t_data *data, int i, int *old_pipe, int *new_pipe)
-{
-	child_infile(data, i, old_pipe, new_pipe);
-	child_outfile(data, i, old_pipe, new_pipe);
-	if (data->block->in_fd == -1 || data->block->out_fd == -1)
-		return (1);
-}
-
-int	maj_env_paths(t_data *data)
-{
-	data->environ = env_to_char(data, false);
-	if (data->environ)
-		return (1);
-	if (parse_paths(data) != 0)
-		return (free_full_split(data->environ), 0);
-	return (0);
-}
 
 void	close_all(t_data *data, int *old_pipe, int *new_pipe)
 {
@@ -123,23 +40,32 @@ void	close_all(t_data *data, int *old_pipe, int *new_pipe)
 		block = block->next;
 	}
 }
-
-void	error_exec(t_data *data, int *old_pipe, int *new_pipe, char *str)
+void	next_block(t_data *data)
 {
-	close_all(data, old_pipe, new_pipe);
-	if (str)
-		perror(str);
-	exit(EXIT_FAILURE);
+	t_block	*block;
+
+	block = data->block->next;
+	if (data->block->in_fd > 2)
+		close(data->block->in_fd);
+	if (data->block->out_fd > 2)
+		close(data->block->out_fd);
+	// if (data->block->path)
+	// 	free(data->block->path);
+	// free_full_split(data->block->args);
+	// free(data->block);
+	data->block = block;
 }
 
 int	child_process(t_data *data, int i, int *old_pipe, int *new_pipe)
 {
-	if (check_files(data, old_pipe, new_pipe) != 0)
+	printf("child no %d - pipes old 0 = %d / old 1 = %d / new 0 = %d / new 1 = %d\n", i, old_pipe[0], old_pipe[1], new_pipe[0], new_pipe[1]);
+	if (check_files(data, i, old_pipe, new_pipe) != 0)
 		error_exec(data, old_pipe, new_pipe, NULL);
 	if (search_path(data) != 0)
 		error_exec(data, old_pipe, new_pipe, NULL);
 	if (data->block->path == NULL)
 		error_exec(data, old_pipe, new_pipe, "not found");
+	printf("determined in_fd = %d / out_fd = %d\n", data->block->in_fd, data->block->out_fd);
 	if (dup2(data->block->in_fd, STDIN_FILENO) == -1)
 		error_exec(data, old_pipe, new_pipe, "dup2 in:");
 	if (dup2(data->block->out_fd, STDOUT_FILENO) == -1)
@@ -150,26 +76,32 @@ int	child_process(t_data *data, int i, int *old_pipe, int *new_pipe)
 	else
 	{
 		execve(data->block->path, data->block->args, data->environ);
+		printf("should have executed %s \n", data->block->path);
 		error_exec(data, NULL, NULL, "execve:");
 	}
+	return (0);
 }
 
-void	pipe_manager(int *old_pipe, int *new_pipe)
+void	parent_process(t_data *data, int last_pid, int *old_pipe, int *new_pipe)
 {
-	if (old_pipe[0] > 2)
-		close(old_pipe[0]);
-	if (old_pipe[1] > 2)
-		close(old_pipe[1]);
-	old_pipe[0] = new_pipe[0];
-	old_pipe[1] = new_pipe[1];
-}
+	int	status;
+	int	w;
+	int	value;
 
-void	pipe_initializer(int *old_pipe, int *new_pipe)
-{
-	old_pipe[0] = -2;
-	old_pipe[1] = -2;
-	new_pipe[0] = -2;
-	new_pipe[1] = -2;
+	w = 0;
+	close_all(data, old_pipe, new_pipe);
+	while (w != -1)
+	{
+		w = wait(&status);
+		if (w == last_pid)
+		{
+			if (WIFEXITED(status))
+				value = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				value = 128 + WTERMSIG(status);
+		}
+	}
+	data->ret_val = value;
 }
 
 void	exec(t_data *data)
@@ -183,18 +115,21 @@ void	exec(t_data *data)
 		return ;
 	i = 0;
 	pipe_initializer(old_pipe, new_pipe);
-	while (i < cmd_count)
+	while (i < data->cmd_count)
 	{
+		printf("exec no %d\n", i);
 		pipe(new_pipe);
 		fd = fork();
 		if (fd == 0)
 		{
 			child_process(data, i, old_pipe, new_pipe);
 		}
-		pipe_manager(&old_pipe, &new_pipe);
+		next_block(data);
+		pipe_manager(old_pipe, new_pipe);
 		i++;
 	}
-	parent_process(data, fd);
+	printf("children all done, waiting for them\n");
+	parent_process(data, fd, old_pipe, new_pipe);
 }
 
 // void	exec(t_data *data)
