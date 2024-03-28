@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 15:54:35 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/27 15:50:31 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/03/28 11:11:52 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	main(int argc, char **argv, char **environ)
 {
 	// char	*line;
 	t_data	data;
-	char	*a = "cat";
+	char	*a = "pwd";
 	char	*b = "ls";
 	char	*end = NULL;
 	char	*arg_a[2];
@@ -63,7 +63,7 @@ int	main(int argc, char **argv, char **environ)
 	arg_a[0] = a;
 	arg_a[1] = end;
 	block_a.args = arg_a;
-	block_a.next = &block_b;
+	block_a.next = NULL; //&block_b;
 	block_a.builtin = false;
 
 	block_b.in_fd = -2;
@@ -78,7 +78,7 @@ int	main(int argc, char **argv, char **environ)
 
 	data = init_data(environ);
 	data.block = &block_a;
-	data.cmd_count = 2;
+	data.cmd_count = 1;
 	data.ret_val = 0;
 
 	print_data(&data);

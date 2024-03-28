@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:14:10 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/27 15:37:18 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/03/28 11:27:15 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,10 @@ char	**sort_env(t_data *data);
 // EXEC
 
 void	exec(t_data *data);
+void	child_process(t_data *data, int i, int *old_pipe, int *new_pipe);
+void	parent_process(t_data *data, int last_pid, int *old_pipe, int *new_pipe);
+void	next_block(t_data *data);
+void	close_all(t_data *data, int *old_pipe, int *new_pipe);
 
 // EXEC : PATHS
 char	**append_cmd(char **paths, char *name);

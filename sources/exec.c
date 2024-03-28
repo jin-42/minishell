@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 13:46:22 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/27 15:47:20 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/03/28 11:27:04 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	close_all(t_data *data, int *old_pipe, int *new_pipe)
 		block = block->next;
 	}
 }
+
 void	next_block(t_data *data)
 {
 	t_block	*block;
@@ -49,14 +50,14 @@ void	next_block(t_data *data)
 		close(data->block->in_fd);
 	if (data->block->out_fd > 2)
 		close(data->block->out_fd);
-	// if (data->block->path)
-	// 	free(data->block->path);
+	if (data->block->path)
+		free(data->block->path);
 	// free_full_split(data->block->args);
 	// free(data->block);
 	data->block = block;
 }
 
-int	child_process(t_data *data, int i, int *old_pipe, int *new_pipe)
+void	child_process(t_data *data, int i, int *old_pipe, int *new_pipe)
 {
 	printf("child no %d - pipes old 0 = %d / old 1 = %d / new 0 = %d / new 1 = %d\n", i, old_pipe[0], old_pipe[1], new_pipe[0], new_pipe[1]);
 	if (check_files(data, i, old_pipe, new_pipe) != 0)
@@ -76,10 +77,8 @@ int	child_process(t_data *data, int i, int *old_pipe, int *new_pipe)
 	else
 	{
 		execve(data->block->path, data->block->args, data->environ);
-		printf("should have executed %s \n", data->block->path);
 		error_exec(data, NULL, NULL, "execve:");
 	}
-	return (0);
 }
 
 void	parent_process(t_data *data, int last_pid, int *old_pipe, int *new_pipe)

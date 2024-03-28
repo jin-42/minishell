@@ -5,74 +5,116 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/20 11:11:27 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/27 15:32:01 by sponthus         ###   ########lyon.fr   */
+/*   Created: 2024/03/28 11:28:47 by sponthus          #+#    #+#             */
+/*   Updated: 2024/03/28 17:12:49 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	free_env(t_env *env) // Ne pas free val, pas malloc
-{
-	t_env	*ptr;
-	t_env	*tmp;
+// Rend un (int)((i + 256) % 256)
+// Realiser un atoi acceptant 1 seul signe
+// Sans arg code = 0
+// Arguments numeriques code erreur 2 (check en 1er prio sur erreur 1)
+// Si plusieurs signes ou lettres : --abc: numeric argument required
+// Ne prend que un seul argument sinon trop d'arguments et code erreur 1
+// 9223372036854775808 overflow numeric argument required
+// -9223372036854775809 underflow idem
 
-	if (!env)
-		return ;
-	ptr = env;
-	while (ptr)
+int	bt_atoi(char *nptr)
+{
+	long long	nb;
+	int			i;
+	int			sign;
+
+	nb = 0;
+	i = 0;
+	sign = 1;
+	while ((nptr[i] >= 9 && nptr[i] <= 13) || nptr[i] == 32)
+		i++;
+	if (nptr[i] == '-' || nptr[i] == '+')
 	{
-		tmp = ptr->next;
-		if (ptr->name)
-			free(ptr->name);
-		if (ptr->val)
-			free(ptr->val);
-		free(ptr);
-		ptr = tmp;
+		if (nptr[i++] == '-')
+			sign = -1;
 	}
-	env = NULL;
+	while (nptr[i] >= '0' && nptr[i] <= '9')
+	{
+		if (nb != (nb * 10 + ((nptr[i] - '0') * sign)) / 10)
+			return (-1);
+		nb = (nb * 10) + (nptr[i++] - '0') * sign;
+	}
+	if (sign == -1)
+		return (256 - (((nb * sign) + 256) % 256));
+	return ((int)(((nb * sign) + 256) % 256));
 }
 
-void	free_data(t_data *data) // Ajouter blocks quand seront ajoutes
+int	contains_digits(char *arg)
 {
-	if (data->env)
-		free_env(data->env);
-	if (data->paths)
-		free_full_split(data->paths);
-	if (data->environ)
-		free_full_split(data->environ);
-	while (data->block)
-		next_block(data);
+	int	i;
+	int	val;
+
+	i = 0;
+	val = 0;
+	while (arg[i])
+	{
+		if (ft_isdigit(arg[i]) == 1)
+			val++;
+		i++;
+	}
+	if (val > 0)
+		return (1);
+	return (0);
 }
 
-void	error_exec(t_data *data, int *old_pipe, int *new_pipe, char *str)
+int	check_exit_argument(char *arg)
 {
-	int	value;
+	int		i;
 
-	value = 0;
-	close_all(data, old_pipe, new_pipe);
-	if (str && ft_strcmp(str, "not found") == 0)
+	i = 0;
+	if (contains_digits(arg) == 0 || bt_atoi(arg) < 0)
+		return (1);
+	while ((arg[i] >= 9 && arg[i] <= 13) || arg[i] == 32)
+		i++;
+	if (arg[i] == '-' || arg[i] == '+')
+		i++;
+	while (arg[++i])
 	{
-		printf("command not found: %s\n", data->block->args[0]);
-		value = 127;
+		if ((arg[i] >= 9 && arg[i] <= 13) || arg[i] == 32)
+		{
+			while (arg[++i])
+			{
+				if ((arg[i] < 9 || arg[i] > 13) && arg[i] != 32)
+					return (2);
+			}
+			break ;
+		}
+		if (arg[i] < '0' || arg[i] > '9')
+			return (3);
 	}
-	else if (str)
-	{
-		perror(str);
-	}
-	free_data(data);
-	if (value != 0)
-		exit(value);
-	else
-		exit(EXIT_FAILURE);
+	return (0);
 }
 
-void	error_parsing(t_data *data, char *type)
+int	bt_exit(t_data *data, char **args)
 {
-	free_data(data);
-	if (ft_strncmp(type, "env", 4) == 0)
+	int	i;
+
+	i = 0;
+	while (args && args[i])
 	{
-		write(2, "Error parsing env.\n", 19);
+		if (i == 0)
+		{
+			if (check_exit_argument(args[i]) != SUCCESS)
+			{
+				printf("exit: %s: numeric argument required\n", args[i]);
+				i = 2;
+				break ;
+			}
+		}
+		else if (i == 1)
+			return (printf("exit: too many argyments\n"), 1);
+		i++;
 	}
-	exit(EXIT_FAILURE);
+	if (i != 2)
+		i = bt_atoi(args[0]);
+	exit(i);
 }
