@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:14:10 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/18 15:01:32 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/03/18 14:51:33 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@
 # include <readline/history.h>
 # include <unistd.h>
 # include <stdbool.h>
-asdasdas
+# include <limits.h>
+
 typedef struct s_env
 {
 	char			*val;
@@ -28,15 +29,17 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
-
+typedef struct s_block
 {
 	int				in_fd;
 	int				out_fd;
 	bool			here_doc;
-	char			*path;
-	char			**args;
+	char			*path; // cmd chemin 
+	char			**args; // cmd tables
 	struct s_block	*next;
 }	t_block;
+
+
 
 typedef struct s_data
 {
@@ -46,7 +49,7 @@ typedef struct s_data
 	int		cmd_count;
 }	t_data;
 
-enum e_tokens
+typedef enum e_tokens
 {
 	UNDEFINED,
 	PIPE,
@@ -54,7 +57,7 @@ enum e_tokens
 } ;
 
 // BUILTIN
-adsds
+
 int	*pwd(void);
 
 #endif
