@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include <type.h>
 
 // // Voici une explication détaillée du fonctionnement du lexer dans le contexte de Bash :
 
@@ -24,9 +23,6 @@
 // //     Sortie : Une fois que tous les jetons ont été identifiés, le lexer transmet la liste des 
 // jetons à l'analyseur syntaxique (parser), qui vérifie si la séquence de jetons forme une structure valide 
 // dans le langage Bash et génère un arbre de syntaxe abstraite (AST) pour représenter la commande ou le script.
-
-
-
 
 // Division en jetons 
 #include <stdbool.h>
@@ -52,9 +48,26 @@ typedef enum class bassh_operator {
 typedef struct s_token {
     const char *str;
     e_token_type type;
-    bool join;
     struct s_token *next;
 } t_list;
+
+void	ft_lstadd_back(t_list **lst, t_list *new)
+{
+	t_list	*ptr;
+
+	if (!new)
+		return ;
+	if (!*lst)
+	{
+		*lst = new;
+		return ;
+	}
+	ptr = *lst;
+	while (ptr->next != 0)
+		ptr = ptr->next;
+	ptr->next = new;
+	return ;
+}
 
 t_list *_cp_simple_quote(char *s, int *i)
 {
@@ -139,7 +152,7 @@ t_list *_cp_dollar(char *s, int *i)
 	return tok;
 }
 
-t_token *_cp_pipe(char *s, int *i)
+t_list *_cp_pipe(char *s, int *i)
 {
 	t_list *tok;
 
@@ -156,13 +169,53 @@ t_token *_cp_pipe(char *s, int *i)
 	return (tok);
 }
 
-t_token *_cp_redir(char *s, int *i)
+t_list *_cp_redir(char *s, int *i)
 {
+	t_list *tok;
+
+	tok = malloc(sizeof(t_list));
+	if(!tok)
+		return (NULL);
+	tok->str = malloc(sizeof(char) * 2);
+	if (!tok->str)
+        return (free(tok), NULL);
+	tok->str[0] = s[i];
+	tok->str[1] = '\0';
+	tok->type = OPERATOR
+	(*i)+=1;
+	return (tok);
+}
+
+token *_cp_space(char *s, int *i)
+{
+    int j;
+	t_list *tok;
 	
+	j = *i;
+    tok = malloc(sizeof(t_list));
+	if(!tok)
+		return (NULL);
+	while ((s[j] != '\"') && (s[j] != '\'') 
+		&& (s[j] != ' ') && (s[j] != '|') && s[j] != '\0')
+        j++;
+    tok->str = malloc(sizeof(char) * (1 + j));
+    if (!tok->str)
+        return (free(tok), NULL);
+    j = 0;
+	while ((s[j] != '\"') && (s[j] != '\'') 
+		&& (s[j] != ' ') && (s[j] != '|') && s[j] != '\0')
+	{
+        tok->str[j] = s[*i];
+        (*i)++;
+        j++;
+    }
+    tok->str[j] = '\0';
+    tok->type = STRING;
+    return (tok);
 }
 void _lexer(char *s)
 {
-	int i;
+	int         i;
 	t_list *token;
 
 	i = 0;
@@ -177,13 +230,17 @@ void _lexer(char *s)
 		else if (s[i] == '|')
 			ft_lstadd_back(&token, _cp_pipe(s, &i));
 		else if (s[i]  == '<' || s[i] == '>')
-			
+			ft_lstadd_back(&token, _cp_redir(s, &i));
 		else
-			// espace
-		i++;
+			ft_lstadd_back(&token, _cp_space(s, &i));
 	}
 } 
 
 
-
+int main()
+{
+    char input[] = "example input string";
+    _lexer(input);
+    return 0;
+}
 // EXPSND VERS PSRSING
