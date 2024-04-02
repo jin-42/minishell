@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 13:46:22 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/28 11:27:04 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/02 12:00:22 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,8 @@ void	exec(t_data *data)
 	if (maj_env_paths(data) != 0)
 		return ;
 	i = 0;
+	if (data->cmd_count == 1 && is_builtin(data) == true)
+		exec_builtin(data, )
 	pipe_initializer(old_pipe, new_pipe);
 	while (i < data->cmd_count)
 	{

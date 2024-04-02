@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 11:28:47 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/28 17:12:49 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/02 12:06:38 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,14 @@
 // Ne prend que un seul argument sinon trop d'arguments et code erreur 1
 // 9223372036854775808 overflow numeric argument required
 // -9223372036854775809 underflow idem
+
+int	ft_isdigit(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	else
+		return (0);
+}
 
 int	bt_atoi(char *nptr)
 {
@@ -43,9 +51,7 @@ int	bt_atoi(char *nptr)
 			return (-1);
 		nb = (nb * 10) + (nptr[i++] - '0') * sign;
 	}
-	if (sign == -1)
-		return (256 - (((nb * sign) + 256) % 256));
-	return ((int)(((nb * sign) + 256) % 256));
+	return ((unsigned char)nb);
 }
 
 int	contains_digits(char *arg)
@@ -77,7 +83,7 @@ int	check_exit_argument(char *arg)
 		i++;
 	if (arg[i] == '-' || arg[i] == '+')
 		i++;
-	while (arg[++i])
+	while (arg[i])
 	{
 		if ((arg[i] >= 9 && arg[i] <= 13) || arg[i] == 32)
 		{
@@ -90,11 +96,12 @@ int	check_exit_argument(char *arg)
 		}
 		if (arg[i] < '0' || arg[i] > '9')
 			return (3);
+		i++;
 	}
 	return (0);
 }
 
-int	bt_exit(t_data *data, char **args)
+int	bt_exit(char **args)
 {
 	int	i;
 
@@ -103,7 +110,7 @@ int	bt_exit(t_data *data, char **args)
 	{
 		if (i == 0)
 		{
-			if (check_exit_argument(args[i]) != SUCCESS)
+			if (check_exit_argument(args[i]) != 0)
 			{
 				printf("exit: %s: numeric argument required\n", args[i]);
 				i = 2;
@@ -116,5 +123,7 @@ int	bt_exit(t_data *data, char **args)
 	}
 	if (i != 2)
 		i = bt_atoi(args[0]);
-	exit(i);
+	printf("exit\n");
+	exit(i); // A modifier car doit exit proprement
+	return (i);
 }

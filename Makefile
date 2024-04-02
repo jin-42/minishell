@@ -24,11 +24,12 @@ SRC = $(SRC_DIR)main.c \
 	$(SRC_DIR)exec_paths.c \
 	$(SRC_DIR)exec_pipes.c \
 	$(SRC_DIR)builtin.c \
-	$(SRC_DIR)env.c \
-	$(SRC_DIR)pwd.c \
-	$(SRC_DIR)cd.c \
-	$(SRC_DIR)unset.c \
-	$(SRC_DIR)export.c \
+	$(SRC_DIR)builtin_env.c \
+	$(SRC_DIR)builtin_pwd.c \
+	$(SRC_DIR)builtin_cd.c \
+	$(SRC_DIR)builtin_unset.c \
+	$(SRC_DIR)builtin_export.c \
+	$(SRC_DIR)builtin_exit.c \
 	$(SRC_DIR)test.c
 
 #SRC_BON = 
