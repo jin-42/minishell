@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 15:24:35 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/02 12:05:27 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/03 12:57:48 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	cpy_builtin(t_data *data)
 	return (SUCCESS);
 }
 
-void	exec_builtin(t_data *data, char *builtin, char **args)
+void	exec_builtin(t_data *data, char **args, bool ex)
 {
 	int	val;
 
@@ -54,10 +54,12 @@ void	exec_builtin(t_data *data, char *builtin, char **args)
 		val = export(data, args);
 	else if (ft_strcmp(data->block->args[0], "unset") == 0)
 		val = unset(data, args);
-	// else if (ft_strcmp(data->block->args[0], "echo") == 0)
-	// 	val = echo(data, args);
+	else if (ft_strcmp(data->block->args[0], "echo") == 0)
+		val = echo(data, args + 1);
 	else if (ft_strcmp(data->block->args[0], "exit") == 0)
-		val = exit(data, args); // PROBLEME : quitte dans un enfant, pas le programme ! faire remonter ...
-	free_data(data);
-	exit(val); // remplacer par fonction qui quitte proprement le programme (avec readline) ?
+		val = exit(data, args + 1);
+	if (ex == true)
+		leave_minishell(data, val); // remplacer par fonction qui quitte proprement le programme (avec readline) ?
+	else
+		data->ret_val = val;
 }

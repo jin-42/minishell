@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 11:28:47 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/02 12:06:38 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/03 11:23:26 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,24 +106,24 @@ int	bt_exit(char **args)
 	int	i;
 
 	i = 0;
+	printf("exit\n");
 	while (args && args[i])
 	{
-		if (i == 0)
+		if (i - 1 == 0)
 		{
-			if (check_exit_argument(args[i]) != 0)
+			if (check_exit_argument(args[i + 1]) != 0)
 			{
 				printf("exit: %s: numeric argument required\n", args[i]);
 				i = 2;
 				break ;
 			}
 		}
-		else if (i == 1)
+		else if (i - 1 == 1)
 			return (printf("exit: too many argyments\n"), 1);
 		i++;
 	}
 	if (i != 2)
-		i = bt_atoi(args[0]);
-	printf("exit\n");
-	exit(i); // A modifier car doit exit proprement
+		i = bt_atoi(args[1]);
+	leave_minishell(data, i);
 	return (i);
 }

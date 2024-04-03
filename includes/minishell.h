@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:14:10 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/28 11:27:15 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/03 13:04:35 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,13 @@ typedef struct s_env
 
 typedef struct s_block
 {
-	int				in_fd;
-	int				out_fd;
-	bool			here_doc;
-	bool			builtin;
-	char			*path;
-	char			**args;
-	struct s_block	*next;
+	int				in_fd; // Ouvrir le fichier si < sinon initialiser a -2
+	int				out_fd; // Ouvrir le fichier si > sinon initialiser a -2
+	bool			here_doc; // Vrai si << alors ce qui suit sera le 1er argument (?)
+	bool			builtin; // Initialiser a faux
+	char			*path; // Initialiser a NULL
+	char			**args; // Tous les args/options de la cmd, 1er = nom de la cmd
+	struct s_block	*next; // chainer
 }	t_block;
 
 typedef struct s_data
@@ -53,8 +53,8 @@ typedef struct s_data
 	t_env	*env;
 	char	**environ;
 	char	**paths;
-	t_block	*block;
-	int		cmd_count;
+	t_block	*block; // CA, 1 par cmd separes par pipes
+	int		cmd_count; // CA
 	int		ret_val;
 }	t_data;
 

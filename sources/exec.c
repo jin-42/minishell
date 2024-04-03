@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 13:46:22 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/02 12:00:22 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/03 11:16:12 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	child_process(t_data *data, int i, int *old_pipe, int *new_pipe)
 		error_exec(data, old_pipe, new_pipe, "dup2 out:");
 	close_all(data, old_pipe, new_pipe);
 	if (data->block->builtin == true)
-		exec_builtin(data, data->block->path, data->block->args);
+		exec_builtin(data, data->block->args, true);
 	else
 	{
 		execve(data->block->path, data->block->args, data->environ);
@@ -114,7 +114,7 @@ void	exec(t_data *data)
 		return ;
 	i = 0;
 	if (data->cmd_count == 1 && is_builtin(data) == true)
-		exec_builtin(data, )
+		return (exec_builtin(data, data->block->args, false));
 	pipe_initializer(old_pipe, new_pipe);
 	while (i < data->cmd_count)
 	{
@@ -122,9 +122,7 @@ void	exec(t_data *data)
 		pipe(new_pipe);
 		fd = fork();
 		if (fd == 0)
-		{
 			child_process(data, i, old_pipe, new_pipe);
-		}
 		next_block(data);
 		pipe_manager(old_pipe, new_pipe);
 		i++;

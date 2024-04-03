@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 11:07:31 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/28 11:07:44 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/03 11:19:09 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,15 @@ void	free_data(t_data *data) // Ajouter blocks quand seront ajoutes
 	if (data->environ)
 		free_full_split(data->environ);
 	while (data->block)
-		next_block(data);
+		next_block(data); // ferme les FD ouverts
+}
+
+void	leave_minishell(t_data *data, int val)
+{
+	free_data(data);
+	if (val > 0)
+		exit(val);
+	else
+		exit(EXIT_FAILURE);
+	// rl_clear_history();
 }

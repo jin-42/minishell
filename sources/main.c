@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 15:54:35 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/28 11:11:52 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/03 11:18:57 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,6 @@ int	main(int argc, char **argv, char **environ)
 	// 		free(arg);
 	// 	}
 	// }
-	// if (line)
-	// 	free(line);
 	free_data(&data);
 	// rl_clear_history();
 }
