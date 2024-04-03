@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 16:16:02 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/27 11:03:45 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/03 13:05:54 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	parse_paths(t_data *data)
 		return (2);
 	data->paths = path_split;
 	return (0);
-} // ATTENTION : a recalculer apres chaque ligne car on peut unset les paths
+}
 
 int	parse_env(t_data *data, char **env)
 {

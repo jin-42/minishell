@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 11:28:47 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/03 11:23:26 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/03 13:30:29 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	check_exit_argument(char *arg)
 	return (0);
 }
 
-int	bt_exit(char **args)
+int	bt_exit(t_data *data, char **args)
 {
 	int	i;
 

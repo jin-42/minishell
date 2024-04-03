@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 11:40:50 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/21 15:39:29 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/03 15:42:46 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	**sort_env(t_data *data)
 	names = env_to_char(data, true);
 	if (names == NULL)
 		return (NULL);
-	while(names[i])
+	while (names[i])
 	{
 		j = 0;
 		while (names[j])

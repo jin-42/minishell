@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 12:53:57 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/03 13:00:53 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/03 13:52:13 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,22 +17,55 @@
 // MAIS s'arrete quand on a plus une option, le reste est des args
 // Espaces entre les args affiches
 // exemple : echo hola -n = pas d'optionm affiche hola -n
+// ATTENTION envoyer args + 1
 
 bool	echo_is_option(char *arg)
 {
-	
+	int	i;
+
+	i = 0;
+	if (arg[i] == '-')
+		i++;
+	while (arg[i] == 'n')
+		i++;
+	if (i == ft_strlen(arg))
+		return (true);
+	return (false);
 }
 
-int	echo(t_data *data, char **args)
+int	count_args(char **args)
 {
 	int	i;
-	int	j;
+
+	i = 0;
+	while (args && args[i])
+		i++;
+	return (i);
+}
+
+int	echo(char **args)
+{
+	int		i;
+	int		j;
+	bool	option;
 
 	j = 0;
-	while(args && args[j] && echo_is_option(args[i]) == true) // Compter les options
+	option == false;
+	while(args && args[j] && echo_is_option(args[j]) == true)
+	{
 		j++;
-	i = j;
-	while (args && args[i]) // Compter les args
-		i++;
-	
+		option = true;
+	}
+	i = count_args(args);
+	printf("i = %d\n", i);
+	while (args && args[j] && j <= i - 1)
+	{
+		printf("%s", args[j]);
+		if (j < i - 1)
+			printf(" ");
+		if (j == i - 1 && option == false)
+			printf("\n");
+		j++;
+	}
+	return (SUCCESS);
 }

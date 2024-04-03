@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 13:46:22 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/03 11:16:12 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/03 15:49:52 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,11 @@ void	close_all(t_data *data, int *old_pipe, int *new_pipe)
 	while (block)
 	{
 		if (block->in_fd > 2)
+		{
 			close(block->in_fd);
+			if (block->here_doc)
+				unlink("tmp/heredoc");
+		}
 		if (block->out_fd > 2)
 			close (block->out_fd);
 		block = block->next;

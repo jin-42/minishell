@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:14:10 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/03 13:04:35 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/03 15:00:50 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ typedef struct s_block
 	int				in_fd; // Ouvrir le fichier si < sinon initialiser a -2
 	int				out_fd; // Ouvrir le fichier si > sinon initialiser a -2
 	bool			here_doc; // Vrai si << alors ce qui suit sera le 1er argument (?)
+	bool			hd_quote; // Vrai si le limiter du here_doc contient des '' ou ""
+	char			*limiter; // NULL ou initialise
 	bool			builtin; // Initialiser a faux
 	char			*path; // Initialiser a NULL
 	char			**args; // Tous les args/options de la cmd, 1er = nom de la cmd
