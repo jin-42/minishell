@@ -8,9 +8,9 @@ int	_find_pipe(t_list *token)
 	while (token->next != NULL && strcmp(token->str, "|") != 0)
 	{
 		token = token->next;
-		if (token->type == OP && token->next != NULL)
+		if (token->type == 2 && token->next != NULL)
 		{
-			if (token->next->type != OP)
+			if (token->next->type != 2)
 				token = token->next;
 		}
 		else
@@ -36,24 +36,24 @@ void _wich_redir(t_inter **node, t_list **token)
 {
     if (strncmp((*token)->str, "<<", 2) == 0)
     {
-        if ((*token)->next != NULL && (*token)->next->type != OP)
+        if ((*token)->next != NULL && (*token)->next->type != 2)
         {
             memcpy((*node)->heredoc, (*token)->next->str, strlen((*token)->next->str) + 1);
         }
     }
     else if (strncmp((*token)->str, ">>", 2) == 0)
     {
-        if ((*token)->next != NULL && (*token)->next->type != OP)
+        if ((*token)->next != NULL && (*token)->next->type != 2)
             memcpy((*node)->append, (*token)->next->str, strlen((*token)->next->str) + 1);
     }
     else if (strncmp((*token)->str, "<", 1) == 0)
     {
-        if ((*token)->next != NULL && (*token)->next->type != OP)
+        if ((*token)->next != NULL && (*token)->next->type != 2)
             memcpy((*node)->infile, (*token)->next->str, strlen((*token)->next->str) + 1);
     }
     else
     {
-        if ((*token)->next != NULL && (*token)->next->type != OP)
+        if ((*token)->next != NULL && (*token)->next->type != 2)
             *token = (*token)->next;
         memcpy((*node)->outfile, (*token)->next->str, strlen((*token)->next->str) + 1);
     }
@@ -109,8 +109,8 @@ t_inter	*_parse(t_list *token)
 		node->arr[i] = malloc(sizeof(char) * (strlen(token->str) + 1));
 		if (!node->arr[i])
 			return (free_memory(node, i), NULL);
-		if (token->type != OP)
-		{printf ("a");
+		if (token->type != 2)
+		{
 			strcpy(node->arr[i++], token->str);
 		}
 		else

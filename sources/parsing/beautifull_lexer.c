@@ -246,12 +246,18 @@ void _print_tokens(t_list *tokens) {
 	(*data)->block.here_doc = false;
 }*/
 
+t_inter *_parse(t_token *tok)
+{
+	
+}
+
 int main(int ac, char **av)
 {
     t_list *tokens = NULL;
     tokens = _lexer(av[1]);
    _print_tokens(tokens);
-   const t_inter *jeudi = _parse(tokens);
-    _print_inter(jeudi);
+   _print_tokens(tokens);
+ 	//const t_inter *jeudi = _parse(tokens);
+   // _print_inter(jeudi);
     return 0;
 }
