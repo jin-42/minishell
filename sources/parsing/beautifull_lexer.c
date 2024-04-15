@@ -246,11 +246,6 @@ void _print_tokens(t_list *tokens) {
 	(*data)->block.here_doc = false;
 }*/
 
-t_inter *_parse(t_token *tok)
-{
-	
-}
-
 int main(int ac, char **av)
 {
     t_list *tokens = NULL;
