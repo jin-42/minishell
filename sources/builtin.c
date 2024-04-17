@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 15:24:35 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/17 11:40:49 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/17 11:46:46 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	exec_builtin(t_data *data, char **args, bool ex)
 	else if (ft_strcmp(data->block->args[0], "exit") == 0)
 		val = bt_exit(data, args + 1);
 	if (ex == true)
-		leave_minishell(data, val); // remplacer par fonction qui quitte proprement le programme (avec readline) ?
+		leave_minishell(data, val);
 	return (val);
 }
 
