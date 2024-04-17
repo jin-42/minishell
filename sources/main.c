@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 15:54:35 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/03 15:28:53 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/17 11:41:10 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,9 @@ int	main(int argc, char **argv, char **environ)
 {
 	// char	*line;
 	t_data	data;
-	char	*a = "pwd";
-	char	*b = "ls";
+	char	*a = "echo";
+	char	*b = "cat";
+	// char	*c = "blabla";
 	char	*end = NULL;
 	char	*arg_a[2];
 	char	*arg_b[2];
@@ -56,14 +57,17 @@ int	main(int argc, char **argv, char **environ)
 	t_block	block_a;
 	t_block	block_b;
 
-	block_a.in_fd = -2; //open("test", O_RDONLY);
+	block_a.in_fd = open("/dev/urandom", O_RDONLY);
 	block_a.out_fd = -2;
 	block_a.here_doc = false;
+	block_a.hd_quote = true;
+	block_a.limiter = "stop";
 	block_a.path = NULL;
 	arg_a[0] = a;
+	// arg_a[1] = c;
 	arg_a[1] = end;
-	block_a.args = arg_a;
-	block_a.next = NULL; //&block_b;
+	block_a.args = argv + 1; //arg_a;
+	block_a.next = NULL; // &block_b;
 	block_a.builtin = false;
 
 	block_b.in_fd = -2;
@@ -71,6 +75,7 @@ int	main(int argc, char **argv, char **environ)
 	block_b.here_doc = false;
 	block_b.path = NULL;
 	arg_b[0] = b;
+	// arg_b[1] = c;
 	arg_b[1] = end;
 	block_b.args = arg_b;
 	block_b.next = NULL;
@@ -81,9 +86,29 @@ int	main(int argc, char **argv, char **environ)
 	data.cmd_count = 1;
 	data.ret_val = 0;
 
-	print_data(&data);
+	// print_data(&data);
+	// printf("WAITING 3nl\n\n\n");
+	
+	arg_a[0] = a;
+	// arg_a[1] = c;
+	arg_a[1] = end;
+	// env(&data, arg_a);
+
 	exec(&data);
-	print_data(&data);
+
+	// env(&data, arg_a);
+	// val = getcwd(NULL, 0);
+	// if (val == NULL)
+	// {
+	// 	perror("pwd: ");
+	// 	return (1);
+	// }
+	// printf("%s\n", val);
+	// free(val);
+
+
+	// printf("WAITING 3nl\n\n\n");
+	// print_data(&data);
 	// while (42)
 	// {
 	// 	line = readline("minishell> ");
@@ -99,7 +124,7 @@ int	main(int argc, char **argv, char **environ)
 	// 		free(arg);
 	// 	}
 	// }
-	free(line);
+	// free(line);
 	free_data(&data);
 	// rl_clear_history();
 }

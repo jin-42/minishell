@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 15:33:03 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/03 15:39:55 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/17 11:19:49 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	child_infile(t_data *data, int i, int *old_pipe, int *new_pipe)
 				data->block->in_fd = -2;
 	}
 	if (data->block->here_doc == true)
-		here_doc(data);
+		heredoc(data);
 }
 
 void	child_outfile(t_data *data, int i, int *old_pipe, int *new_pipe)
@@ -52,6 +52,19 @@ int	check_files(t_data *data, int i, int *old_pipe, int *new_pipe)
 	if (data->block->in_fd == -1 || data->block->in_fd == -2)
 		return (1);
 	if (data->block->out_fd == -1 || data->block->out_fd == -2)
+		return (1);
+	return (SUCCESS);
+}
+
+int	check_builtin_files(t_data *data)
+{
+	if (data->block->in_fd == -2)
+		data->block->in_fd = 0;
+	if (data->block->out_fd == -2)
+		data->block->out_fd = 1;
+	if (data->block->here_doc == true)
+		heredoc(data);
+	if (data->block->in_fd == -1 || data->block->out_fd == -1)
 		return (1);
 	return (SUCCESS);
 }

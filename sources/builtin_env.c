@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 16:34:38 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/25 11:45:30 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/04 16:38:47 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 // Affiche l'environnement, n'affiche pas les variables sans contenu
-// Tester l ajout des arguments
+// Tester l ajout des arguments -> OK a priori
 
 int	env(t_data *data, char **args)
 {
@@ -23,7 +23,7 @@ int	env(t_data *data, char **args)
 	i = 1;
 	while (args[i])
 	{
-		if (i == 2)
+		if (i == 1)
 			return (printf("env: too many arguments or options\n"), 1);
 		i++;
 	}

@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   builtin_pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 13:34:32 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/28 15:27:39 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/04 16:35:12 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-// A check depuis les ajouts des args
+// Check depuis les ajouts des args, OK
 // prend en compte arg[0] = pwd
 
 int	pwd(t_data *data, char **args)

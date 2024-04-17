@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 12:53:57 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/03 13:52:13 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/04 16:35:27 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 // Espaces entre les args affiches
 // exemple : echo hola -n = pas d'optionm affiche hola -n
 // ATTENTION envoyer args + 1
+// Check a priori ok
 
 bool	echo_is_option(char *arg)
 {
@@ -43,29 +44,31 @@ int	count_args(char **args)
 	return (i);
 }
 
-int	echo(char **args)
+int	bt_echo(t_data *data, char **args)
 {
 	int		i;
 	int		j;
 	bool	option;
 
 	j = 0;
-	option == false;
+	(void)data;
+	// printf("enter echo");
+	option = false;
 	while(args && args[j] && echo_is_option(args[j]) == true)
 	{
 		j++;
 		option = true;
 	}
 	i = count_args(args);
-	printf("i = %d\n", i);
+	// printf("i = %d, j = %d\n", i, j);
 	while (args && args[j] && j <= i - 1)
 	{
 		printf("%s", args[j]);
 		if (j < i - 1)
 			printf(" ");
-		if (j == i - 1 && option == false)
-			printf("\n");
 		j++;
 	}
+	if (option == false)
+		printf("\n");
 	return (SUCCESS);
 }

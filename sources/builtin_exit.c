@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 11:28:47 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/03 13:30:29 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/04 14:13:39 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,6 @@
 // Ne prend que un seul argument sinon trop d'arguments et code erreur 1
 // 9223372036854775808 overflow numeric argument required
 // -9223372036854775809 underflow idem
-
-int	ft_isdigit(int c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	else
-		return (0);
-}
 
 int	bt_atoi(char *nptr)
 {

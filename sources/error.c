@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:11:27 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/28 11:07:50 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/04/04 14:32:30 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,12 @@ void	error_exec(t_data *data, int *old_pipe, int *new_pipe, char *str)
 	}
 	else if (str)
 	{
+		printf("that's me writing");
 		perror(str);
+	}
+	else if (str == NULL)
+	{
+		printf("I am the problem");
 	}
 	free_data(data);
 	if (value != 0)
