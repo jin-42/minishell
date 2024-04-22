@@ -33,6 +33,7 @@ typedef struct s_inter
 }					t_inter;
 
 
-t_inter	*_parse(t_list *token);
+t_inter	*_parse(t_list **token);
 void _print_inter(const t_inter *node);
+t_inter *_parse_add_back(t_list **token);
 #endif 
