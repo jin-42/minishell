@@ -32,8 +32,9 @@ SRC = $(SRC_DIR)main.c \
 	$(SRC_DIR)builtin_unset.c \
 	$(SRC_DIR)builtin_export.c \
 	$(SRC_DIR)builtin_echo.c \
-	$(SRC_DIR)builtin_exit.c
-	# $(SRC_DIR)test.c
+	$(SRC_DIR)builtin_exit.c \
+	$(SRC_DIR)lexer.c \
+	$(SRC_DIR)parser.c
 
 #SRC_BON = 
 

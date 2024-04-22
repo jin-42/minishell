@@ -62,12 +62,26 @@ typedef struct s_data
 	int		ret_val;
 }	t_data;
 
-// enum e_tokens
-// {
-// 	UNDEFINED,
-// 	PIPE,
-// 	GREATER
-// } ;
+typedef enum e_bash_op
+{
+	VAR = 0, // Commence par $
+	VAR_IN_QUOTE, // Commence par $ dans une chaine entre db quotes
+	OP,
+	STRING
+} e_token_type;
+
+typedef struct s_token
+{
+	char			*str;
+	e_token_type	type;
+	struct s_token	*next;
+} t_token;
+
+// LEXER
+
+t_token *lexer(char *s);
+void print_tokens(t_token *tokens);
+
 
 // ENV PARSING
 
