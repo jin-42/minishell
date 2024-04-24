@@ -83,17 +83,19 @@ typedef struct {
     int top;
 } Stack; // parser count quote
 
-// PARSER
-void	parser(t_data *data, t_token *tok);
-int count_av(t_token *head);
-bool operator_crash(t_token *head);
-
 //Stack Utils
 void initStack(Stack *s);
 void push(Stack *s, char value);
 char pop(Stack *s);
 bool quotes_closed(const char* str);
 
+// PARSER
+void	parser(t_data *data, t_token *tok);
+
+// PARSER - EXPAND
+int search_env_size(t_data *data, char *name);
+char	*expand_find_name(char *str);
+void expander(t_data *data, t_token *head);
 
 // LEXER
 t_token *lexer(char *s);

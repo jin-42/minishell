@@ -105,7 +105,7 @@ char	*search_env(t_data *data, char *name)
 	ptr = data->env;
 	while (ptr != 0)
 	{
-		if (ft_strncmp(ptr->name, name, len) == 0)
+		if (ft_strcmp(ptr->name, name) == 0)
 			return (ptr->val);
 		ptr = ptr->next;
 	}

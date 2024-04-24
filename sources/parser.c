@@ -4,7 +4,7 @@ t_block	*init_block()
 {
 	t_block	*block;
 
-	block = malloc(sizeof (t_block));
+	block = malloc(sizeof (t_block ));
 	if (!block)
 		return (NULL);
 	block->in_fd = -2;
@@ -93,9 +93,6 @@ void	parse_operators(t_data *data, t_token *tok)
 		}
 }
 
-
-
-
 void print_block(t_block *block) {
     printf("in_fd: %d\n", block->in_fd);
     printf("out_fd: %d\n", block->out_fd);
@@ -107,6 +104,7 @@ void print_block(t_block *block) {
     }
 	printf("next: %p\n", (void *)block->next);
 }
+=======
 
 void free_tok(t_token *head)
 {
@@ -121,47 +119,6 @@ void free_tok(t_token *head)
 	}
 }
 
-int search_env_size(t_data *data, char *name)
-{
-	t_env	*ptr;
-	int		len;
-
-	len = ft_strlen(name);
-	ptr = data->env;
-	while (ptr != 0)
-	{
-		if (ft_strncmp(ptr->name, name, len) == 0)
-			return ((int)(ft_strlen(ptr->val)));
-		ptr = ptr->next;
-	}
-	return (-1);
-}
-
-
-// void expand_var_in_quote(t_data *data, t_token *tok)
-// {
-// 	int i;
-// 	int size_expand;
-// 	char *tmp;
-// 	char	*var;
-// 	int		j
-
-
-// 	i = 0;
-// 	while (tok->str[i] != '$')
-// 		i++;
-
-// 	size_expand = search_env_size(data, tok->(str + i + 1));
-// 	if (size_expand == -1)
-// 	{
-// 				//expand pas trouve
-// 	}
-// 	tmp = malloc(sizeof(char) * size_expand + i)
-// 	if (!tok->str)
-// 		return ; // gestion d'erreur a faire
-	
-// }
-
 char *ft_strdup_mod(char *s, int start, int end)
 {
 	char *str;
@@ -175,65 +132,6 @@ char *ft_strdup_mod(char *s, int start, int end)
 		str[i++] = s[start++];
 	str[i] = '\0';
 	return (str);
-}
-
-// void var_in_quote_expand(t_data *data, t_token *tok)
-// {
-// 	int			i;
-// 	int			j;
-// 	int			size_expand;
-// 	char		*s;
-// 	char		*new;
-
-// 	i = 0;
-// 	while (tok->str[i] != '$')
-// 		i++;
-// 	j = i;
-// 	while (tok->str[j] != ' ' || tok->str[j] || tok->type != OP)
-// 		j++;
-// 	s = ft_strdup_mod(tok->str, i + 1, j);
-// 	if (!s)
-// 		return ;
-// 	size_expand = search_env_size(data, s);
-// 	// if (size_expand == -1)
-// 	// {
-// 	// 	//expand
-// 	// }
-// 	new = ft_substr(tok->str, i, j);
-// 	if (j == ft_strlen(tok->str))
-// 		tmp = malloc(sizeof(char) * (size_expand + i));
-// 	else
-// 		tmp = malloc(sizeof(char) * (size_expand + i);
-// 	if (!tok->str)
-// 		return ;// gestion d'erreir
-// }
-
-
-
-
-void expand(t_data *data, t_token *head)
-{
-	int			size_expand;
-	char		*tmp;
-	t_token		*tok;
-
-	tok = head;
-	while (tok)
-	{
-		if (tok->type == VAR)
-		{
-			size_expand = search_env_size(data, tok->str);
-			if (size_expand == -1)
-				return (free(tok->str));
-			tmp = malloc(sizeof(char) * size_expand);
-			if (!tok->str)
-				return ; // geston d'erreur ?
-			ft_strlcpy(tmp, search_env(data, tok->str), size_expand + 1);
-			free(tok->str);
-			tok->str = tmp;
-		}
-		tok = tok->next;
-	}
 }
 
 void	parser(t_data *data, t_token *tok)
@@ -266,32 +164,4 @@ void	parser(t_data *data, t_token *tok)
 	}
 	data->block->args[i] = '\0';
 	print_block(data->block);
-}
-	// while(tok)
-	// {
-	// 	if (tok->type == OP)
-	// 	{
-	// 		parse_operators(data, tok);
-	// 	}
-	// 	else if (tok->type == STRING)
-	// 	{
-	// 		args[i++] = strdup((*token)->str);
-	// 	}
-	// 	tok = free_tok_go_next(tok);
-	// }
-	// while (tok)
-	// {
-	// 	if (tok->type == VAR)
-	// 	{
-	// 		expand = search_env(data, tok->str);
-	// 		if (expand == NULL)
-	// 		{
-	// 			// gestion d'erreur a faire
-	// 		}
-	// 		free(tok->str);
-	// 	}
-	// 	char	*search_env(t_data *data, char *name)
-	// }
-	// 	// Fonction a part qui expand tout ce qui doit l'etre  
-	// }
-	// Revenir au debut de tok et on gere token / operators//
+} // Revenir au debut de tok et on gere token / operators
