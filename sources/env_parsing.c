@@ -100,3 +100,23 @@ int	parse_env(t_data *data, char **env)
 		return (5);
 	return (0);
 }
+
+int search_env_size(t_data *data, char *name)
+{
+	t_env	*ptr;
+	int		len;
+
+	len = ft_strlen(name);
+	if (len == 0)
+		return (-1);
+	if (ft_strcmp(name, "?") == 0)
+		return (number_length(data->ret_val));
+	ptr = data->env;
+	while (ptr != 0)
+	{
+		if (ft_strcmp(ptr->name, name) == 0)
+			return ((int)(ft_strlen(ptr->val)));
+		ptr = ptr->next;
+	}
+	return (-1);
+}
