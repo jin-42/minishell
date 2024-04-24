@@ -50,9 +50,11 @@ t_env	*search_env_node(t_env *env, char *name)
 	int		len;
 
 	len = ft_strlen(name);
+	if (len == 0)
+		return (NULL);
 	while (env)
 	{
-		if (ft_strncmp(env->name, name, len + 1) == 0)
+		if (ft_strcmp(env->name, name) == 0)
 			return (env);
 		env = env->next;
 	}

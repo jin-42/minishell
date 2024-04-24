@@ -108,22 +108,6 @@ void free_tok(t_token *head)
 	}
 }
 
-int search_env_size(t_data *data, char *name)
-{
-	t_env	*ptr;
-	int		len;
-
-	len = ft_strlen(name);
-	ptr = data->env;
-	while (ptr != 0)
-	{
-		if (ft_strncmp(ptr->name, name, len) == 0)
-			return ((int)(ft_strlen(ptr->val)));
-		ptr = ptr->next;
-	}
-	return (-1);
-}
-
 void utils_expand(t_data *data, t_token *tok)
 {
 
@@ -166,69 +150,6 @@ char *ft_strdup_mod(char *s, int start, int end)
 		str[i++] = s[start++];
 	str[i] = '\0';
 	return (str);
-}
-
-// void var_in_quote_expand(t_data *data, t_token *tok)
-// {
-// 	int			i;
-// 	int			j;
-// 	int			size_expand;
-// 	char		*s;
-// 	char		*new;
-
-// 	i = 0;
-// 	while (tok->str[i] != '$')
-// 		i++;
-// 	j = i;
-// 	while (tok->str[j] != ' ' || tok->str[j] || tok->type != OP)
-// 		j++;
-// 	s = ft_strdup_mod(tok->str, i + 1, j);
-// 	if (!s)
-// 		return ;
-// 	size_expand = search_env_size(data, s);
-// 	// if (size_expand == -1)
-// 	// {
-// 	// 	//expand
-// 	// }
-// 	new = ft_substr(tok->str, i, j);
-// 	if (j == ft_strlen(tok->str))
-// 		tmp = malloc(sizeof(char) * (size_expand + i));
-// 	else
-// 		tmp = malloc(sizeof(char) * (size_expand + i);
-// 	if (!tok->str)
-// 		return ;// gestion d'erreir
-// }
-
-
-
-
-void expand(t_data *data, t_token *head)
-{
-	int			size_expand;
-	char		*tmp;
-	t_token		*tok;
-
-	tok = head;
-	while (tok)
-	{
-		if (tok->type == VAR)
-		{
-			size_expand = search_env_size(data, tok->str);
-			if (size_expand == -1)
-				return (free(tok->str));
-			tmp = malloc(sizeof(char) * size_expand);
-			if (!tok->str)
-				return ; // geston d'erreur ?
-			ft_strlcpy(tmp, search_env(data, tok->str), size_expand + 1);
-			free(tok->str);
-			tok->str = tmp;
-		}
-		// else if (tok->type == VAR_IN_QUOTE)
-		// {
-		// 	expand_var_in_quote(data, tok);
-		// }
-		tok = tok->next;
-	}
 }
 
 void	parser(t_data *data, t_token *tok)

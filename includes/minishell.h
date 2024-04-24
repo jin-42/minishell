@@ -80,6 +80,8 @@ typedef struct s_token
 // PARSER
 void	parser(t_data *data, t_token *tok);
 
+// PARSER - EXPAND 
+void expand(t_data *data, t_token *head);
 
 // LEXER
 
