@@ -35,7 +35,8 @@ SRC = $(SRC_DIR)main.c \
 	$(SRC_DIR)builtin_exit.c \
 	$(SRC_DIR)lexer.c \
 	$(SRC_DIR)parser.c \
-	$(SRC_DIR)parser_utils.c
+	$(SRC_DIR)parser_utils.c \
+	$(SRC_DIR)stack_utils.c
 
 #SRC_BON = 
 
