@@ -151,7 +151,7 @@ static t_token	*_cp_simple_quote(char *s, int *i)
 		j++;
 	}
 	tok->str[j] = '\0';
-	tok->type = STRING;
+	tok->type = STRING_IN_QUOTE;
 	return (tok);
 }
 
@@ -170,7 +170,7 @@ static t_token	*_cp_double_quote(char *s, int *i)
 	if (!tok->str)
 			return (free(tok), NULL);
 	j = 0;
-	tok->type = STRING;
+	tok->type = STRING_IN_QUOTE;
 	while ((s[*i] != '\"'))
 	{
 		tok->str[j] = s[*i];

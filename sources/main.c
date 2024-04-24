@@ -59,14 +59,16 @@ int	main(int argc, char **argv, char **environ)
 		line = readline("minishell> ");
 		if (line)
 		{
+			if (quotes_closed(line) == 0)
+				return (free(line), 1); // gestion d'errer
 			add_history(line);
 			if (ft_strncmp(line, "stop", 5) == 0)
 				break ;
-			else {
+			else 
+			{
 				tokens = lexer(line);
 				print_tokens(tokens);
 				parser(&data, tokens);
-				print_tokens(tokens);
 			}
 			free(line);
 		}

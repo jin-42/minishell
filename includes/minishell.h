@@ -67,7 +67,8 @@ typedef enum e_bash_op
 	VAR = 0, // Commence par $
 	VAR_IN_QUOTE, // Commence par $ dans une chaine entre db quotes
 	OP,
-	STRING
+	STRING,
+	STRING_IN_QUOTE
 } e_token_type;
 
 typedef struct s_token
@@ -76,6 +77,17 @@ typedef struct s_token
 	e_token_type	type;
 	struct s_token	*next;
 } t_token;
+
+typedef struct {
+    char items[100];
+    int top;
+} Stack; // parser count quote
+
+//Stack Utils
+void initStack(Stack *s);
+void push(Stack *s, char value);
+char pop(Stack *s);
+bool quotes_closed(const char* str);
 
 // PARSER
 void	parser(t_data *data, t_token *tok);
@@ -86,7 +98,6 @@ char	*expand_find_name(char *str);
 void expander(t_data *data, t_token *head);
 
 // LEXER
-
 t_token *lexer(char *s);
 void print_tokens(t_token *tokens);
 
