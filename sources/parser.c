@@ -108,35 +108,6 @@ void free_tok(t_token *head)
 	}
 }
 
-void utils_expand(t_data *data, t_token *tok)
-{
-
-}
-
-// void expand_var_in_quote(t_data *data, t_token *tok)
-// {
-// 	int i;
-// 	int size_expand;
-// 	char *tmp;
-// 	char	*var;
-// 	int		j
-
-
-// 	i = 0;
-// 	while (tok->str[i] != '$')
-// 		i++;
-
-// 	size_expand = search_env_size(data, tok->(str + i + 1));
-// 	if (size_expand == -1)
-// 	{
-// 				//expand pas trouve
-// 	}
-// 	tmp = malloc(sizeof(char) * size_expand + i)
-// 	if (!tok->str)
-// 		return ; // gestion d'erreur a faire
-	
-// }
-
 char *ft_strdup_mod(char *s, int start, int end)
 {
 	char *str;
@@ -160,7 +131,7 @@ void	parser(t_data *data, t_token *tok)
 	data->block = init_block();
 	if (data->block == NULL)
 		return (free_tok(tok)); // Gestion erreur a faire , free_tok
-	expand(data, tok);
+	expander(data, tok);
 	// while(tok)
 	// {
 	// 	if (tok->type == OP)

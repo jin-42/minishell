@@ -18,7 +18,7 @@ int search_env_size(t_data *data, char *name)
 	return (-1);
 }
 
-char	*expand_var_in_quote_name(t_token *tok)
+char	*expand_find_name(char *str)
 {
 	int		i;
 	char	*name;
@@ -26,11 +26,11 @@ char	*expand_var_in_quote_name(t_token *tok)
 	int		j;
 
 	j = 0;
-	name = ft_strchr(tok->str, '$');
+	name = ft_strchr(str, '$');
 	if (name == NULL || ft_strlen(name) == 1)
 		return (NULL);
-	i = name - tok->str + 1;
-	while (tok->str[i] && is_charset(tok->str[i], EXP_CHAR) == 1)
+	i = name - str + 1;
+	while (str[i] && is_charset(str[i], EXP_CHAR) == 1)
 	{
 		i++;
 		j++;
@@ -42,7 +42,7 @@ char	*expand_var_in_quote_name(t_token *tok)
 	return (var);
 }
 
-char	*expand_var_in_quote_copy(t_data *data, t_token *tok, char *new, char *name)
+char	*expand_copy(t_data *data, t_token *tok, char *new, char *name)
 {
 	int		i;
 	int		j;
@@ -52,7 +52,7 @@ char	*expand_var_in_quote_copy(t_data *data, t_token *tok, char *new, char *name
 	ft_strlcpy(new + i, search_env(data, name), search_env_size(data, name) + 1);
 	j = ft_strlen(new);
 	i = i + 1 + ft_strlen(name);
-	while(tok->str[i])
+	while (tok->str[i])
 	{
 		new[j] = tok->str[i];
 		i++;
@@ -62,28 +62,28 @@ char	*expand_var_in_quote_copy(t_data *data, t_token *tok, char *new, char *name
 	return (new);
 }
 
-void expand_var_in_quote(t_data *data, t_token *tok)
+void expand(t_data *data, t_token *tok)
 {
 	int		size;
 	char	*new;
 	char	*name;
 
 	size = ft_strlen(tok->str);
-	name = expand_var_in_quote_name(tok);
+	name = expand_find_name(tok->str);
 	if (name == NULL)
 		return ;
 	size = size - ft_strlen(name) - 1 + search_env_size(data, name);
 	new = malloc(sizeof (char) * size);
 	if (!new)
 		return ;
-	new = expand_var_in_quote_copy(data, tok, new, name);
+	new = expand_copy(data, tok, new, name);
 	free(name);
 	free(tok->str);
 	tok->str = new;
-	expand_var_in_quote(data, tok);
+	expand(data, tok);
 }
 
-void expand(t_data *data, t_token *head)
+void expander(t_data *data, t_token *head)
 {
 	int			size_expand;
 	char		*tmp;
@@ -107,7 +107,7 @@ void expand(t_data *data, t_token *head)
 			tok->str = tmp;
 		}
 		else if (tok->type == VAR_IN_QUOTE)
-			expand_var_in_quote(data, tok);
+			expand(data, tok);
 		tok = tok->next;
 	}
 }
