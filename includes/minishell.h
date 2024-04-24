@@ -89,6 +89,10 @@ void push(Stack *s, char value);
 char pop(Stack *s);
 bool quotes_closed(const char* str);
 
+// PARSER UTILS
+bool operator_crash(t_token *head);
+int count_av(t_token *head);
+
 // PARSER
 void	parser(t_data *data, t_token *tok);
 

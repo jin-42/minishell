@@ -69,6 +69,7 @@ int	main(int argc, char **argv, char **environ)
 				tokens = lexer(line);
 				print_tokens(tokens);
 				parser(&data, tokens);
+				print_tokens(tokens);
 			}
 			free(line);
 		}

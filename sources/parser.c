@@ -104,7 +104,6 @@ void print_block(t_block *block) {
     }
 	printf("next: %p\n", (void *)block->next);
 }
-=======
 
 void free_tok(t_token *head)
 {
@@ -146,7 +145,7 @@ void	parser(t_data *data, t_token *tok)
 	i = 0;
 	if (data->block == NULL)
 		return (free_tok(tok)); // Gestion erreur a faire , free_tok
-	expand(data, tok);
+	expander(data, tok);
 	if (count_av(tok) != 0)
 		data->block->args = malloc(sizeof(char) + 1);
 	if (!data->block->args)
@@ -158,7 +157,7 @@ void	parser(t_data *data, t_token *tok)
 			parse_operators(data, tok);
 			tok = tok->next;
 		}
-		else if (tok->type == STRING || tok->type == STRING_IN_QUOTE)
+		else
 			data->block->args[i++] = ft_strdup(tok->str);
 		tok = tok->next;
 	}
