@@ -53,7 +53,7 @@ void	parse_operators(t_data *data, t_token *tok)
 			tok = free_tok_go_next(tok); // On free le '>'
 		}
 	}
-	else if (ft_strncmp(tok->str), "<<", 1)
+	else if (ft_strncmp((tok->str), "<<", 2) == 0)
 	{
 		if (tok->next != 0)
 		{
