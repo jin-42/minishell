@@ -77,9 +77,9 @@ static t_token *_cp_var(char *s, int *i)
 	}
 	printf("aaaa\n");
 	tok->str[j] = '\0';
-	tok->type = STRING;
+	tok->type = VAR;
 	if (flag == false)
-		tok->type = VAR;
+		tok->type = STRING;
 	return (tok);
 }
 

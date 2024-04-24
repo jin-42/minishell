@@ -77,6 +77,10 @@ typedef struct s_token
 	struct s_token	*next;
 } t_token;
 
+// PARSER
+void	parser(t_data *data, t_token *tok);
+
+
 // LEXER
 
 t_token *lexer(char *s);

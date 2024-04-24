@@ -33,72 +33,72 @@ t_token	*free_tok_go_next(t_token *tok)
 	return (tmp);
 }
 
-void	parse_operators(t_data *data, t_token *tok)
-{
-	t_block	*block;
+// void	parse_operators(t_data *data, t_token *tok)
+// {
+// 	t_block	*block;
 
-	block = data->block;
-	while (block)
-		block = block->next;
-	if  (ft_strncmp(tok->str, ">>", 2) == 0)
-	{
-		if (tok->next != 0)
-		{
-			block->out_fd = open(tok->next->str, /*APPEND*/);
-			if (block->out_fd == -1)
-			{
-				ft_printf_fd(2, "%s: ", tok->next->str);
-				perror(NULL);
-			}
-			tok = free_tok_go_next(tok); // On free le '>'
-		}
-	}
-	else if (ft_strncmp((tok->str), "<<", 2) == 0)
-	{
-		if (tok->next != 0)
-		{
-			block->heredoc = true;
-			block->(*limiter) = ft_strdup(tok->next->str);
-			if (block->(*limiter) == NULL)
-			{
-				ft_printf_fd(2, "%s: ", tok->next->str);
-				perror(NULL);
-			}
-			tok = free_tok_go_next(tok);
-		}
-	}
-	else if  (ft_strncmp(tok->str, ">", 1) == 0)
-	{
-		if (tok->next != 0)
-		{
-			block->out_fd = open(tok->next->str, O_WRONLY || O_CREAT || O_TRUNC, 0700);
-			if (block->out_fd == -1)
-			{
-				ft_printf_fd(2, "%s: ", tok->next->str);
-				perror(NULL);
-			}
-			tok = free_tok_go_next(tok); // On free le '>'
-		}
-		else if (ft_strncmp(tok->str, "<", 1) == 0)
-		{
-			if (tok->next != 0)
-			{
-				block->in_fd = open(tok->next->str, /*droit pour infile*/)
-				if (block->in_fd == -1)
-				{
-					ft_printf_fd(2, "%s: ", tok->next->str);
-					perror(NULL);
-				}
-				tok = free_tok_go_next(tok); // free "<"
-			}
-		}
-	}
-}
+// 	block = data->block;
+// 	while (block)
+// 		block = block->next;
+// 	if  (ft_strncmp(tok->str, ">>", 2) == 0)
+// 	{
+// 		if (tok->next != 0)
+// 		{
+// 			block->out_fd = open(tok->next->str, O_APPEND/*APPEND*/);
+// 			if (block->out_fd == -1)
+// 			{
+// 				ft_printf_fd(2, "%s: ", tok->next->str);
+// 				perror(NULL);
+// 			}
+// 			tok = free_tok_go_next(tok); // On free le '>'
+// 		}
+// 	}
+// 	else if (ft_strncmp((tok->str), "<<", 2) == 0)
+// 	{
+// 		if (tok->next != 0)
+// 		{
+// 			block->here_doc = true;
+// 			block->(*limiter) = ft_strdup(tok->next->str);
+// 			if (block->(*limiter) == NULL)
+// 			{
+// 				ft_printf_fd(2, "%s: ", tok->next->str);
+// 				perror(NULL);
+// 			}
+// 			tok = free_tok_go_next(tok);
+// 		}
+// 	}
+// 	else if  (ft_strncmp(tok->str, ">", 1) == 0)
+// 	{
+// 		if (tok->next != 0)
+// 		{
+// 			block->out_fd = open(tok->next->str, O_WRONLY || O_CREAT || O_TRUNC, 0700);
+// 			if (block->out_fd == -1)
+// 			{
+// 				ft_printf_fd(2, "%s: ", tok->next->str);
+// 				perror(NULL);
+// 			}
+// 			tok = free_tok_go_next(tok); // On free le '>'
+// 		}
+// 		else if (ft_strncmp(tok->str, "<", 1) == 0)
+// 		{
+// 			if (tok->next != 0)
+// 			{
+// 				block->in_fd = open(tok->next->str, /*droit pour infile*/)
+// 				if (block->in_fd == -1)
+// 				{
+// 					ft_printf_fd(2, "%s: ", tok->next->str);
+// 					perror(NULL);
+// 				}
+// 				tok = free_tok_go_next(tok); // free "<"
+// 			}
+// 		}
+// 	}
+// }
 
 void free_tok(t_token *head)
 {
 	t_token *current = head;
-	t_token temp;
+	t_token *temp;
 
 	while (current != NULL)
 	{
@@ -158,7 +158,7 @@ char *ft_strdup_mod(char *s, int start, int end)
 	char *str;
 	int		i;
 
-	str = malloc(sizeof(char) * (end - start +1))
+	str = malloc(sizeof(char) * (end - start +1));
 	if (!str)
 		return (NULL);
 	i = 0;
@@ -168,62 +168,66 @@ char *ft_strdup_mod(char *s, int start, int end)
 	return (str);
 }
 
-void var_in_quote_expand(t_data *data, t_token *tok)
+// void var_in_quote_expand(t_data *data, t_token *tok)
+// {
+// 	int			i;
+// 	int			j;
+// 	int			size_expand;
+// 	char		*s;
+// 	char		*new;
+
+// 	i = 0;
+// 	while (tok->str[i] != '$')
+// 		i++;
+// 	j = i;
+// 	while (tok->str[j] != ' ' || tok->str[j] || tok->type != OP)
+// 		j++;
+// 	s = ft_strdup_mod(tok->str, i + 1, j);
+// 	if (!s)
+// 		return ;
+// 	size_expand = search_env_size(data, s);
+// 	// if (size_expand == -1)
+// 	// {
+// 	// 	//expand
+// 	// }
+// 	new = ft_substr(tok->str, i, j);
+// 	if (j == ft_strlen(tok->str))
+// 		tmp = malloc(sizeof(char) * (size_expand + i));
+// 	else
+// 		tmp = malloc(sizeof(char) * (size_expand + i);
+// 	if (!tok->str)
+// 		return ;// gestion d'erreir
+// }
+
+
+
+
+void expand(t_data *data, t_token *head)
 {
-	int			i;
-	int			j;
 	int			size_expand;
-	char		*s;
-
-	i = 0;
-	while (tok->str[i] != '$')
-		i++;
-	j = i;
-	while (tok->str[j] != ' ' || tok->str[j] || tok->type != OP)
-		j++;
-	s = ft_strdup_mod(tok->str, i + 1, j);
-	if (!s)
-		return ;
-	size_expand = search_env_size(data, s);
-	if (size_expand == -1)
-	{
-		//expand
-	}
-	ft_substr(tok->str, i, j);
-	if (j == ft_strlen(tok->str))
-		tmp = malloc(sizeof(char) * (size_expand + i));
-	else
-		tmp = malloc(sizeof(char) * (size_expand + i);
-	if (!tok->str)
-		return ;// gestion d'erreir
-}
-
-
-
-
-void expand(t_data *data, t_token *tok)
-{
-	int					size_expand;
 	char		*tmp;
+	t_token		*tok;
 
+	tok = head;
 	while (tok)
 	{
 		if (tok->type == VAR)
 		{
 			size_expand = search_env_size(data, tok->str);
 			if (size_expand == -1)
-				free(tok->str);
+				return (free(tok->str));
 			tmp = malloc(sizeof(char) * size_expand);
 			if (!tok->str)
 				return ; // geston d'erreur ?
-			tmp = search_env(data, tok->str);
+			ft_strlcpy(tmp, search_env(data, tok->str), size_expand + 1);
 			free(tok->str);
 			tok->str = tmp;
 		}
-		else if (tok->type == VAR_IN_QUOTE)
-		{
-			expand_var_in_quote(data, tok);
-		}
+		// else if (tok->type == VAR_IN_QUOTE)
+		// {
+		// 	expand_var_in_quote(data, tok);
+		// }
+		tok = tok->next;
 	}
 }
 
@@ -234,19 +238,20 @@ void	parser(t_data *data, t_token *tok)
 		return ;
 	data->block = init_block();
 	if (data->block == NULL)
-		return (free_tok(tok), ); // Gestion erreur a faire , free_tok
-	while(tok)
-	{
-		if (tok->type == OP)
-		{
-			parse_operators(data, tok);
-		}
-		else if (tok->type == STRING)
-		{
-			args[i++] = strdup((*token)->str);
-		}
-		tok = free_tok_go_next(tok);
-	}
+		return (free_tok(tok)); // Gestion erreur a faire , free_tok
+	expand(data, tok);
+	// while(tok)
+	// {
+	// 	if (tok->type == OP)
+	// 	{
+	// 		parse_operators(data, tok);
+	// 	}
+	// 	else if (tok->type == STRING)
+	// 	{
+	// 		args[i++] = strdup((*token)->str);
+	// 	}
+	// 	tok = free_tok_go_next(tok);
+	// }
 	// while (tok)
 	// {
 	// 	if (tok->type == VAR)

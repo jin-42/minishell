@@ -14,10 +14,10 @@
 
 int	status;
 
-void	print_data(t_data *data)
-{
-	printf("")
-}
+// void	print_data(t_data *data)
+// {
+// 	printf("")
+// }
 
 void	print_eenv(char **env)
 {
@@ -66,6 +66,7 @@ int	main(int argc, char **argv, char **environ)
 				tokens = lexer(line);
 				print_tokens(tokens);
 				parser(&data, tokens);
+				print_tokens(tokens);
 			}
 			free(line);
 		}

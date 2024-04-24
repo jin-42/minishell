@@ -14,16 +14,16 @@
 
 // Si heredoc priorite sur le infile
 
-char	*expand(t_data *data, char *line)
-{
-	printf("NOT IMPLEMENTED YET");
-	return (line);
-}
+// char	*expand(t_data *data, char *line)
+// {
+// 	printf("NOT IMPLEMENTED YET");
+// 	return (line);
+// }
 
 char	*expand_heredoc(t_data *data, char *line)
 {
-	if (data->block->hd_quote == false)
-		line = expand(data, line); // A IMPLEMENTER
+	// if (data->block->hd_quote == false)
+		// line = expand(data, line); // A IMPLEMENTER
 	return (line);
 }
 

@@ -100,6 +100,8 @@ char	*search_env(t_data *data, char *name)
 	int		len;
 
 	len = ft_strlen(name);
+	if (len == 0)
+		return (NULL);
 	ptr = data->env;
 	while (ptr != 0)
 	{
