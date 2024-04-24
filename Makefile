@@ -4,7 +4,7 @@ NAME = minishell
 #NAME_BON = minishell_bonus
 
 CC = cc
-CFLAGS = -g3
+CFLAGS = -Wall -g3
 LIBS = -lreadline -lncurses
 
 LIBRARY = full_libft/libft.a
@@ -15,7 +15,27 @@ HEADER = includes/minishell.h
 SRC_DIR = sources/
 #SRC_BON_DIR = bonus/
 
-SRC = $(SRC_DIR)main.c
+SRC = $(SRC_DIR)main.c \
+	$(SRC_DIR)free.c \
+	$(SRC_DIR)error.c \
+	$(SRC_DIR)env_parsing.c \
+	$(SRC_DIR)env_manip.c \
+	$(SRC_DIR)exec.c \
+	$(SRC_DIR)exec_files.c \
+	$(SRC_DIR)exec_paths.c \
+	$(SRC_DIR)exec_pipes.c \
+	$(SRC_DIR)exec_heredoc.c \
+	$(SRC_DIR)builtin.c \
+	$(SRC_DIR)builtin_env.c \
+	$(SRC_DIR)builtin_pwd.c \
+	$(SRC_DIR)builtin_cd.c \
+	$(SRC_DIR)builtin_unset.c \
+	$(SRC_DIR)builtin_export.c \
+	$(SRC_DIR)builtin_echo.c \
+	$(SRC_DIR)builtin_exit.c \
+	$(SRC_DIR)lexer.c \
+	$(SRC_DIR)parser.c \
+	$(SRC_DIR)parser_utils.c
 
 #SRC_BON = 
 
