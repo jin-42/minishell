@@ -196,9 +196,9 @@ void var_in_quote_expand(t_data *data, t_token *tok)
 		tmp = malloc(sizeof(char) * (size_expand + i);
 	if (!tok->str)
 		return ;// gestion d'erreir
-	}
-
 }
+
+
 
 
 void expand(t_data *data, t_token *tok)
@@ -212,9 +212,7 @@ void expand(t_data *data, t_token *tok)
 		{
 			size_expand = search_env_size(data, tok->str);
 			if (size_expand == -1)
-			{
-				//expand pas trouve
-			}
+				free(tok->str);
 			tmp = malloc(sizeof(char) * size_expand);
 			if (!tok->str)
 				return ; // geston d'erreur ?
