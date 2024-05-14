@@ -33,7 +33,7 @@ t_token	*free_tok_go_next(t_token *tok)
 	return (tmp);
 }
 
-void	parse_operators(t_data *data, t_token *tok)
+void	parse_operators(t_data *data, t_token *tok, int i)
 {
 	t_block	*block;
 
@@ -69,7 +69,7 @@ void	parse_operators(t_data *data, t_token *tok)
 	}
 	else if  (ft_strncmp(tok->str, ">", 1) == 0)
 	{
-				if (tok->next != 0)
+		if (tok->next != 0)
 		{
 			block->out_fd = open(tok->next->str, O_WRONLY || O_CREAT || O_TRUNC, 0700);
 			if (block->out_fd == -1)
@@ -79,21 +79,39 @@ void	parse_operators(t_data *data, t_token *tok)
 			}
 		}
 	}
-		else if (ft_strncmp(tok->str, "<", 1) == 0) // probleme 
+	else if (ft_strncmp(tok->str, "<", 1) == 0)
+	{
+		if (tok->next != 0)
 		{
-			if (tok->next != 0)
+			block->in_fd = open(tok->next->str, O_RDONLY);
+			if (block->in_fd == -1)
 			{
-				block->in_fd = open(tok->next->str, O_RDONLY);
-				if (block->in_fd == -1)
-				{
-					ft_printf_fd(2, "%s: ", tok->next->str);
-					perror(NULL);
-				}
-			}
+				ft_printf_fd(2, "%s: ", tok->next->str);
+				perror(NULL);
+			}			
 		}
+	}
+	else if (ft_strncmp(tok->str, "|", 1) == 0)
+	{
+		if (tok->next != 0)
+		{
+			 t_block *bl;
+
+			 bl = init_block();
+			 if (!bl)
+				 return ;
+			 block->args[i] = '\0';
+        		 bl->args = malloc(sizeof(char *) * (count_av(tok->next) + 1));
+			 block->next = bl;
+		}
+	}
+
 }
 
 void print_block(t_block *block) {
+
+while(block != NULL)
+{
     printf("in_fd: %d\n", block->in_fd);
     printf("out_fd: %d\n", block->out_fd);
     printf("here_doc: %s\n", block->here_doc ? "true" : "false");
@@ -102,7 +120,9 @@ void print_block(t_block *block) {
 	for (int i = 0; block->args[i] != NULL; ++i) {
         printf("agrs[%i] = \t%s\n",i, block->args[i]);
     }
-	printf("next: %p\n", (void *)block->next);
+	printf("\n");
+	block = block->next;
+}
 }
 
 void free_tok(t_token *head)
@@ -118,49 +138,48 @@ void free_tok(t_token *head)
 	}
 }
 
-char *ft_strdup_mod(char *s, int start, int end)
+void parser(t_data *data, t_token *tok)
 {
-	char *str;
-	int		i;
+    t_block *head;
+    int i = 0;
 
-	str = malloc(sizeof(char) * (end - start +1));
-	if (!str)
-		return (NULL);
-	i = 0;
-	while (start < end)
-		str[i++] = s[start++];
-	str[i] = '\0';
-	return (str);
+    if (tok == NULL)
+        return;
+    if (!operator_crash(tok))
+        return;
+    data->block = init_block();
+    head = data->block;
+    if (data->block == NULL)
+    {
+        free_tok(tok); // Gestion d'erreur : libérer la mémoire allouée pour les tokens
+        return;
+    }
+    expander(data, tok);
+    if (count_av(tok) != 0)
+        data->block->args = malloc(sizeof(char *) * (count_av(tok) + 1));
+    if (!data->block->args)
+    {
+        free_tok(tok);
+        return;
+    }
+    while (tok)
+    {
+        if (tok->type == OP)
+        {
+            parse_operators(data, tok, i);
+            if (ft_strncmp("|", tok->str, 1) == 0)
+            {
+                i = 0;
+                data->block = data->block->next;
+            }
+	    else 
+		    tok = tok->next;
+        }
+        else
+
+            data->block->args[i++] = ft_strdup(tok->str);
+        tok = tok->next;
+    }
+    data->block->args[i] = NULL;
+    print_block(head);
 }
-
-void	parser(t_data *data, t_token *tok)
-{
-	int i;
-	
-	if (tok == NULL)
-		return ;
-	if (operator_crash(tok) == false)
-		return ;
-	data->block = init_block();
-	i = 0;
-	if (data->block == NULL)
-		return (free_tok(tok)); // Gestion erreur a faire , free_tok
-	expander(data, tok);
-	if (count_av(tok) != 0)
-		data->block->args = malloc(sizeof(char) + 1);
-	if (!data->block->args)
-		return ;//Gestion d'erreur
-	while (tok)
-	{	
-		if (tok->type == OP)
-		{
-			parse_operators(data, tok);
-			tok = tok->next;
-		}
-		else
-			data->block->args[i++] = ft_strdup(tok->str);
-		tok = tok->next;
-	}
-	data->block->args[i] = '\0';
-	print_block(data->block);
-} // Revenir au debut de tok et on gere token / operators
