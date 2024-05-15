@@ -71,7 +71,7 @@ void	parse_operators(t_data *data, t_token *tok, int i)
 	{
 		if (tok->next != 0)
 		{
-			block->out_fd = open(tok->next->str, O_WRONLY | O_CREAT | O_TRUNC, 0700);
+			block->out_fd = open(tok->next->str, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (block->out_fd == -1)
 				perror(custom_error("open: ", tok->next->str));
 		}
@@ -82,10 +82,7 @@ void	parse_operators(t_data *data, t_token *tok, int i)
 		{
 			block->in_fd = open(tok->next->str, O_RDONLY);
 			if (block->in_fd == -1)
-			{
-				ft_printf_fd(2, "%s: ", tok->next->str);
-				perror(NULL);
-			}			
+				perror(custom_error("open: ", tok->next->str));		
 		}
 	}
 	else if (ft_strncmp(tok->str, "|", 1) == 0)
