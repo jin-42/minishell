@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 13:46:22 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/15 14:54:05 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/15 16:35:07 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ void	next_block(t_data *data)
 		close(data->block->out_fd);
 	if (data->block->path)
 		free(data->block->path);
+	if (data->block->here_doc == true)
+		unlink(data->block->limiter);
 	if (data->block->limiter)
 		free(data->block->limiter);
 	free_full_split(data->block->args);

@@ -20,6 +20,27 @@ t_block	*init_block()
 
 }
 
+char *ft_strdup_var(char *str)
+{
+	char	*res;
+	size_t	len;
+	size_t i;
+
+	len = ft_strlen(str);
+	res = ft_calloc(len + 2, sizeof (char ));
+	if (!res)
+		return (NULL);
+	i = 0;
+	len = 0;
+	res[i++] = '$'; 
+	while (str[len])
+	{
+		res[i++] = str[len++];
+	}
+	res[i] = '\0';
+	return (res);
+}
+
 t_token	*free_tok_go_next(t_token *tok)
 {
 	t_token *tmp;
@@ -57,9 +78,12 @@ void	parse_operators(t_data *data, t_token *tok, int i)
 		if (tok->next != 0)
 		{
 			block->here_doc = true;
-			if (tok->next->type == STRING_IN_QUOTE)
+			if ((tok->next->type == STRING_IN_QUOTE) || tok->next->type == VAR_IN_QUOTE)
 				block->hd_quote = true;
-			block->limiter = ft_strdup(tok->next->str);
+			if (tok->next->type == VAR)
+				block->limiter = ft_strdup_var(tok->next->str);
+			else 
+				block->limiter = ft_strdup(tok->next->str);
 			if (block->limiter == NULL)
 			{
 				ft_printf_fd(2, "%s: ", tok->next->str);

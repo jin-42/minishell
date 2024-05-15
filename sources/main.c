@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 15:54:35 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/15 14:52:02 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/15 18:04:26 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,9 @@ int	main(int argc, char **argv, char **environ)
 			else // On n'en aura pas besoin du else, simplement noter les instructions
 			{
 				tokens = lexer(line);
-				// print_tokens(tokens); // A suppr
+				print_tokens(tokens); // A suppr
 				parser(&data, tokens);
-				// print_tokens(tokens); // A suppr
+				//print_tokens(tokens); // A suppr
 			}
 			free(line);
 			exec(&data);

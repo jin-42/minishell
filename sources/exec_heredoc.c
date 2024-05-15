@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 14:00:42 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/17 11:05:04 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/15 17:46:38 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ char	*expand_heredoc(t_data *data, char *line)
 	free(name);
 	free(line);
 	line = new;
+	line = expand_heredoc(data, line);
 	return (line);
 }
 
@@ -75,29 +76,30 @@ int	fill_heredoc(t_data *data, int fd)
 			return (1);
 		if (strcmp(line, data->block->limiter) == 0)
 			break ;
-		write(fd, line, ft_strlen(line));
+		ft_printf_fd(fd, "%s\n", line);
 	}
 	if (line)
 		free(line);
 	return (0);
 }
 
-char	*random_name(void) // prend un nom de 9 carac compose de isAlpha dans urandom
-{
+char	*random_name(void)
+{ // prend un nom de 9 carac compose de isAlpha dans urandom
 	char	*rand;
 	int		fd;
 	int		i;
 
 	i = 0;
-	rand = ft_calloc(10, sizeof(char));
+	rand = ft_calloc(16, sizeof(char));
 	if (!rand)
 		return (NULL);
 	fd = open("/dev/urandom", O_RDONLY, 00644);
 	if (fd == -1)
 		return (NULL);
-	if (read(fd, rand, 9) == -1)
+	if (read(fd, rand, 15) == -1)
 		return (NULL);
 	close(fd);
+	// printf("rand %s", rand);
 	while (rand[i])
 	{
 		if (rand[i] < 0)
@@ -106,6 +108,7 @@ char	*random_name(void) // prend un nom de 9 carac compose de isAlpha dans urand
 			rand[i] = rand[i] % 26 + 'A';
 		i++;
 	}
+	rand = cpy_no_nt(rand, "/tmp/", 6);
 	return (rand);
 }
 

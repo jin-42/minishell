@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:14:10 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/15 15:03:10 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/15 16:31:55 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ int count_av(t_token *head);
 void	parser(t_data *data, t_token *tok);
 
 // PARSER - EXPAND
-int search_env_size(t_data *data, char *name);
 char	*expand_find_name(char *str);
 void expander(t_data *data, t_token *head);
 
@@ -108,6 +107,7 @@ void print_tokens(t_token *tokens);
 
 // ENV PARSING
 
+int 	search_env_size(t_data *data, char *name);
 t_env	*env_new(char *val, char *name);
 int		env_add_back(t_env **env, t_env *new);
 int		parse_paths(t_data *data);

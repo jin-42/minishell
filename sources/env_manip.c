@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 11:40:50 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/03 15:42:46 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/15 16:43:41 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,8 @@ char	*search_env(t_data *data, char *name)
 	len = ft_strlen(name);
 	if (len == 0)
 		return (NULL);
+	if (ft_strcmp(name, "?") == 0)
+		return (ft_itoa(data->ret_val));
 	ptr = data->env;
 	while (ptr != 0)
 	{

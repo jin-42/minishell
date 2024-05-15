@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 16:16:02 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/03 13:05:54 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/15 16:32:08 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	parse_env(t_data *data, char **env)
 	return (0);
 }
 
-int search_env_size(t_data *data, char *name)
+int	search_env_size(t_data *data, char *name)
 {
 	t_env	*ptr;
 	int		len;
