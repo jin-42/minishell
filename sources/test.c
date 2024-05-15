@@ -32,12 +32,12 @@ void	print_data(t_data *data)
 	printf("\n\n");
 
 	i = 0; // ------------------------------------------ PRINT PATHS
-	while (data->paths && data->paths[i])
-	{
-		printf("path %d = --%s--\n", i, data->paths[i]);
-		i++;
-	}
-	printf("\n\n");
+	// while (data->paths && data->paths[i])
+	// {
+	// 	printf("path %d = --%s--\n", i, data->paths[i]);
+	// 	i++;
+	// }
+	// printf("\n\n");
 
 	t_block *block; // ------------------------------------------ PRINT BLOCKS
 	if (data->block)

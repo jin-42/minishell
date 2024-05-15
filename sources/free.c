@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 11:07:31 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/15 13:16:28 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/15 13:54:24 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	free_data(t_data *data) // Ajouter blocks quand seront ajoutes
 void	leave_minishell(t_data *data, int val)
 {
 	free_data(data);
-	// rl_clear_history();
+	rl_clear_history();
 	if (val > 0)
 		exit(val);
 	else

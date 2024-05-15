@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 15:24:35 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/17 11:46:46 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/15 14:54:24 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,11 @@ int	exec_builtin(t_data *data, char **args, bool ex)
 
 int	builtin_process(t_data *data, int i)
 {
-	printf("exec builtin \n");
+	// printf("exec builtin \n");
 	data->ret_val = 0;
 	if (check_builtin_files(data) != 0)
 		data->ret_val = 1;
-	printf("determined in_fd = %d / out_fd = %d\n", data->block->in_fd, data->block->out_fd);
+	// printf("determined in_fd = %d / out_fd = %d\n", data->block->in_fd, data->block->out_fd);
 	if (dup2(data->block->in_fd, STDIN_FILENO) == -1 && data->ret_val == 0)
 	{
 		data->ret_val = 1;
@@ -85,5 +85,6 @@ int	builtin_process(t_data *data, int i)
 	if (data->ret_val == 0)
 		data->ret_val = exec_builtin(data, data->block->args, false);
 	next_block(data);
+	data->cmd_count = 0;
 	return (data->ret_val);
 }
