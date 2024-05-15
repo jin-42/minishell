@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 15:33:26 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/04 17:13:58 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/15 13:11:45 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ int	search_path(t_data *data)
 
 int	maj_env_paths(t_data *data)
 {
+	if (data->environ)
+		free_env_char(data);
 	data->environ = env_to_char(data, false);
 	if (data->environ == NULL)
 		return (1);

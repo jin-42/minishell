@@ -6,11 +6,30 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 11:07:31 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/17 11:46:32 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/15 13:16:28 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	free_env_char(t_data *data)
+{
+	int	size;
+	int	i;
+	char	**environ;
+
+	environ = data->environ;
+	if (!environ)
+		return ;
+	i = 0;
+	size = env_size(data);
+	while (i < size)
+	{
+		free(environ[i]);
+		i++;
+	}
+	free(data->environ);
+}
 
 void	free_env(t_env *env) // Ne pas free val, pas malloc
 {
@@ -35,12 +54,12 @@ void	free_env(t_env *env) // Ne pas free val, pas malloc
 
 void	free_data(t_data *data) // Ajouter blocks quand seront ajoutes
 {
+	if (data->environ)
+		free_env_char(data);
 	if (data->env)
 		free_env(data->env);
 	if (data->paths)
 		free_full_split(data->paths);
-	if (data->environ)
-		free_full_split(data->environ);
 	while (data->block)
 		next_block(data); // ferme les FD ouverts
 }

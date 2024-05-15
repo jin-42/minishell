@@ -232,19 +232,6 @@ t_token *lexer(char *s)
 	return token;
 }
 
-void print_tokens(t_token *tokens) {
-    t_token *current = tokens;
-	int i = 0;
-    
-    while (current != NULL) {
-        printf("Token: %s\n", current->str);
-        printf("Token: %d\n", current->type);
-        printf("\n");
-        current = current->next;
-		i++;
-    }
-}
-
 
 /*void _init_block(t_data **data)
 {

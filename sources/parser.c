@@ -100,29 +100,13 @@ void	parse_operators(t_data *data, t_token *tok, int i)
 			 bl = init_block();
 			 if (!bl)
 				 return ;
-			 block->args[i] = '\0';
+			data->cmd_count = data->cmd_count + 1;
+			block->args[i] = '\0';
         		 bl->args = malloc(sizeof(char *) * (count_av(tok->next) + 1));
-			 block->next = bl;
+			block->next = bl;
 		}
 	}
 
-}
-
-void print_block(t_block *block) {
-
-while(block != NULL)
-{
-    printf("in_fd: %d\n", block->in_fd);
-    printf("out_fd: %d\n", block->out_fd);
-    printf("here_doc: %s\n", block->here_doc ? "true" : "false");
-    printf("hd_quote: %s\n", block->hd_quote ? "true" : "false");
-    printf("limiter: %s\n", block->limiter != NULL ? block->limiter : "NULL");
-	for (int i = 0; block->args[i] != NULL; ++i) {
-        printf("agrs[%i] = \t%s\n",i, block->args[i]);
-    }
-	printf("\n");
-	block = block->next;
-}
 }
 
 void free_tok(t_token *head)
@@ -132,6 +116,8 @@ void free_tok(t_token *head)
 
 	while (current != NULL)
 	{
+		if (current->str)
+			free(current->str);
 		temp = current;
 		current = current->next;
 		free(temp);
@@ -142,44 +128,48 @@ void parser(t_data *data, t_token *tok)
 {
     t_block *head;
     int i = 0;
+	t_token *copy;
 
-    if (tok == NULL)
-        return;
-    if (!operator_crash(tok))
-        return;
+	copy = tok;
+    if (copy == NULL)
+        return ;
+    if (!operator_crash(copy))
+        return ;
     data->block = init_block();
+	data->cmd_count = data->cmd_count + 1;
     head = data->block;
-    if (data->block == NULL)
+    if (head == NULL)
     {
         free_tok(tok); // Gestion d'erreur : libérer la mémoire allouée pour les tokens
         return;
     }
-    expander(data, tok);
-    if (count_av(tok) != 0)
-        data->block->args = malloc(sizeof(char *) * (count_av(tok) + 1));
-    if (!data->block->args)
+    expander(data, copy);
+    if (count_av(copy) != 0)
+        head->args = malloc(sizeof(char *) * (count_av(copy) + 1));
+    if (!head->args)
     {
         free_tok(tok);
         return;
     }
-    while (tok)
+    while (copy)
     {
-        if (tok->type == OP)
+        if (copy->type == OP)
         {
-            parse_operators(data, tok, i);
-            if (ft_strncmp("|", tok->str, 1) == 0)
+            parse_operators(data, copy, i);
+            if (ft_strncmp("|", copy->str, 1) == 0)
             {
                 i = 0;
-                data->block = data->block->next;
+                head = head->next;
             }
 	    else 
-		    tok = tok->next;
+		    copy = copy->next;
         }
         else
 
-            data->block->args[i++] = ft_strdup(tok->str);
-        tok = tok->next;
+            head->args[i++] = ft_strdup(copy->str);
+        copy = copy->next;
     }
-    data->block->args[i] = NULL;
+    head->args[i] = NULL;
     print_block(head);
+	free_tok(tok);
 }

@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:14:10 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/17 11:40:28 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/15 13:19:41 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +190,7 @@ void	error_parsing(t_data *data, char *type);
 void	error_exec(t_data *data, int *old_pipe, int *new_pipe, char *str);
 
 // FREE
+void	free_env_char(t_data *data);
 void	leave_minishell(t_data *data, int val);
 void	free_env(t_env *env);
 void	free_data(t_data *data);
@@ -197,5 +198,6 @@ void	free_data(t_data *data);
 
 // test
 void	print_data(t_data *data); // A RETIRER
+void print_block(t_block *block);
 
 #endif

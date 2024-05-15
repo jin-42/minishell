@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 13:46:22 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/17 11:44:00 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/15 13:36:25 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ void	next_block(t_data *data)
 		close(data->block->out_fd);
 	if (data->block->path)
 		free(data->block->path);
-	// if (data->block->limiter)
-	// 	free(data->block->limiter);
-	// free_full_split(data->block->args);
-	// free(data->block);
+	if (data->block->limiter)
+		free(data->block->limiter);
+	free_full_split(data->block->args);
+	free(data->block);
 	data->block = block;
 }
 
@@ -125,6 +125,7 @@ void	parent_process(t_data *data, int pid, int *old_pipe, int *new_pipe)
 		}
 	}
 	data->ret_val = value;
+	data->cmd_count = 0;
 }
 
 int	exec(t_data *data)
@@ -134,11 +135,16 @@ int	exec(t_data *data)
 	int		i;
 	int		fd;
 
+	// printf("hey");
+	// print_data(data);
 	if (maj_env_paths(data) != 0)
 		return (1);
 	i = 0;
 	if (data->cmd_count == 1 && is_builtin(data) == true)
+	{
+		printf("hey");
 		return (builtin_process(data, i));
+	}
 	pipe_initializer(old_pipe, new_pipe);
 	while (i < data->cmd_count)
 	{

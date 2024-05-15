@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 15:54:35 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/17 11:41:10 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/15 13:28:46 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ t_data	init_data(char **env)
 	return (data);
 }
 
-
 int	main(int argc, char **argv, char **environ)
 {
 	char	*line;
@@ -59,22 +58,28 @@ int	main(int argc, char **argv, char **environ)
 		line = readline("minishell> ");
 		if (line)
 		{
-			if (quotes_closed(line) == 0)
-				return (free(line), 1); // gestion d'errer
 			add_history(line);
+			if (quotes_closed(line) == 0)
+			{
+				free(line); // + msg erreur
+				continue ;
+			}
 			if (ft_strncmp(line, "stop", 5) == 0)
-				break ;
-			else 
+				break ; // A supprimer quand signaux
+			else // On n'en aura pas besoin du else, simplement noter les instructions
 			{
 				tokens = lexer(line);
-				print_tokens(tokens);
+				// print_tokens(tokens); // A suppr
 				parser(&data, tokens);
-				print_tokens(tokens);
+				// print_tokens(tokens); // A suppr
 			}
 			free(line);
+			exec(&data);
 		}
+		// Signaux
 	}
-	free(line);
+	// free(line);
+	free_data(&data);
 	rl_clear_history();
 }
 
