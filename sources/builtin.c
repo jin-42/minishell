@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 15:24:35 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/16 14:31:58 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/16 14:41:27 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	exec_builtin(t_data *data, char **args, bool ex)
 	else if (ft_strcmp(data->block->args[0], "echo") == 0)
 		val = bt_echo(data, args + 1);
 	else if (ft_strcmp(data->block->args[0], "exit") == 0)
-		val = bt_exit(data, args);
+		val = bt_exit(data, args + 1);
 	if (ex == true)
 		leave_minishell(data, val);
 	return (val);

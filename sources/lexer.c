@@ -168,7 +168,7 @@ static t_token	*_cp_double_quote(char *s, int *i)
 		return (NULL);
 	tok->str = malloc(sizeof(char) * (j - (*i) + 1));
 	if (!tok->str)
-			return (free(tok), NULL);
+		return (free(tok), NULL);
 	j = 0;
 	tok->type = STRING_IN_QUOTE;
 	while ((s[*i] != '\"'))
@@ -178,7 +178,7 @@ static t_token	*_cp_double_quote(char *s, int *i)
 			tok->type = VAR_IN_QUOTE;
 		(*i)++;
 		j++;
-		}
+	}
 	tok->str[j] = '\0';
 	return (tok);
 }
