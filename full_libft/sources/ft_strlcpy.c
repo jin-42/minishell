@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 14:01:37 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/15 17:46:30 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/15 18:09:01 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 	}
 	return (ft_strlen(src));
 }
-
 
 char	*cpy_no_nt(char *dst, const char *src, size_t size)
 {

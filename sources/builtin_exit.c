@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 11:28:47 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/04 14:13:39 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/16 14:34:03 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,24 +98,24 @@ int	bt_exit(t_data *data, char **args)
 	int	i;
 
 	i = 0;
-	printf("exit\n");
 	while (args && args[i])
 	{
-		if (i - 1 == 0)
+		if (i == 1)
 		{
-			if (check_exit_argument(args[i + 1]) != 0)
+			if (check_exit_argument(args[i]) != 0)
 			{
 				printf("exit: %s: numeric argument required\n", args[i]);
 				i = 2;
 				break ;
 			}
 		}
-		else if (i - 1 == 1)
+		else if (i == 2)
 			return (printf("exit: too many argyments\n"), 1);
 		i++;
 	}
 	if (i != 2)
 		i = bt_atoi(args[1]);
+	printf("exit\n");
 	leave_minishell(data, i);
 	return (i);
 }
