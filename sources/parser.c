@@ -149,45 +149,45 @@ void parser(t_data *data, t_token *tok)
 	t_token *copy;
 
 	copy = tok;
-    if (copy == NULL)
-        return ;
-    if (!operator_crash(copy))
-        return ;
-    data->block = init_block();
+	if (copy == NULL)
+		return ;
+	if (!operator_crash(copy))
+		return ;
+	data->block = init_block();
 	data->cmd_count = data->cmd_count + 1;
-    head = data->block;
-    if (head == NULL)
-    {
-        free_tok(tok); // Gestion d'erreur : libérer la mémoire allouée pour les tokens
-        return;
-    }
-    expander(data, copy);
-    if (count_av(copy) != 0)
-        head->args = malloc(sizeof(char *) * (count_av(copy) + 1));
-    if (!head->args)
-    {
-        free_tok(tok);
-        return;
-    }
-    while (copy)
-    {
-        if (copy->type == OP)
-        {
-            parse_operators(data, copy, i);
-            if (ft_strncmp("|", copy->str, 1) == 0)
-            {
-                i = 0;
-                head = head->next;
-            }
-	    else 
-		    copy = copy->next;
-        }
-        else
+	head = data->block;
+	if (head == NULL)
+	{
+		free_tok(tok); // Gestion d'erreur : libérer la mémoire allouée pour les tokens
+		return ;
+	}
+	expander(data, copy);
+	if (count_av(copy) != 0)
+		head->args = malloc(sizeof(char *) * (count_av(copy) + 1));
+	if (!head->args)
+	{
+		free_tok(tok);
+		return ;
+	}
+	while (copy)
+	{
+		if (copy->type == OP)
+		{
+			parse_operators(data, copy, i);
+			if (ft_strncmp("|", copy->str, 1) == 0)
+			{
+				i = 0;
+				head = head->next;
+			}
+		else
+			copy = copy->next;
+		}
+		else
 
-            head->args[i++] = ft_strdup(copy->str);
-        copy = copy->next;
-    }
-    head->args[i] = NULL;
-    print_block(head);
+			head->args[i++] = ft_strdup(copy->str);
+		copy = copy->next;
+	}
+	head->args[i] = NULL;
+	print_block(head);
 	free_tok(tok);
 }

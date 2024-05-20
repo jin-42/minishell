@@ -1,8 +1,9 @@
 #include "../includes/minishell.h"
 
-static void _lstadd(t_token **lst, t_token *new)
+static void	_lstadd(t_token **lst, t_token *new)
 {
-	t_token *ptr;
+	t_token	*ptr;
+
 	if (!new)
 		return ;
 	new->next = 0;
@@ -18,23 +19,23 @@ static void _lstadd(t_token **lst, t_token *new)
 	return ;
 }
 
-static t_token *_cp_space(char *s, int *i)
+static t_token	*_cp_space(char *s, int *i)
 {
-	t_token *tok;
+	t_token	*tok;
 	int		j;
 
 	tok = malloc(sizeof(t_token));
 	if (!tok)
 		return (NULL);
 	j = *i;
-	while (s[j] && s[j] != ' ' && s[j] != '|' 
+	while (s[j] && s[j] != ' ' && s[j] != '|'
 		&& s[j] != '>' && s[j] != '<' && s[j] != '$') 
 		j++;
 	tok->str = malloc(sizeof(char) * (j - (*i) + 1));
 	if (!tok->str)
 		return (free(tok), NULL);
 	j = 0;
-	while (s[(*i)] && s[(*i)] != ' ' && s[(*i)] != '|' 
+	while (s[(*i)] && s[(*i)] != ' ' && s[(*i)] != '|'
 		&& s[*i] != '>' && s[*i] != '<' && s[*i] != '$')
 	{
 		tok->str[j] = s[(*i)];
@@ -46,11 +47,11 @@ static t_token *_cp_space(char *s, int *i)
 	return (tok);
 }
 
-static t_token *_cp_var(char *s, int *i)
+static t_token	*_cp_var(char *s, int *i)
 {
-	t_token *tok;
+	t_token	*tok;
 	int		j;
-	bool 	flag;
+	bool	flag;
 
 	tok = malloc(sizeof(t_token));
 	if (!tok)
@@ -75,7 +76,6 @@ static t_token *_cp_var(char *s, int *i)
 		}
 		(*i)++;
 	}
-	printf("aaaa\n");
 	tok->str[j] = '\0';
 	tok->type = VAR;
 	if (flag == false)
@@ -102,31 +102,34 @@ static t_token	*_cp_pipe(int *i)
 
 static t_token *_cp_redir(char *s, int *i)
 {
-    t_token *tok;
+	t_token	*tok;
 
-   tok = malloc(sizeof(t_token));
-    if (!tok)
-        return NULL;
-    tok->str = malloc(sizeof(char) * 3); // Allocate memory for the string
-    if (!tok->str) {
-        free(tok);
-        return NULL;
-    }
-    if ((s[*i] == '<') && (s[*i + 1] == '<')) {
-        ft_strlcpy(tok->str, "<<", 3);
-        (*i)++;
-    }
-    else if ((s[*i] == '>') && (s[*i + 1] == '>')) {
-        ft_strlcpy(tok->str, ">>", 3);
-        (*i)++;
-    }
-    else if (s[*i] == '<') 
-        ft_strlcpy(tok->str, "<", 2);
-    else 
-        ft_strlcpy(tok->str, ">", 2);
-    (*i)++;
+	tok = malloc(sizeof(t_token));
+	if (!tok)
+		return (NULL);
+	tok->str = malloc(sizeof(char) * 3);
+	if (!tok->str)
+	{
+		free(tok);
+		return (NULL);
+	}
+	if ((s[*i] == '<') && (s[*i + 1] == '<'))
+	{
+		ft_strlcpy(tok->str, "<<", 3);
+		(*i)++;
+	}
+	else if ((s[*i] == '>') && (s[*i + 1] == '>'))
+	{
+		ft_strlcpy(tok->str, ">>", 3);
+		(*i)++;
+	}
+	else if (s[*i] == '<')
+		ft_strlcpy(tok->str, "<", 2);
+	else
+		ft_strlcpy(tok->str, ">", 2);
+	(*i)++;
 	tok->type = OP;
-    return (tok);
+	return (tok);
 }
 
 static t_token	*_cp_simple_quote(char *s, int *i)
@@ -157,8 +160,8 @@ static t_token	*_cp_simple_quote(char *s, int *i)
 
 static t_token	*_cp_double_quote(char *s, int *i)
 {
-	int	j;
-	t_token *tok;
+	int		j;
+	t_token	*tok;
 
 	j = *i;
 	while ((s[j] != '\"'))
@@ -183,7 +186,7 @@ static t_token	*_cp_double_quote(char *s, int *i)
 	return (tok);
 }
 
-t_token *lexer(char *s)
+t_token	*lexer(char *s)
 {
 	int		i;
 	t_token	*token;
@@ -229,7 +232,7 @@ t_token *lexer(char *s)
 		else
 			_lstadd(&token, _cp_space(s, &i));
 	}
-	return token;
+	return (token);
 }
 
 

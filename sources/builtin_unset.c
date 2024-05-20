@@ -67,7 +67,7 @@ int	unset(t_data *data, char **args)
 	int		i;
 
 	i = 1;
-	if (!args)
+	if (!args[1])
 	{
 		write(2, "unset: not enough arguments\n", 28);
 		return (1);

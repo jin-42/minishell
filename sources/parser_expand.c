@@ -1,5 +1,7 @@
 #include "../includes/minishell.h"
 
+// A REECRIRE QUAND ON AURA GARDE LE $ DEVANT LES VAR
+
 char	*expand_find_name(char *str)
 {
 	int		i;
@@ -84,7 +86,7 @@ void	expand_var(t_data *data, t_token *tok)
 	size_expand = search_env_size(data, tok->str);
 	tmp = malloc(sizeof(char) * size_expand + 1);
 	if (!tok->str)
-		return ; // geston d'erreur ?
+		return ;
 	if (ft_strcmp(tok->str, "?") == 0)
 		val = ft_itoa(data->ret_val);
 	else
@@ -103,6 +105,7 @@ void	expander(t_data *data, t_token *head)
 	tok = head;
 	while (tok)
 	{
+		printf("expanding %s\n", tok->str);
 		if (tok->type == OP && ft_strncmp(tok->str, "<<", 2) == 0)
 			tok = tok->next;
 		else if (tok->type == VAR)
