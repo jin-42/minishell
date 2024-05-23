@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 16:35:12 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/23 14:50:22 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/23 15:39:29 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,9 +103,6 @@ char	*export_name(char *arg, char *equal, bool add, bool val)
 			name = ft_substr(arg, 0, equal - arg);
 		if (!name)
 			return (NULL);
-		equal = ft_strdup(equal + 1);
-		if (!equal)
-			return (free(name), NULL);
 	}
 	if (val == false)
 	{

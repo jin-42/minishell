@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 15:54:35 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/23 13:38:50 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/23 15:31:42 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ t_data	init_data(char **env)
 	data.env = NULL;
 	data.paths = NULL;
 	data.environ = NULL;
+	data.ret_val = 0;
 	if (parse_env(&data, env) != 0)
 		error_parsing(&data, "env");
 	return (data);
@@ -100,10 +101,7 @@ char	*input(t_data *data)
 	if (ft_strlen(line) > 0)
 		add_history(line);
 	if (quotes_closed(line) == 0)
-	{
-		free(line);
-		return (NULL);
-	}
+		return (free(line), NULL);
 	return (line);
 }
 
@@ -116,13 +114,12 @@ int	main(int argc, char **argv, char **environ)
 	g_signal = 0;
 	signal_init();
 	data = init_data(environ);
-	while (42) // signaux
+	while (42)
 	{
+		print_data(&data);
 		line = input(&data);
 		if (line && line[0] != '\0')
 		{
-			if (ft_strncmp(line, "stop", 5) == 0)
-				break ; // A supprimer quand signaux
 			tokens = lexer(line);
 			// print_tokens(tokens); // A suppr
 			parser(&data, tokens);
@@ -130,30 +127,7 @@ int	main(int argc, char **argv, char **environ)
 			free(line);
 			exec(&data);
 		}
-		// line = readline("minishell> ");
-		// if (line)
-		// {
-		// 	add_history(line);
-		// 	if (quotes_closed(line) == 0)
-		// 	{
-		// 		free(line); // + msg erreur
-		// 		continue ;
-		// 	}
-		// 	if (ft_strncmp(line, "stop", 5) == 0)
-		// 		break ; // A supprimer quand signaux
-		// 	else // On n'en aura pas besoin du else, simplement noter les instructions
-		// 	{
-		// 		tokens = lexer(line);
-		// 		// print_tokens(tokens); // A suppr
-		// 		parser(&data, tokens);
-		// 		//print_tokens(tokens); // A suppr
-		// 	}
-		// 	free(line);
-		// 	exec(&data);
-		// }
-		
-		// print_data(&data);
 	}
-	// free_data(&data);
-	// rl_clear_history();
+	free_data(&data);
+	rl_clear_history();
 }
