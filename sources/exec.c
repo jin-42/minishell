@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 13:46:22 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/23 15:30:50 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/23 16:49:15 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,35 +67,44 @@ void	next_block(t_data *data)
 
 void	child_process(t_data *data, int i, int *old_pipe, int *new_pipe)
 {
+	printf("child no %d - pipes old 0 = %d / old 1 = %d / new 0 = %d / new 1 = %d\n", i, old_pipe[0], old_pipe[1], new_pipe[0], new_pipe[1]);
 	if (check_files(data, i, old_pipe, new_pipe) != 0)
 	{
+		printf("heeeeeeeeere\n");
 		error_exec(data, old_pipe, new_pipe, NULL);
 	}
 	if (search_path(data) != 0)
 	{
+		printf("HEEEEEERE\n");
 		error_exec(data, old_pipe, new_pipe, NULL);
 	}
 	if (data->block->path == NULL)
 	{
+		printf("THEREEEEE");
 		error_exec(data, old_pipe, new_pipe, "not found");
 	}
+	printf("child no %d determined in_fd = %d / out_fd = %d\n", i, data->block->in_fd, data->block->out_fd);
 	if (dup2(data->block->in_fd, STDIN_FILENO) == -1)
 	{
+		// printf("DUPIN SAYS THEEEEEEEERE");
 		error_exec(data, old_pipe, new_pipe, "dup2 in:");
 	}
 	if (dup2(data->block->out_fd, STDOUT_FILENO) == -1)
 	{
+		// printf("DUPOUT SAYS HEREEEEEEEEE");
 		error_exec(data, old_pipe, new_pipe, "dup2 out:");
 	}
 	close_all(data, old_pipe, new_pipe);
 	if (data->block->builtin == true)
 	{
+		// write(2, "entering\n\n", 9);
 		data->ret_val = exec_builtin(data, data->block->args, true);
 	}
 	else
 	{
-		// ft_printf_fd(2, "executing %s on %d\n\n", data->block->path, STDIN_FILENO);
+		ft_printf_fd(2, "executing %s on %d (ex %d)\n\n", data->block->path, STDIN_FILENO, data->block->in_fd);
 		execve(data->block->path, data->block->args, data->environ);
+		// ft_printf_fd(2, "IN THE END\n");
 		error_exec(data, NULL, NULL, "execve:");
 	}
 }
@@ -133,7 +142,7 @@ int	exec(t_data *data)
 	int		fd;
 
 	g_signal = 1;
-	if (maj_env_paths(data) != 0)
+	if (maj_env_paths(data) != 0 || data->cmd_count == 0)
 		return (1);
 	i = 0;
 	if (data->cmd_count == 1 && is_builtin(data) == true)
@@ -150,5 +159,7 @@ int	exec(t_data *data)
 		i++;
 	}
 	parent_process(data, fd, old_pipe, new_pipe);
+	// close_all(data, old_pipe, new_pipe);
+	// data->cmd_count = 0;
 	return (0);
 }

@@ -105,6 +105,7 @@ void	parse_operators(t_data *data, t_token *tok, int i)
 		if (tok->next != 0)
 		{
 			block->in_fd = open(tok->next->str, O_RDONLY);
+			printf("opened %s fd is %d\n", tok->next->str, block->in_fd);
 			if (block->in_fd == -1)
 				perror(custom_error("open: ", tok->next->str));		
 		}

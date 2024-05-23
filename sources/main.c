@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 15:54:35 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/23 15:31:42 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/23 16:49:19 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,6 @@ int	main(int argc, char **argv, char **environ)
 	data = init_data(environ);
 	while (42)
 	{
-		print_data(&data);
 		line = input(&data);
 		if (line && line[0] != '\0')
 		{
@@ -125,6 +124,7 @@ int	main(int argc, char **argv, char **environ)
 			parser(&data, tokens);
 			// print_tokens(tokens);
 			free(line);
+			print_data(&data);
 			exec(&data);
 		}
 	}

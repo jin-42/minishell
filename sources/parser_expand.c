@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_expand.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/23 15:49:27 by sponthus          #+#    #+#             */
+/*   Updated: 2024/05/23 15:49:44 by sponthus         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
 // A REECRIRE QUAND ON AURA GARDE LE $ DEVANT LES VAR
@@ -56,7 +68,7 @@ char	*expand_copy(t_data *data, t_token *tok, char *new, char *name)
 	return (new);
 }
 
-void expand(t_data *data, t_token *tok)
+void	expand(t_data *data, t_token *tok)
 {
 	int		size;
 	char	*new;
@@ -105,7 +117,6 @@ void	expander(t_data *data, t_token *head)
 	tok = head;
 	while (tok)
 	{
-		// printf("expanding %s\n", tok->str);
 		if (tok->type == OP && ft_strncmp(tok->str, "<<", 2) == 0)
 			tok = tok->next;
 		else if (tok->type == VAR)
