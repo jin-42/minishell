@@ -105,7 +105,7 @@ void	expander(t_data *data, t_token *head)
 	tok = head;
 	while (tok)
 	{
-		printf("expanding %s\n", tok->str);
+		// printf("expanding %s\n", tok->str);
 		if (tok->type == OP && ft_strncmp(tok->str, "<<", 2) == 0)
 			tok = tok->next;
 		else if (tok->type == VAR)

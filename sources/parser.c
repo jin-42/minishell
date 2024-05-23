@@ -119,7 +119,7 @@ void	parse_operators(t_data *data, t_token *tok, int i)
 			 if (!bl)
 				 return ;
 			data->cmd_count = data->cmd_count + 1;
-			block->args[i] = '\0';
+			block->args[i] = "\0";
         		 bl->args = malloc(sizeof(char *) * (count_av(tok->next) + 1));
 			block->next = bl;
 		}

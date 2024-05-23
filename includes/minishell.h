@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:14:10 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/15 16:31:55 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/23 14:50:22 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,13 @@
 # include <sys/wait.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+# include <signal.h>
 
 # define EXP_CHAR "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\
 0123456789_"
 # define SUCCESS 0
+
+extern int	g_signal;
 
 typedef struct s_env
 {
@@ -170,10 +173,10 @@ void	env_delone(t_data *data, t_env *node);
 int		env(t_data *data, char **args);
 
 int		export(t_data *data, char **args);
-int		print_export(t_data *data);
+int		export_print(t_data *data);
 int		export_arg(t_data *data, char *arg);
-int		apply_export(t_data *data, char *name, char *val);
-int		check_name(char *name, char *f);
+int		export_apply(t_data *data, char *name, char *val, bool add);
+int		check_var_name(char *name, char *f);
 
 int		bt_echo(t_data *data, char **args);
 int		count_args(char **args);

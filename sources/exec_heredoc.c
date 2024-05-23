@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 14:00:42 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/15 17:46:38 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/23 13:20:20 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,21 @@ int	fill_heredoc(t_data *data, int fd)
 	char	*line;
 
 	line = NULL;
-	// printf("fd = %d", fd);
-	while (42) // ou signal de fin capte = 130
+	while (42) // ou signal de fin capte = 130 capter les signaux
 	{
+		g_signal = fd;
 		if (line)
 			free(line);
 		// if (isatty(STDIN_FILENO) && isatty(STDOUT_FILENO) && isatty(STDERR_FILENO)) // A rajouter a la fin selon les tests si on redirige err et le minishell dans un fichier
 			// line = readline("> "); // ou GNL ?
 		line = readline("> ");
+		if (!line)
+		{
+			write(2, "warning: here-document delimited by end-of-file", 47);
+			break ;
+		}
+		if (strcmp(line, data->block->limiter) == 0)
+			break ;
 		line = expand_heredoc(data, line);
 		if (line == NULL)
 			return (1);

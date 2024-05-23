@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unset.c                                            :+:      :+:    :+:   */
+/*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 14:06:46 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/26 11:04:38 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/23 14:50:22 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	unset(t_data *data, char **args)
 	}
 	while (args[i])
 	{
-		if (check_name(args[i], "unset") != 0)
+		if (check_var_name(args[i], "unset") != 0)
 			return (2);
 		node = search_env_node(data->env, args[i]);
 		if (!node)

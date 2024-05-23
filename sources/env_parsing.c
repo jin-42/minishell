@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 16:16:02 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/15 16:32:08 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/22 12:49:12 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	parse_paths(t_data *data)
 	path_str = getenv("PATH");
 	if (path_str == NULL)
 	{
-		write(2, "Warning : PATH not set.\n", 24);
+		// write(2, "Warning : PATH not set.\n", 24);
 		data->paths = NULL;
 		return (0);
 	}

@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 11:07:31 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/16 14:56:57 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/23 14:43:08 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,17 @@
 
 void	free_env_char(t_data *data)
 {
-	int	size;
-	int	i;
+	int		i;
 	char	**environ;
 
 	environ = data->environ;
 	if (!environ)
 		return ;
 	i = 0;
-	size = env_size(data);
-	while (i < size)
+	while (environ[i])
 	{
-		free(environ[i]);
+		if (environ[i])
+			free(environ[i]);
 		i++;
 	}
 	free(data->environ);

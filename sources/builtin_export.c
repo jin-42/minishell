@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export.c                                           :+:      :+:    :+:   */
+/*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 16:35:12 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/25 13:44:32 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/23 14:50:22 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,7 @@
 // prend en compte arg[0] = export
 // a verifier avec la PEC de plusieurs args
 
-// ATTENTION : ajouter le fait que i on a VAL="    hey le monde    " on enleve les espaces a la fin et au debut
-
-int	check_name(char *name, char *f)
+int	check_var_name(char *name, char *f)
 {
 	int	i;
 
@@ -43,21 +41,45 @@ int	check_name(char *name, char *f)
 	return (0);
 }
 
-int	apply_export(t_data *data, char *name, char *val)
+int	export_replace_val(t_env *node, char *name, char *val, bool add)
+{
+	char	*tmp;
+
+	if (add == false)
+	{
+		free(node->val);
+		node->val = val;
+	}
+	else
+	{
+		tmp = ft_strjoin(node->val, val);
+		if (!tmp)
+		{
+			free(name);
+			free(val);
+			return (1);
+		}
+		free(node->val);
+		node->val = tmp;
+	}
+	node->val_len = ft_strlen(val);
+	free(name);
+	return (0);
+}
+
+int	export_apply(t_data *data, char *name, char *val, bool add)
 {
 	t_env	*env_node;
 
 	env_node = search_env_node(data->env, name);
 	if (env_node)
 	{
-		free(env_node->val);
-		env_node->val = val;
-		env_node->val_len = ft_strlen(val);
-		free(name);
+		if (export_replace_val(env_node, name, val, add) != 0)
+			return (1);
 	}
 	else
 	{
-		if (check_name(name, "export") == 0)
+		if (check_var_name(name, "export") == 0)
 			return (env_add_back(&data->env, env_new(val, name)));
 		else
 		{
@@ -69,15 +91,44 @@ int	apply_export(t_data *data, char *name, char *val)
 	return (0);
 }
 
+char	*export_name(char *arg, char *equal, bool add, bool val)
+{
+	char	*name;
+
+	if (val == true)
+	{
+		if (add == true)
+			name = ft_substr(arg, 0, equal - arg - 1);
+		else
+			name = ft_substr(arg, 0, equal - arg);
+		if (!name)
+			return (NULL);
+		equal = ft_strdup(equal + 1);
+		if (!equal)
+			return (free(name), NULL);
+	}
+	if (val == false)
+	{
+		name = ft_strdup(arg);
+		if (!name)
+			return (NULL);
+	}
+	return (name);
+}
+
 int	export_arg(t_data *data, char *arg)
 {
 	char	*name;
 	char	*val;
+	bool	add;
 
+	add = false;
 	val = ft_strchr(arg, '=');
+	if (val > arg && *(val - 1) == '+')
+		add = true;
 	if (val != NULL && ft_strlen(arg) > 1 && val != arg)
 	{
-		name = ft_substr(arg, 0, val - arg);
+		name = export_name(arg, val, add, true);
 		if (!name)
 			return (1);
 		val = ft_strdup(val + 1);
@@ -86,16 +137,36 @@ int	export_arg(t_data *data, char *arg)
 	}
 	else
 	{
-		name = ft_strdup(arg);
+		name = export_name(arg, val, add, false);
 		if (!name)
 			return (1);
-		if (ft_strlen(arg) <= 1 || val == arg)
-			val = NULL;
+		val = NULL;
 	}
-	return (apply_export(data, name, val));
+	return (export_apply(data, name, val, add));
 }
 
-int	print_export(t_data *data)
+	// if (val != NULL && ft_strlen(arg) > 1 && val != arg)
+	// {
+	// 	if (add == true)
+	// 		name = ft_substr(arg, 0, val - arg - 1);
+	// 	else
+	// 		name = ft_substr(arg, 0, val - arg);
+	// 	if (!name)
+	// 		return (1);
+	// 	val = ft_strdup(val + 1);
+	// 	if (!val)
+	// 		return (free(name), 1);
+	// }
+	// else
+	// {
+	// 	name = ft_strdup(arg);
+	// 	if (!name)
+	// 		return (1);
+	// 	if (ft_strlen(arg) < 1 || val == arg)
+	// 		val = NULL;
+	// }
+
+int	export_print(t_data *data)
 {
 	char	**names;
 	t_env	*env;
@@ -132,7 +203,7 @@ int	export(t_data *data, char **args)
 	}
 	if (i == 1)
 	{
-		if (print_export(data) != 0)
+		if (export_print(data) != 0)
 			return (1);
 	}
 	return (0);
