@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 15:54:35 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/15 18:04:26 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/27 15:22:21 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ t_data	init_data(char **env)
 	data.env = NULL;
 	data.paths = NULL;
 	data.environ = NULL;
+	data.ret_val = 0;
 	if (parse_env(&data, env) != 0)
 		error_parsing(&data, "env");
 	return (data);
@@ -70,12 +71,15 @@ int	main(int argc, char **argv, char **environ)
 			{
 				tokens = lexer(line);
 				//expender a placer ici
+				expander(&data, tokens);
+				print_tokens(tokens); // A suppr
+				printf("////\n\n\n");
 				tokens = token_join(tokens);
+				print_tokens(tokens); // A suppr
 				parser(&data, tokens);
-				//print_tokens(tokens); // A suppr
 			}
 			free(line);
-	//		exec(&data);
+			exec(&data);
 		}
 		//print_data(&data);
 		// Signaux
