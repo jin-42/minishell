@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 15:33:26 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/04 17:13:58 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/15 14:41:07 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,9 @@ int	search_path(t_data *data)
 
 	if (is_builtin(data) == true)
 	{
-		if (data->block->in_fd > 2)
-			close(data->block->in_fd);
-		data->block->in_fd = 0; // Voir si on peut raisonnablement enlever tout ca ca sembble possible
+		// if (data->block->in_fd > 2)
+		// 	close(data->block->in_fd);
+		// data->block->in_fd = 0; // Voir si on peut raisonnablement enlever tout ca ca sembble possible
 		return (cpy_builtin(data));
 	}
 	else if (ft_strchr(data->block->args[0], '/') != NULL)
@@ -96,6 +96,8 @@ int	search_path(t_data *data)
 
 int	maj_env_paths(t_data *data)
 {
+	if (data->environ)
+		free_env_char(data);
 	data->environ = env_to_char(data, false);
 	if (data->environ == NULL)
 		return (1);

@@ -1,22 +1,6 @@
 #include "../includes/minishell.h"
 
-int search_env_size(t_data *data, char *name)
-{
-	t_env	*ptr;
-	int		len;
-
-	len = ft_strlen(name);
-	if (len == 0)
-		return (-1);
-	ptr = data->env;
-	while (ptr != 0)
-	{
-		if (ft_strcmp(ptr->name, name) == 0)
-			return ((int)(ft_strlen(ptr->val)));
-		ptr = ptr->next;
-	}
-	return (-1);
-}
+// A REECRIRE QUAND ON AURA GARDE LE $ DEVANT LES VAR
 
 char	*expand_find_name(char *str)
 {
@@ -30,6 +14,8 @@ char	*expand_find_name(char *str)
 	if (name == NULL || ft_strlen(name) == 1)
 		return (NULL);
 	i = name - str + 1;
+	if (str[i] == '?')
+		return (ft_strdup("?"));
 	while (str[i] && is_charset(str[i], EXP_CHAR) == 1)
 	{
 		i++;
@@ -46,10 +32,18 @@ char	*expand_copy(t_data *data, t_token *tok, char *new, char *name)
 {
 	int		i;
 	int		j;
+	char	*val;
 
 	ft_strlcpy(new, tok->str, ft_strchr(tok->str, '$') - tok->str + 1);
 	i = ft_strlen(new);
-	ft_strlcpy(new + i, search_env(data, name), search_env_size(data, name) + 1);
+	if (ft_strcmp(name, "?") == 0)
+		val = ft_itoa(data->ret_val);
+	else
+		val = ft_strdup(search_env(data, name));
+	if (!val)
+		return (new);
+	ft_strlcpy(new + i, val, search_env_size(data, name) + 1);
+	free(val);
 	j = ft_strlen(new);
 	i = i + 1 + ft_strlen(name);
 	while (tok->str[i])
@@ -83,31 +77,63 @@ void expand(t_data *data, t_token *tok)
 	expand(data, tok);
 }
 
-void expander(t_data *data, t_token *head)
+void	expand_var(t_data *data, t_token *tok)
 {
 	int			size_expand;
 	char		*tmp;
-	t_token		*tok;
+	char		*val;
 
-	tok = head;
-	while (tok)
-	{
-		if (tok->type == OP && ft_strncmp(tok->str, "<<", 2) == 0)
-			tok = tok->next;
-		else if (tok->type == VAR)
-		{
-			size_expand = search_env_size(data, tok->str);
-			if (size_expand == -1)
-				return (free(tok->str));
-			tmp = malloc(sizeof(char) * size_expand);
-			if (!tok->str)
-				return ; // geston d'erreur ?
-			ft_strlcpy(tmp, search_env(data, tok->str), size_expand + 1);
-			free(tok->str);
-			tok->str = tmp;
-		}
-		else if (tok->type == VAR_IN_QUOTE)
-			expand(data, tok);
-		tok = tok->next;
-	}
+	size_expand = search_env_size(data, tok->str);
+	tmp = malloc(sizeof(char) * size_expand + 1);
+	if (!tok->str)
+		return ;
+	if (ft_strcmp(tok->str, "?") == 0)
+		val = ft_itoa(data->ret_val);
+	else
+		val = ft_strdup(search_env(data, tok->str));
+	if (!val)
+		return (free(tmp));
+	ft_strlcpy(tmp, val, size_expand + 1);
+	free(tok->str);
+	tok->str = tmp;
 }
+
+
+int findDollarPosition(const char *str) {
+    int length;
+	int i;
+	
+	length = ft_strlen(str);
+    if (str[0] == '$' && length == 1) 
+        return (0);
+	if (str[0] == '$' && length != 1)
+		return (1);
+    if (str[length - 1] == '$')
+        return 0;
+	i = 0;
+   while (i < length) 
+   {
+        if (str[i] == '$')
+            return (2);
+		i++;
+    }
+	return (0);
+}
+
+// void	expander(t_data *data, t_token *head)
+// {
+// 	t_token		*tok;
+
+// 	tok = head;
+// 	while (tok)
+// 	{
+// 		printf("expanding %s\n", tok->str);
+// 		if (tok->type == OP && ft_strncmp(tok->str, "<<", 2) == 0)
+// 			tok = tok->next;
+// 		else if (tok->t)
+// 			expand_var(data, tok);
+// 		else if (tok->type == VAR_IN_QUOTE)
+// 			expand(data, tok);
+// 		tok = tok->next;
+// 	}
+// }

@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:14:10 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/17 11:40:28 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/15 16:31:55 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,17 +64,17 @@ typedef struct s_data
 
 typedef enum e_bash_op
 {
-	VAR = 0, // Commence par $
-	VAR_IN_QUOTE, // Commence par $ dans une chaine entre db quotes
 	OP,
 	STRING,
-	STRING_IN_QUOTE
+	QUOTE
 } e_token_type;
 
 typedef struct s_token
 {
 	char			*str;
 	e_token_type	type;
+	bool			space;
+	bool			quote;
 	struct s_token	*next;
 } t_token;
 
@@ -89,21 +89,31 @@ void push(Stack *s, char value);
 char pop(Stack *s);
 bool quotes_closed(const char* str);
 
+// PARSER UTILS
+bool operator_crash(t_token *head);
+int count_av(t_token *head);
+
 // PARSER
 void	parser(t_data *data, t_token *tok);
 
 // PARSER - EXPAND
-int search_env_size(t_data *data, char *name);
 char	*expand_find_name(char *str);
 void expander(t_data *data, t_token *head);
 
 // LEXER
 t_token *lexer(char *s);
 void print_tokens(t_token *tokens);
-
-
+t_token	*simple_quote(char *s, int *i);
+t_token	*double_quote(char *s, int *i);
+t_token	*redir(char *s, int *i);
+void free_tok(t_token *head);
+int	_lstadd(t_token **lst, t_token *new);
+t_token *token_join(t_token *tok);
+char	*ft_strjoin(char const *s1, char const *s2);
+int count_back_slash(char *s);
 // ENV PARSING
 
+int 	search_env_size(t_data *data, char *name);
 t_env	*env_new(char *val, char *name);
 int		env_add_back(t_env **env, t_env *new);
 int		parse_paths(t_data *data);
@@ -181,11 +191,13 @@ int		contains_digits(char *arg);
 int		bt_atoi(char *nptr);
 
 
-// EXIT
+// ERROR
+char	*custom_error(char *function, char *arg);
 void	error_parsing(t_data *data, char *type);
 void	error_exec(t_data *data, int *old_pipe, int *new_pipe, char *str);
 
 // FREE
+void	free_env_char(t_data *data);
 void	leave_minishell(t_data *data, int val);
 void	free_env(t_env *env);
 void	free_data(t_data *data);
@@ -193,5 +205,6 @@ void	free_data(t_data *data);
 
 // test
 void	print_data(t_data *data); // A RETIRER
+void print_block(t_block *block);
 
 #endif

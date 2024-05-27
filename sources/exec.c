@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 13:46:22 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/17 11:44:00 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/15 16:35:07 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,32 +56,34 @@ void	next_block(t_data *data)
 		close(data->block->out_fd);
 	if (data->block->path)
 		free(data->block->path);
-	// if (data->block->limiter)
-	// 	free(data->block->limiter);
-	// free_full_split(data->block->args);
-	// free(data->block);
+	if (data->block->here_doc == true)
+		unlink(data->block->limiter);
+	if (data->block->limiter)
+		free(data->block->limiter);
+	free_full_split(data->block->args);
+	free(data->block);
 	data->block = block;
 }
 
 void	child_process(t_data *data, int i, int *old_pipe, int *new_pipe)
 {
-	printf("child no %d - pipes old 0 = %d / old 1 = %d / new 0 = %d / new 1 = %d\n", i, old_pipe[0], old_pipe[1], new_pipe[0], new_pipe[1]);
+	// printf("child no %d - pipes old 0 = %d / old 1 = %d / new 0 = %d / new 1 = %d\n", i, old_pipe[0], old_pipe[1], new_pipe[0], new_pipe[1]);
 	if (check_files(data, i, old_pipe, new_pipe) != 0)
 	{
-		// printf("heeeeeeeeere\n");
+		printf("heeeeeeeeere\n");
 		error_exec(data, old_pipe, new_pipe, NULL);
 	}
 	if (search_path(data) != 0)
 	{
-		// printf("HEEEEEERE\n");
+		printf("HEEEEEERE\n");
 		error_exec(data, old_pipe, new_pipe, NULL);
 	}
 	if (data->block->path == NULL)
 	{
-		// printf("THEREEEEE");
+		printf("THEREEEEE");
 		error_exec(data, old_pipe, new_pipe, "not found");
 	}
-	printf("determined in_fd = %d / out_fd = %d\n", data->block->in_fd, data->block->out_fd);
+	// printf("determined in_fd = %d / out_fd = %d\n", data->block->in_fd, data->block->out_fd);
 	if (dup2(data->block->in_fd, STDIN_FILENO) == -1)
 	{
 		// printf("DUPIN SAYS THEEEEEEEERE");
@@ -94,12 +96,15 @@ void	child_process(t_data *data, int i, int *old_pipe, int *new_pipe)
 	}
 	close_all(data, old_pipe, new_pipe);
 	if (data->block->builtin == true)
-		exec_builtin(data, data->block->args, true);
+	{
+		// write(2, "entering\n\n", 9);
+		data->ret_val = exec_builtin(data, data->block->args, true);
+	}
 	else
 	{
-		printf("executing %s on %d\n", data->block->path, STDIN_FILENO);
+		// ft_printf_fd(2, "executing %s on %d\n\n", data->block->path, STDIN_FILENO);
 		execve(data->block->path, data->block->args, data->environ);
-		// printf("IN THE END\n");
+		// ft_printf_fd(2, "IN THE END\n");
 		error_exec(data, NULL, NULL, "execve:");
 	}
 }
@@ -125,6 +130,7 @@ void	parent_process(t_data *data, int pid, int *old_pipe, int *new_pipe)
 		}
 	}
 	data->ret_val = value;
+	data->cmd_count = 0;
 }
 
 int	exec(t_data *data)
@@ -134,11 +140,16 @@ int	exec(t_data *data)
 	int		i;
 	int		fd;
 
+	// printf("hey");
+	// print_data(data);
 	if (maj_env_paths(data) != 0)
 		return (1);
 	i = 0;
 	if (data->cmd_count == 1 && is_builtin(data) == true)
+	{
+		// write(2, "hey\n", 4);
 		return (builtin_process(data, i));
+	}
 	pipe_initializer(old_pipe, new_pipe);
 	while (i < data->cmd_count)
 	{
@@ -153,42 +164,3 @@ int	exec(t_data *data)
 	parent_process(data, fd, old_pipe, new_pipe);
 	return (0);
 }
-
-// void	exec(t_data *data)
-// {
-// 	int	pipe[2];
-// 	int	i;
-// 	int	fd;
-// 	int	tmpin;
-// 	int	tmpout;
-
-// 	tmpin = dup(STDIN_FILENO);
-// 	tmpout = dup(STDOUT_FILENO);
-// 	i = 0;
-// 	if (data->block->in_fd == -2)
-// 		data->block->in_fd = dup(tmpin);
-// 	while (i < data->cmd_count)
-// 	{
-// 		dup2(data->block->in_fd, STDIN_FILENO);
-// 		if (i == data->cmd_count - 1 && data->block->out_fd == -2)
-// 			data->block->out_fd = dup(tmpout);
-// 		else
-// 		{
-// 			pipe(pipe);
-// 			data->block->in_fd = pipe[0];
-// 			data->block->out_fd = pipe[1];
-// 		}
-// 		dup2(data->block->out_fd, STDOUT_FILENO);
-// 		close(data->block->out_fd);
-// 		fd = fork();
-// 		if (fd == -1)
-// 			return (2);
-// 		else if (fd == 0)
-// 			child_process(data, pipe);
-// 		next_block(data);
-// 		i++;
-// 	}
-// 	dup2(tmpin, STDIN_FILENO);
-// 	dup2(tmpout, STDOUT_FILENO);
-// 	parent_process(data, fd);
-// }

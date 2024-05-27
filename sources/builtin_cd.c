@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 12:53:34 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/04 16:56:59 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/15 15:02:32 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,8 @@ int	cd(t_data *data, char **args)
 	getcwd(old_pwd, PATH_MAX);
 	if (chdir(path) != 0)
 	{
-		printf("cd: %s: ", path);
-		return (perror(NULL), 1);
+		perror(custom_error("cd: ", path));
+		return (1);
 	}
 	if (maj_pwd(data, old_pwd) != 0)
 		return (1);

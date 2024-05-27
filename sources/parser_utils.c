@@ -28,34 +28,11 @@ bool operator_crash(t_token *head)
     {
         if (curr->type == OP && curr->next == NULL)
             return (false);
-        else if (curr->type == OP && curr->next->type == OP)
+        else if ((curr->type == OP) && (ft_strncmp(curr->next->str, "<<", 2) != 0) && (curr->next->type == OP))
             return (false);
         curr = curr->next;
     }
     return (true);
 }
 
-//do it before lexer
-bool quotes_closed(const char* str) 
-{
-    Stack s;
-    initStack(&s);
-    int i = 0;
-    char c;
 
-    while ((c = str[i++]) != '\0') 
-    {
-        if (c == '\'' || c == '"') 
-        {
-            if (s.top == -1 || s.items[s.top] != c) 
-            {
-                push(&s, c);
-            } 
-            else
-             {
-                pop(&s);
-            }
-        }
-    }
-    return (s.top == -1);
-}

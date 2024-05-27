@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 12:53:57 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/04 16:35:27 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/15 17:59:30 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,3 +72,5 @@ int	bt_echo(t_data *data, char **args)
 		printf("\n");
 	return (SUCCESS);
 }
+
+// RECTIF A FAIRE Si null ne pas mettre d'espace supplementaire

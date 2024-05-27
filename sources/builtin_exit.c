@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 11:28:47 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/04 14:13:39 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/16 15:39:13 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 // Ne prend que un seul argument sinon trop d'arguments et code erreur 1
 // 9223372036854775808 overflow numeric argument required
 // -9223372036854775809 underflow idem
+// CHECK OK SAUF GUILLEMETS
 
 int	bt_atoi(char *nptr)
 {
@@ -99,23 +100,19 @@ int	bt_exit(t_data *data, char **args)
 
 	i = 0;
 	printf("exit\n");
-	while (args && args[i])
+	if (args[0] != NULL)
 	{
-		if (i - 1 == 0)
+		if (check_exit_argument(args[0]) != 0)
 		{
-			if (check_exit_argument(args[i + 1]) != 0)
-			{
-				printf("exit: %s: numeric argument required\n", args[i]);
-				i = 2;
-				break ;
-			}
+			printf("exit: %s: numeric argument required\n", args[i]);
+			i++;
 		}
-		else if (i - 1 == 1)
+		else if (args[1] != NULL)
 			return (printf("exit: too many argyments\n"), 1);
 		i++;
 	}
-	if (i != 2)
-		i = bt_atoi(args[1]);
+	if (i != 0 && i != 2)
+		i = bt_atoi(args[0]);
 	leave_minishell(data, i);
 	return (i);
 }

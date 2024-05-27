@@ -6,11 +6,21 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:11:27 by sponthus          #+#    #+#             */
-/*   Updated: 2024/04/04 14:32:30 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/15 15:13:36 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+char	*custom_error(char *function, char *arg) // exemple util : perror(custom_error("cd: ", arg));
+{
+	char	*str;
+
+	str = ft_strjoin(function, arg);
+	if (!str)
+		return (NULL);
+	return (str);
+}
 
 void	error_exec(t_data *data, int *old_pipe, int *new_pipe, char *str)
 {
