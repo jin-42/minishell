@@ -89,7 +89,8 @@ $(NAME): $(OBJ) $(LIBRARY)
 
 $(OBJ_DIR)%.o: %.c $(HEADER) $(LIBRARY)
 	@mkdir -p $(OBJ_DIR)$(SRC_DIR)
-	$(CC) $(CFLAGS) -o $@ -c $< $(LIBS)
+	$(CC) $(CFLAGS) -o $@ -c $< 
+#$(LIBS)
 
 #$(OBJ_BON_DIR)%.o: %.c $(HEADER_BON) $(LIBRARY)
 #	@mkdir -p $(OBJ_BON_DIR)$(SRC_BON_DIR)

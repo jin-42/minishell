@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 16:35:12 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/23 15:46:49 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/28 13:17:47 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	export_apply(t_data *data, char *name, char *val, bool add)
 	return (0);
 }
 
-char	*export_name(char *arg, char *equal, bool add, bool val)
+char	*export_find_name(char *arg, char *equal, bool add, bool val)
 {
 	char	*name;
 
@@ -80,7 +80,7 @@ int	export_arg(t_data *data, char *arg)
 		add = true;
 	if (val != NULL && ft_strlen(arg) > 1 && val != arg)
 	{
-		name = export_name(arg, val, add, true);
+		name = export_find_name(arg, val, add, true);
 		if (!name)
 			return (1);
 		val = ft_strdup(val + 1);
@@ -89,7 +89,7 @@ int	export_arg(t_data *data, char *arg)
 	}
 	else
 	{
-		name = export_name(arg, val, add, false);
+		name = export_find_name(arg, val, add, false);
 		if (!name)
 			return (1);
 		val = NULL;
