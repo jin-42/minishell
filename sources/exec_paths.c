@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 15:33:26 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/22 12:54:06 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/29 14:38:36 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,7 @@ int	search_path(t_data *data)
 	char	**paths;
 
 	if (is_builtin(data) == true)
-	{
-		// if (data->block->in_fd > 2)
-		// 	close(data->block->in_fd);
-		// data->block->in_fd = 0; // Voir si on peut raisonnablement enlever tout ca ca sembble possible
 		return (cpy_builtin(data));
-	}
 	else if (ft_strchr(data->block->args[0], '/') != NULL)
 	{
 		if (access(data->block->args[0], F_OK) == SUCCESS)

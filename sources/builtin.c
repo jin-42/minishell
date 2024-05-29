@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 15:24:35 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/29 14:33:31 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/29 14:38:24 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ bool	is_builtin(t_data *data)
 int	cpy_builtin(t_data *data)
 {
 	data->block->builtin = true;
+	if (!data->block->args)
+		return (1);
 	data->block->path = ft_strdup(data->block->args[0]);
 	if (data->block->path == NULL)
 		return (1);
