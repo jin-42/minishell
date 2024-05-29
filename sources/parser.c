@@ -97,27 +97,27 @@ void parse_operators(t_data *data, t_token *tok, int i) {
 
 void parse_tokens(t_data *data, t_token *copy, t_block *head)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (copy)
-    {
-        if (copy->type == OP)
-        {
-            parse_operators(data, copy, i);
-            if (ft_strncmp("|", copy->str, 1) == 0)
-            {
-                i = 0;
-                head = head->next;
-            }
-        }
-        else
-        {
-            head->args[i++] = ft_strdup(copy->str);
-        }
-        copy = copy->next;
-    }
-    head->args[i] = NULL;
+	i = 0;
+	while (copy)
+	{
+		if (copy->type == OP)
+		{
+			parse_operators(data, copy, i);
+			if (ft_strncmp("|", copy->str, 1) == 0)
+			{
+				i = 0;
+				head = head->next;
+			}
+		    else
+			    copy = copy->next;
+		}
+		else
+			head->args[i++] = ft_strdup(copy->str);
+		copy = copy->next;
+	}
+	head->args[i] = NULL;
 }
 
 void parser(t_data *data, t_token *tok)
