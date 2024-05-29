@@ -1,25 +1,25 @@
 #include "../includes/minishell.h"
 
-static void	_lstadd(t_token **lst, t_token *new)
+int	_lstadd(t_token **lst, t_token *new)
 {
 	t_token	*ptr;
 
 	if (!new)
-		return ;
+		return (-1);
 	new->next = 0;
 	if (!(*lst))
 	{
 		*lst = new;
-		return ;
+		return (0);
 	}
 	ptr = *lst;
 	while (ptr->next != 0)
 		ptr = ptr->next;
 	ptr->next = new;
-	return ;
+	return (0);
 }
 
-static t_token	*_cp_space(char *s, int *i)
+static t_token	*_space(char *s, int *i)
 {
 	t_token	*tok;
 	int		j;
@@ -29,61 +29,23 @@ static t_token	*_cp_space(char *s, int *i)
 		return (NULL);
 	j = *i;
 	while (s[j] && s[j] != ' ' && s[j] != '|'
-		&& s[j] != '>' && s[j] != '<' && s[j] != '$') 
+		&& s[j] != '>' && s[j] != '<' && s[j] != '\'' && s[j] != '\"') 
 		j++;
 	tok->str = malloc(sizeof(char) * (j - (*i) + 1));
 	if (!tok->str)
 		return (free(tok), NULL);
 	j = 0;
 	while (s[(*i)] && s[(*i)] != ' ' && s[(*i)] != '|'
-		&& s[*i] != '>' && s[*i] != '<' && s[*i] != '$')
-	{
-		tok->str[j] = s[(*i)];
-		j++;
-		(*i)++;
-	}
+		&& s[(*i)] != '>' && s[(*i)] != '<' && s[(*i)] != '\'' && s[(*i)] != '\"') 
+		tok->str[j++] = s[(*i)++];
 	tok->str[j] = '\0';
-	tok->type = STRING;
-	return (tok);
+	tok->space = false;
+	if (s[(*i)] != '\0' && s[(*i)] == ' ')
+		tok->space = true;
+	return (tok->type = STRING, tok->quote = false, tok);
 }
 
-static t_token	*_cp_var(char *s, int *i)
-{
-	t_token	*tok;
-	int		j;
-	bool	flag;
-
-	tok = malloc(sizeof(t_token));
-	if (!tok)
-		return (NULL);
-	j = *i;
-	flag = false;
-	while (s[j] && s[j] != ' ' && s[j] != '|'
-		&& s[j] != '>' && s[j] != '<' && s[j] != '$') 
-		j++;
-	tok->str = malloc(sizeof(char) * (j - (*i) + 1));
-	if (!tok->str)
-		return (free(tok), NULL);
-	j = 0;
-	while (s[(*i)] && s[(*i)] != ' ' && s[(*i)] != '|'
-		&& s[*i] != '>' && s[*i] != '<' && s[*i] != '$')
-	{
-		if (s[(*i)]  != '\'' && s[(*i)] != '\"')
-		{
-			tok->str[j] = s[(*i)];
-			j++;
-			flag = true;
-		}
-		(*i)++;
-	}
-	tok->str[j] = '\0';
-	tok->type = VAR;
-	if (flag == false)
-		tok->type = STRING;
-	return (tok);
-}
-
-static t_token	*_cp_pipe(int *i)
+static t_token	*_pipe(int *i, char *s)
 {
 	t_token	*tok;
 
@@ -97,156 +59,79 @@ static t_token	*_cp_pipe(int *i)
 	tok->str[1] = '\0';
 	tok->type = OP;
 	(*i) += 1;
-	return (tok);
+	tok->space = false;
+	if (s[(*i)] != '\0' && s[(*i)] == ' ')
+		tok->space = true;
+	return (tok->quote = false, tok);
 }
 
-static t_token *_cp_redir(char *s, int *i)
+void free_tok(t_token *head)
 {
-	t_token	*tok;
+	t_token *current = head;
+	t_token *temp;
 
-	tok = malloc(sizeof(t_token));
-	if (!tok)
-		return (NULL);
-	tok->str = malloc(sizeof(char) * 3);
-	if (!tok->str)
+	while (current != NULL)
 	{
-		free(tok);
-		return (NULL);
+		if (current->str)
+			free(current->str);
+		temp = current;
+		current = current->next;
+		free(temp);
 	}
-	if ((s[*i] == '<') && (s[*i + 1] == '<'))
-	{
-		ft_strlcpy(tok->str, "<<", 3);
-		(*i)++;
-	}
-	else if ((s[*i] == '>') && (s[*i + 1] == '>'))
-	{
-		ft_strlcpy(tok->str, ">>", 3);
-		(*i)++;
-	}
-	else if (s[*i] == '<')
-		ft_strlcpy(tok->str, "<", 2);
-	else
-		ft_strlcpy(tok->str, ">", 2);
-	(*i)++;
-	tok->type = OP;
-	return (tok);
 }
 
-static t_token	*_cp_simple_quote(char *s, int *i)
+int handle_quote(t_token **token, char *s, int *i)
 {
-	int		j;
-	t_token	*tok;
+    int flag;
 
-	j = *i;
-	while ((s[j] != '\'') && s[j])
-		j++;
-	tok = malloc(sizeof(t_token));
-	if (!tok)
-		return (NULL);
-	tok->str = malloc(sizeof(char) * (j - (*i) + 1));
-	if (!tok->str)
-		return (free(tok), NULL);
-	j = 0;
-	while ((s[*i] != '\'') && s[*i])
-	{
-		tok->str[j] = s[*i];
-		(*i)++;
-		j++;
-	}
-	tok->str[j] = '\0';
-	tok->type = STRING_IN_QUOTE;
-	return (tok);
-}
-
-static t_token	*_cp_double_quote(char *s, int *i)
-{
-	int		j;
-	t_token	*tok;
-
-	j = *i;
-	while ((s[j] != '\"'))
-		j++;
-	tok = malloc(sizeof(t_token));
-	if (!tok)
-		return (NULL);
-	tok->str = malloc(sizeof(char) * (j - (*i) + 1));
-	if (!tok->str)
-		return (free(tok), NULL);
-	j = 0;
-	tok->type = STRING_IN_QUOTE;
-	while ((s[*i] != '\"'))
-	{
-		tok->str[j] = s[*i];
-		if (tok->str[j] == '$')
-			tok->type = VAR_IN_QUOTE;
-		(*i)++;
-		j++;
-	}
-	tok->str[j] = '\0';
-	return (tok);
+    if (s[*i] == '\'')
+    {
+        if (s[*i + 1] != '\0' && s[*i + 1] != '\'')
+        {
+            (*i)++;
+            flag = _lstadd(token, simple_quote(s, i));
+            (*i)++;
+        }
+        else
+            *i += 2;
+    }
+    else if (s[*i] == '\"')
+    {
+        if (s[*i + 1] != '\0' && s[*i + 1] != '\"')
+        {
+            (*i)++;
+            flag = _lstadd(token, double_quote(s, i));
+            (*i)++;
+        }
+        else
+            *i += 2;
+    }
+    return (flag);
 }
 
 t_token	*lexer(char *s)
 {
 	int		i;
 	t_token	*token;
+	int flag;
 
 	i = 0;
 	token = NULL;
+	flag = 0;
 	while (s[i] != '\0')
 	{
 		if (s[i] == ' ')
 			i++;
-		else if (s[i] == '\'')
-		{
-			i++;
-			_lstadd(&token, _cp_simple_quote(s, &i));
-			i++;
-		}
-		else if (s[i] == '\"')
-		{
-			i++;
-			_lstadd(&token, _cp_double_quote(s, &i));
-			i++;
-		}
+		else if (s[i] == '\'' || s[i] == '\"')
+            flag = handle_quote(&token, s, &i);
 		else if (s[i] == '<' || s[i] == '>')
-		{
-			_lstadd(&token, _cp_redir(s, &i));
-		}
-		// else if (s[i] == '$' && s[i + 1] && s[i + 1] == '\'')
-		// {
-		// 	i++;
-		// 	_lstadd(&token, _cp_var_single_q(s, &i));
-		// 	i++;
-		// }
-		else if (s[i] == '$')
-		{
-			i++;
-			_lstadd(&token, _cp_var(s, &i));
-			i++;
-		}
+			flag = _lstadd(&token, redir(s, &i));
 		else if (s[i] == '|')
-		{
-			_lstadd(&token, _cp_pipe(&i));
-		}
+			flag = _lstadd(&token, _pipe(&i, s));
 		else
-			_lstadd(&token, _cp_space(s, &i));
+			flag = _lstadd(&token, _space(s, &i));
+		if (flag == -1)
+			return (free_tok(token), NULL);
 	}
 	return (token);
 }
-
-
-/*void _init_block(t_data **data)
-{
-	(*data) = malloc(sizeof(t_data));
-		if (!(*data))
-			return ;
-	(*data)->block = malloc(sizeof(t_data));
-		if (!(*data->block))
-			return (free(*data), );
-	(*data)->block.builtin = false;
-	(*data)->block->path = NULL;
-	(*data)->block.int_fd = -2;
-	(*data)->block.out_fd = -2;
-	(*data)->block.here_doc = false;
-}*/

@@ -12,9 +12,7 @@
 
 #include "../includes/minishell.h"
 
-// exemple util : perror(custom_error("cd: ", arg));
-
-char	*custom_error(char *function, char *arg)
+char	*custom_error(char *function, char *arg) // exemple util : perror(custom_error("cd: ", arg));
 {
 	char	*str;
 

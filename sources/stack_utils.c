@@ -14,3 +14,27 @@ void push(Stack *s, char value) {
 char pop(Stack *s) {
     return s->items[(s->top)--];
 }
+
+bool quotes_closed(const char* str) 
+{
+    Stack s;
+    initStack(&s);
+    int i = 0;
+    char c;
+
+    while ((c = str[i++]) != '\0') 
+    {
+        if (c == '\'' || c == '"') 
+        {
+            if (s.top == -1 || s.items[s.top] != c) 
+            {
+                push(&s, c);
+            } 
+            else
+             {
+                pop(&s);
+            }
+        }
+    }
+    return (s.top == -1);
+}

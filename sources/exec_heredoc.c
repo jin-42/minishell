@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 14:00:42 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/23 13:20:20 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/27 15:22:56 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,29 +16,50 @@
 
 char	*expand_heredoc_copy(t_data *data, char *line, char *new, char *name)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
+	char	*val;
 
-	ft_strlcpy(new, line, ft_strchr(line, '$') - line + 1);
-	i = ft_strlen(new);
-	ft_strlcpy(new + i, search_env(data, name), search_env_size(data, name) + 1);
-	j = ft_strlen(new);
-	i = i + 1 + ft_strlen(name);
-	while (line[i])
+	val = search_env(data, name);
+	ft_strlcpy(new, line, ft_strchr(line, '$') - line + 1); // Copie de ce aui est avant le $
+	i = ft_strlen(new); // On se place a la fin de ce qui a ete copie
+	j = i + 1 + ft_strlen(name); // Et apres le $NAME
+	if (val != NULL)
 	{
-		new[j] = line[i];
-		i++;
-		j++;
+		ft_strlcpy(new + i, val, search_env_size(data, name) + 1); // Copie de ce qui est dans la variable
+		i = ft_strlen(new); // On se place de nouveau a la fin de ce qui a ete copie
 	}
-	new[j] = 0;
+	while (line[j])
+		new[i++] = line[j++]; // On copie ce qui reste dans la str
+	new[i] = 0;
 	return (new);
 }
+
+// char	*expand_heredoc_copy(t_data *data, char *line, char *new, char *name)
+// {
+// 	int	i;
+// 	int	j;
+
+// 	ft_strlcpy(new, line, ft_strchr(line, '$') - line + 1);
+// 	i = ft_strlen(new);
+// 	ft_strlcpy(new + i, search_env(data, name), search_env_size(data, name) + 1);
+// 	j = ft_strlen(new);
+// 	i = i + 1 + ft_strlen(name);
+// 	while (line[i])
+// 	{
+// 		new[j] = line[i];
+// 		i++;
+// 		j++;
+// 	}
+// 	new[j] = 0;
+// 	return (new);
+// }
 
 char	*expand_heredoc(t_data *data, char *line)
 {
 	int		size;
-	char	*name;
 	char	*new;
+	char	*name;
 
 	if (data->block->hd_quote == true)
 		return (line);
@@ -46,17 +67,45 @@ char	*expand_heredoc(t_data *data, char *line)
 	name = expand_find_name(line);
 	if (name == NULL)
 		return (line);
-	size = size - ft_strlen(name) - 1 + search_env_size(data, name);
-	new = malloc(sizeof (char ) * size);
+	if (search_env_size(data, name) == -1)
+		size = size - ft_strlen(name);
+	else
+		size = size - ft_strlen(name) + search_env_size(data, name);
+	new = malloc(sizeof (char) * size);
 	if (!new)
 		return (line);
 	new = expand_heredoc_copy(data, line, new, name);
-	free(name);
+	if (name)
+		free(name);
 	free(line);
 	line = new;
 	line = expand_heredoc(data, line);
 	return (line);
 }
+
+// char	*expand_heredoc(t_data *data, char *line)
+// {
+// 	int		size;
+// 	char	*name;
+// 	char	*new;
+
+// 	if (data->block->hd_quote == true)
+// 		return (line);
+// 	size = ft_strlen(line);
+// 	name = expand_find_name(line);
+// 	if (name == NULL)
+// 		return (line);
+// 	size = size - ft_strlen(name) - 1 + search_env_size(data, name);
+// 	new = malloc(sizeof (char ) * size);
+// 	if (!new)
+// 		return (line);
+// 	new = expand_heredoc_copy(data, line, new, name);
+// 	free(name);
+// 	free(line);
+// 	line = new;
+// 	line = expand_heredoc(data, line);
+// 	return (line);
+// }
 
 int	fill_heredoc(t_data *data, int fd)
 {

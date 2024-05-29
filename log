@@ -4,7 +4,7 @@ NAME = minishell
 #NAME_BON = minishell_bonus
 
 CC = cc
-CFLAGS = -g3
+CFLAGS = -Wall -g3
 LIBS = -lreadline -lncurses
 
 LIBRARY = full_libft/libft.a
@@ -21,29 +21,24 @@ SRC = $(SRC_DIR)main.c \
 	$(SRC_DIR)env_parsing.c \
 	$(SRC_DIR)env_manip.c \
 	$(SRC_DIR)exec.c \
+	$(SRC_DIR)exec_files.c \
 	$(SRC_DIR)exec_paths.c \
 	$(SRC_DIR)exec_pipes.c \
+	$(SRC_DIR)exec_heredoc.c \
 	$(SRC_DIR)builtin.c \
 	$(SRC_DIR)builtin_env.c \
 	$(SRC_DIR)builtin_pwd.c \
 	$(SRC_DIR)builtin_cd.c \
 	$(SRC_DIR)builtin_unset.c \
 	$(SRC_DIR)builtin_export.c \
-	$(SRC_DIR)builtin_export_utils.c \
 	$(SRC_DIR)builtin_echo.c \
 	$(SRC_DIR)builtin_exit.c \
-	$(SRC_DIR)lexer_join.c \
-	$(SRC_DIR)lexer_quote.c \
-	$(SRC_DIR)lexer_redir.c \
 	$(SRC_DIR)lexer.c \
-	$(SRC_DIR)stack_utils.c \
-	$(SRC_DIR)test.c \
 	$(SRC_DIR)parser.c \
 	$(SRC_DIR)parser_utils.c \
+	$(SRC_DIR)stack_utils.c \
 	$(SRC_DIR)parser_expand.c \
-	$(SRC_DIR)exec_heredoc.c \
-	$(SRC_DIR)exec_files.c \
-	$(SRC_DIR)parser_redir.c 
+	$(SRC_DIR)test.c
 
 #SRC_BON = 
 
@@ -93,8 +88,7 @@ $(NAME): $(OBJ) $(LIBRARY)
 
 $(OBJ_DIR)%.o: %.c $(HEADER) $(LIBRARY)
 	@mkdir -p $(OBJ_DIR)$(SRC_DIR)
-	$(CC) $(CFLAGS) -o $@ -c $< 
-#$(LIBS)
+	$(CC) $(CFLAGS) -o $@ -c $< $(LIBS)
 
 #$(OBJ_BON_DIR)%.o: %.c $(HEADER_BON) $(LIBRARY)
 #	@mkdir -p $(OBJ_BON_DIR)$(SRC_BON_DIR)

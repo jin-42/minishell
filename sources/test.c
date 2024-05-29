@@ -7,6 +7,7 @@ void print_tokens(t_token *tokens) {
     while (current != NULL) {
         printf("Token: %s\n", current->str);
         printf("Token: %d\n", current->type);
+        printf("Token: %s\n", current->space ? "true" : "false" );
         printf("\n");
         current = current->next;
 		i++;
@@ -29,7 +30,7 @@ void	print_data(t_data *data)
 	// 	env = env->next;
 	// 	i++;
 	// }
-	// printf("\n\n");
+	printf("\n\n");
 
 	i = 0; // ------------------------------------------ PRINT PATHS
 	// while (data->paths && data->paths[i])
@@ -61,7 +62,6 @@ void	print_data(t_data *data)
 	}
 	printf("\n\n");
 }
-
 
 void print_block(t_block *block) {
 

@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:14:10 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/28 13:17:47 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/15 16:31:55 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,17 +67,17 @@ typedef struct s_data
 
 typedef enum e_bash_op
 {
-	VAR = 0, // Commence par $
-	VAR_IN_QUOTE, // Commence par $ dans une chaine entre db quotes
 	OP,
 	STRING,
-	STRING_IN_QUOTE
+	QUOTE
 } e_token_type;
 
 typedef struct s_token
 {
 	char			*str;
 	e_token_type	type;
+	bool			space;
+	bool			quote;
 	struct s_token	*next;
 }	t_token;
 
@@ -97,6 +97,21 @@ bool	quotes_closed(const char* str);
 bool	operator_crash(t_token *head);
 int		count_av(t_token *head);
 
+// PARSER UTILS
+bool operator_crash(t_token *head);
+int count_av(t_token *head);
+t_block	*init_block();
+t_token	*free_tok_go_next(t_token *tok);
+int init_parser(t_data *data);
+
+// Parser redir
+void handle_append_redirection(t_block *block, t_token *tok);
+void handle_here_document(t_block *block, t_token *tok);
+void handle_output_redirection(t_block *block, t_token *tok);
+void handle_input_redirection(t_block *block, t_token *tok);
+void handle_input_redirection(t_block *block, t_token *tok);
+void handle_pipe(t_data *data, t_block *block, t_token *tok, int i);
+
 // PARSER
 void	parser(t_data *data, t_token *tok);
 
@@ -105,8 +120,16 @@ char	*expand_find_name(char *str);
 void	expander(t_data *data, t_token *head);
 
 // LEXER
-t_token	*lexer(char *s);
-void	print_tokens(t_token *tokens);
+t_token *lexer(char *s);
+void print_tokens(t_token *tokens);
+t_token	*simple_quote(char *s, int *i);
+t_token	*double_quote(char *s, int *i);
+t_token	*redir(char *s, int *i);
+void free_tok(t_token *head);
+int	_lstadd(t_token **lst, t_token *new);
+t_token *token_join(t_token *tok);
+char	*ft_strjoin(char const *s1, char const *s2);
+int count_back_slash(char *s);
 
 
 // ENV PARSING

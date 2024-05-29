@@ -67,7 +67,7 @@ void	next_block(t_data *data)
 
 void	child_process(t_data *data, int i, int *old_pipe, int *new_pipe)
 {
-	printf("child no %d - pipes old 0 = %d / old 1 = %d / new 0 = %d / new 1 = %d\n", i, old_pipe[0], old_pipe[1], new_pipe[0], new_pipe[1]);
+	// printf("child no %d - pipes old 0 = %d / old 1 = %d / new 0 = %d / new 1 = %d\n", i, old_pipe[0], old_pipe[1], new_pipe[0], new_pipe[1]);
 	if (check_files(data, i, old_pipe, new_pipe) != 0)
 	{
 		printf("heeeeeeeeere\n");
@@ -83,7 +83,7 @@ void	child_process(t_data *data, int i, int *old_pipe, int *new_pipe)
 		printf("THEREEEEE");
 		error_exec(data, old_pipe, new_pipe, "not found");
 	}
-	printf("child no %d determined in_fd = %d / out_fd = %d\n", i, data->block->in_fd, data->block->out_fd);
+	// printf("child no %d determined in_fd = %d / out_fd = %d\n", i, data->block->in_fd, data->block->out_fd);
 	if (dup2(data->block->in_fd, STDIN_FILENO) == -1)
 	{
 		// printf("DUPIN SAYS THEEEEEEEERE");
@@ -102,7 +102,7 @@ void	child_process(t_data *data, int i, int *old_pipe, int *new_pipe)
 	}
 	else
 	{
-		ft_printf_fd(2, "executing %s on %d (ex %d)\n\n", data->block->path, STDIN_FILENO, data->block->in_fd);
+		// ft_printf_fd(2, "executing %s on %d (ex %d)\n\n", data->block->path, STDIN_FILENO, data->block->in_fd);
 		execve(data->block->path, data->block->args, data->environ);
 		// ft_printf_fd(2, "IN THE END\n");
 		error_exec(data, NULL, NULL, "execve:");
@@ -146,7 +146,10 @@ int	exec(t_data *data)
 		return (1);
 	i = 0;
 	if (data->cmd_count == 1 && is_builtin(data) == true)
+	{
+		// write(2, "hey\n", 4);
 		return (builtin_process(data, i));
+	}
 	pipe_initializer(old_pipe, new_pipe);
 	while (i < data->cmd_count)
 	{
