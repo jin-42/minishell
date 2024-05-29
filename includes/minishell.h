@@ -92,6 +92,17 @@ bool quotes_closed(const char* str);
 // PARSER UTILS
 bool operator_crash(t_token *head);
 int count_av(t_token *head);
+t_block	*init_block();
+t_token	*free_tok_go_next(t_token *tok);
+int init_parser(t_data *data);
+
+// Parser redir
+void handle_append_redirection(t_block *block, t_token *tok);
+void handle_here_document(t_block *block, t_token *tok);
+void handle_output_redirection(t_block *block, t_token *tok);
+void handle_input_redirection(t_block *block, t_token *tok);
+void handle_input_redirection(t_block *block, t_token *tok);
+void handle_pipe(t_data *data, t_block *block, t_token *tok, int i);
 
 // PARSER
 void	parser(t_data *data, t_token *tok);

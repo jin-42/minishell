@@ -72,14 +72,14 @@ int	main(int argc, char **argv, char **environ)
 				tokens = lexer(line);
 				//expender a placer ici
 				expander(&data, tokens);
-				print_tokens(tokens); // A suppr
+				//print_tokens(tokens); // A suppr
 				printf("////\n\n\n");
 				tokens = token_join(tokens);
-				print_tokens(tokens); // A suppr
+				//print_tokens(tokens); // A suppr
 				parser(&data, tokens);
 			}
 			free(line);
-			exec(&data);
+		//	exec(&data);
 		}
 		//print_data(&data);
 		// Signaux
