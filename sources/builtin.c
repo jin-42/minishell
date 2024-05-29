@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 15:24:35 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/22 13:18:33 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/29 14:33:31 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 bool	is_builtin(t_data *data)
 {
+	if (!data->block->args)
+		return (true);
 	if (ft_strcmp(data->block->args[0], "cd") == 0)
 		return (true);
 	else if (ft_strcmp(data->block->args[0], "pwd") == 0)
@@ -68,6 +70,8 @@ int	builtin_process(t_data *data, int i)
 {
 	// printf("exec builtin \n");
 	data->ret_val = 0;
+	if (!data->block->args)
+		return (0);
 	if (check_builtin_files(data) != 0)
 		data->ret_val = 1;
 	// printf("determined in_fd = %d / out_fd = %d\n", data->block->in_fd, data->block->out_fd);

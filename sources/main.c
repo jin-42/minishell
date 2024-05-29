@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 15:54:35 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/27 15:22:21 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/29 14:29:38 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,11 +131,11 @@ int	main(int argc, char **argv, char **environ)
 				tokens = token_join(tokens);
 				//print_tokens(tokens); // A suppr
 				parser(&data, tokens);
+				print_data(&data);
 			}
 			free(line);
-      exec(&data);
+			exec(&data);
 		}
-		//print_data(&data);
 		// Signaux
 	}
 	// free(line);
