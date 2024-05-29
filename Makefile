@@ -29,6 +29,7 @@ SRC = $(SRC_DIR)main.c \
 	$(SRC_DIR)builtin_cd.c \
 	$(SRC_DIR)builtin_unset.c \
 	$(SRC_DIR)builtin_export.c \
+	$(SRC_DIR)builtin_export_utils.c \
 	$(SRC_DIR)builtin_echo.c \
 	$(SRC_DIR)builtin_exit.c \
 	$(SRC_DIR)lexer_join.c \
@@ -43,7 +44,6 @@ SRC = $(SRC_DIR)main.c \
 	$(SRC_DIR)exec_heredoc.c \
 	$(SRC_DIR)exec_files.c \
 	$(SRC_DIR)parser_redir.c 
-
 
 #SRC_BON = 
 
@@ -93,7 +93,8 @@ $(NAME): $(OBJ) $(LIBRARY)
 
 $(OBJ_DIR)%.o: %.c $(HEADER) $(LIBRARY)
 	@mkdir -p $(OBJ_DIR)$(SRC_DIR)
-	$(CC) $(CFLAGS) -o $@ -c $< $(LIBS)
+	$(CC) $(CFLAGS) -o $@ -c $< 
+#$(LIBS)
 
 #$(OBJ_BON_DIR)%.o: %.c $(HEADER_BON) $(LIBRARY)
 #	@mkdir -p $(OBJ_BON_DIR)$(SRC_BON_DIR)

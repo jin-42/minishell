@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 15:24:35 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/16 14:41:27 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/22 13:18:33 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,11 @@ int	builtin_process(t_data *data, int i)
 	if (check_builtin_files(data) != 0)
 		data->ret_val = 1;
 	// printf("determined in_fd = %d / out_fd = %d\n", data->block->in_fd, data->block->out_fd);
-	if (dup2(data->block->in_fd, STDIN_FILENO) == -1 && data->ret_val == 0)
-	{
-		data->ret_val = 1;
-		perror("dup2 in: ");
-	}
+	// if (dup2(data->block->in_fd, STDIN_FILENO) == -1 && data->ret_val == 0)
+	// {
+	// 	data->ret_val = 1;
+	// 	perror("dup2 in: ");
+	// }
 	if (dup2(data->block->out_fd, STDOUT_FILENO) == -1 && data->ret_val == 0)
 	{
 		data->ret_val = 1;

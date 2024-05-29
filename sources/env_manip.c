@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 11:40:50 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/15 16:43:41 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/22 12:47:46 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,10 +87,16 @@ char	**env_to_char(t_data *data, bool exp) // Utile pour recreer le char** de l'
 		return (NULL);
 	while (env)
 	{
-		res[i] = env_join(env, exp);
-		env = env->next;
-		i++;
+		if (env->val == NULL && exp == false)
+			env = env->next;
+		else
+		{
+			res[i] = env_join(env, exp);
+			env = env->next;
+			i++;
+		}
 	}
+	res[i] = 0;
 	return (res);
 }
 

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export.c                                           :+:      :+:    :+:   */
+/*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 16:35:12 by sponthus          #+#    #+#             */
-/*   Updated: 2024/03/25 13:44:32 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/28 13:17:47 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,42 +22,19 @@
 // prend en compte arg[0] = export
 // a verifier avec la PEC de plusieurs args
 
-// ATTENTION : ajouter le fait que i on a VAL="    hey le monde    " on enleve les espaces a la fin et au debut
-
-int	check_name(char *name, char *f)
-{
-	int	i;
-
-	i = 0;
-	if (ft_isdigit(name[0]) == 1 || ft_strlen(name) == 0)
-	{
-		printf("%s: `%s': not a valid identifier\n", f, name);
-		return (1);
-	}
-	while (name[i])
-	{
-		if (ft_strchr(EXP_CHAR, name[i]) == NULL)
-			return (printf("%s: `%s': not a valid identifier\n", f, name), 1);
-		i++;
-	}
-	return (0);
-}
-
-int	apply_export(t_data *data, char *name, char *val)
+int	export_apply(t_data *data, char *name, char *val, bool add)
 {
 	t_env	*env_node;
 
 	env_node = search_env_node(data->env, name);
 	if (env_node)
 	{
-		free(env_node->val);
-		env_node->val = val;
-		env_node->val_len = ft_strlen(val);
-		free(name);
+		if (export_replace_val(env_node, name, val, add) != 0)
+			return (1);
 	}
 	else
 	{
-		if (check_name(name, "export") == 0)
+		if (check_var_name(name, "export") == 0)
 			return (env_add_back(&data->env, env_new(val, name)));
 		else
 		{
@@ -69,15 +46,41 @@ int	apply_export(t_data *data, char *name, char *val)
 	return (0);
 }
 
+char	*export_find_name(char *arg, char *equal, bool add, bool val)
+{
+	char	*name;
+
+	if (val == true)
+	{
+		if (add == true)
+			name = ft_substr(arg, 0, equal - arg - 1);
+		else
+			name = ft_substr(arg, 0, equal - arg);
+		if (!name)
+			return (NULL);
+	}
+	if (val == false)
+	{
+		name = ft_strdup(arg);
+		if (!name)
+			return (NULL);
+	}
+	return (name);
+}
+
 int	export_arg(t_data *data, char *arg)
 {
 	char	*name;
 	char	*val;
+	bool	add;
 
+	add = false;
 	val = ft_strchr(arg, '=');
+	if (val > arg && *(val - 1) == '+')
+		add = true;
 	if (val != NULL && ft_strlen(arg) > 1 && val != arg)
 	{
-		name = ft_substr(arg, 0, val - arg);
+		name = export_find_name(arg, val, add, true);
 		if (!name)
 			return (1);
 		val = ft_strdup(val + 1);
@@ -86,38 +89,34 @@ int	export_arg(t_data *data, char *arg)
 	}
 	else
 	{
-		name = ft_strdup(arg);
+		name = export_find_name(arg, val, add, false);
 		if (!name)
 			return (1);
-		if (ft_strlen(arg) <= 1 || val == arg)
-			val = NULL;
+		val = NULL;
 	}
-	return (apply_export(data, name, val));
+	return (export_apply(data, name, val, add));
 }
 
-int	print_export(t_data *data)
-{
-	char	**names;
-	t_env	*env;
-	int		i;
-
-	i = 0;
-	names = sort_env(data);
-	if (names == NULL)
-		return (1);
-	while (names[i])
-	{
-		env = search_env_node(data->env, names[i]);
-		printf("declare -x %s", env->name);
-		if (env->val)
-			printf("=\"%s\"\n", env->val);
-		else
-			printf("\n");
-		i++;
-	}
-	free(names);
-	return (0);
-}
+	// if (val != NULL && ft_strlen(arg) > 1 && val != arg)
+	// {
+	// 	if (add == true)
+	// 		name = ft_substr(arg, 0, val - arg - 1);
+	// 	else
+	// 		name = ft_substr(arg, 0, val - arg);
+	// 	if (!name)
+	// 		return (1);
+	// 	val = ft_strdup(val + 1);
+	// 	if (!val)
+	// 		return (free(name), 1);
+	// }
+	// else
+	// {
+	// 	name = ft_strdup(arg);
+	// 	if (!name)
+	// 		return (1);
+	// 	if (ft_strlen(arg) < 1 || val == arg)
+	// 		val = NULL;
+	// }
 
 int	export(t_data *data, char **args)
 {
@@ -132,7 +131,7 @@ int	export(t_data *data, char **args)
 	}
 	if (i == 1)
 	{
-		if (print_export(data) != 0)
+		if (export_print(data) != 0)
 			return (1);
 	}
 	return (0);

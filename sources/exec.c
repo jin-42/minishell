@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 13:46:22 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/15 16:35:07 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/23 16:49:15 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	child_process(t_data *data, int i, int *old_pipe, int *new_pipe)
 		printf("THEREEEEE");
 		error_exec(data, old_pipe, new_pipe, "not found");
 	}
-	// printf("determined in_fd = %d / out_fd = %d\n", data->block->in_fd, data->block->out_fd);
+	// printf("child no %d determined in_fd = %d / out_fd = %d\n", i, data->block->in_fd, data->block->out_fd);
 	if (dup2(data->block->in_fd, STDIN_FILENO) == -1)
 	{
 		// printf("DUPIN SAYS THEEEEEEEERE");
@@ -102,7 +102,7 @@ void	child_process(t_data *data, int i, int *old_pipe, int *new_pipe)
 	}
 	else
 	{
-		// ft_printf_fd(2, "executing %s on %d\n\n", data->block->path, STDIN_FILENO);
+		// ft_printf_fd(2, "executing %s on %d (ex %d)\n\n", data->block->path, STDIN_FILENO, data->block->in_fd);
 		execve(data->block->path, data->block->args, data->environ);
 		// ft_printf_fd(2, "IN THE END\n");
 		error_exec(data, NULL, NULL, "execve:");
@@ -131,6 +131,7 @@ void	parent_process(t_data *data, int pid, int *old_pipe, int *new_pipe)
 	}
 	data->ret_val = value;
 	data->cmd_count = 0;
+	g_signal = 0;
 }
 
 int	exec(t_data *data)
@@ -140,9 +141,8 @@ int	exec(t_data *data)
 	int		i;
 	int		fd;
 
-	// printf("hey");
-	// print_data(data);
-	if (maj_env_paths(data) != 0)
+	g_signal = 1;
+	if (maj_env_paths(data) != 0 || data->cmd_count == 0)
 		return (1);
 	i = 0;
 	if (data->cmd_count == 1 && is_builtin(data) == true)
@@ -162,5 +162,7 @@ int	exec(t_data *data)
 		i++;
 	}
 	parent_process(data, fd, old_pipe, new_pipe);
+	// close_all(data, old_pipe, new_pipe);
+	// data->cmd_count = 0;
 	return (0);
 }

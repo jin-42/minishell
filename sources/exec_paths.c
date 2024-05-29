@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 15:33:26 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/15 14:41:07 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/22 12:54:06 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,6 @@ int	maj_env_paths(t_data *data)
 	if (data->environ == NULL)
 		return (1);
 	if (parse_paths(data) != SUCCESS)
-		return (free_full_split(data->environ), 1);
+		return (free_full_split(data->environ), 2);
 	return (SUCCESS);
 }

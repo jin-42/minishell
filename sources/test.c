@@ -1,5 +1,19 @@
 #include "../includes/minishell.h"
 
+void print_tokens(t_token *tokens) {
+    t_token *current = tokens;
+	int i = 0;
+    
+    while (current != NULL) {
+        printf("Token: %s\n", current->str);
+        printf("Token: %d\n", current->type);
+        printf("Token: %s\n", current->space ? "true" : "false" );
+        printf("\n");
+        current = current->next;
+		i++;
+    }
+}
+
 void	print_data(t_data *data)
 {
 	int		i;
@@ -7,8 +21,8 @@ void	print_data(t_data *data)
 	printf("cmd_count = %d\n\n", data->cmd_count);
 	printf("ret_val = %d\n\n", data->ret_val);
 
-	t_env *env = data->env; // --------------------------------- PRINT ENVIRONNEMENT
-	i = 0;
+	// t_env *env = data->env; // --------------------------------- PRINT ENVIRONNEMENT
+	// i = 0;
 	// while (data->env && env != 0) 
 	// {
 	// 	printf("Env nb %d : \n - name (len %d) /%s/ \n - val (len %d) --%s--\n", i,  env->name_len, env->name, env->val_len, env->val);
@@ -48,7 +62,6 @@ void	print_data(t_data *data)
 	}
 	printf("\n\n");
 }
-
 
 void print_block(t_block *block) {
 

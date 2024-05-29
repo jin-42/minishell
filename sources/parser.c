@@ -9,7 +9,6 @@ void custom_perror(const char *prefix, const char *filename) {
         perror(NULL);
 }
 
-
 void parse_operators(t_data *data, t_token *tok, int i) {
     t_block *block = data->block;
     while (block->next) {
@@ -121,7 +120,6 @@ void parse_tokens(t_data *data, t_token *copy, t_block *head)
     head->args[i] = NULL;
 }
 
-
 void parser(t_data *data, t_token *tok)
 {
     t_block *head;
@@ -144,6 +142,3 @@ void parser(t_data *data, t_token *tok)
 	print_block(for_print);
 	free_tok(tok);
 }
-
-
-

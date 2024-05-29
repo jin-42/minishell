@@ -19,20 +19,6 @@ int	_lstadd(t_token **lst, t_token *new)
 	return (0);
 }
 
-void print_tokens(t_token *tokens) {
-    t_token *current = tokens;
-	int i = 0;
-    
-    while (current != NULL) {
-        printf("Token: %s\n", current->str);
-        printf("Token: %d\n", current->type);
-        printf("Token: %s\n", current->space ? "true" : "false" );
-        printf("\n");
-        current = current->next;
-		i++;
-    }
-}
-
 static t_token	*_space(char *s, int *i)
 {
 	t_token	*tok;
@@ -122,7 +108,6 @@ int handle_quote(t_token **token, char *s, int *i)
     }
     return (flag);
 }
-
 
 t_token	*lexer(char *s)
 {
