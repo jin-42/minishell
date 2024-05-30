@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:49:27 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/30 16:34:17 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/30 16:48:54 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ char	*expand_copy(t_data *data, t_token *tok, char *new, char *name)
 		ft_strlcpy(new + i, val, search_env_size(data, name) + 1); // Copie de ce qui est dans la variable
 		i = ft_strlen(new); // On se place de nouveau a la fin de ce qui a ete copie
 	}
+	if (ft_strcmp(name, "?") == 0)
+		free(val);
 	while (tok->str[j])
 		new[i++] = tok->str[j++]; // On copie ce qui reste dans la str
 	new[i] = 0;
