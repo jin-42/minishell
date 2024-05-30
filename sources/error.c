@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:11:27 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/23 15:48:54 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/30 16:22:41 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,17 @@ void	error_exec(t_data *data, int *old_pipe, int *new_pipe, char *str)
 {
 	int	value;
 
-	value = 0;
+	value = -1;
 	close_all(data, old_pipe, new_pipe);
 	if (str && ft_strcmp(str, "not found") == 0)
 	{
 		printf("command not found: %s\n", data->block->args[0]);
 		value = 127;
+	}
+	else if (ft_strcmp(str, "is a directory") == 0)
+	{
+		printf("%s: Is a directory\n", data->block->args[0]);
+		value = 126;
 	}
 	else if (str)
 	{
@@ -42,11 +47,7 @@ void	error_exec(t_data *data, int *old_pipe, int *new_pipe, char *str)
 	{
 		printf("I am the problem");
 	}
-	free_data(data);
-	if (value != 0)
-		exit(value);
-	else
-		exit(EXIT_FAILURE);
+	leave_minishell(data, value);
 }
 
 void	error_parsing(t_data *data, char *type)
@@ -56,5 +57,6 @@ void	error_parsing(t_data *data, char *type)
 	{
 		write(2, "Error parsing env.\n", 19);
 	}
-	exit(EXIT_FAILURE);
+	leave_minishell(data, -1);
+	// exit(EXIT_FAILURE);
 }

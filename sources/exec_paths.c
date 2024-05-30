@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 15:33:26 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/29 14:38:36 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/30 16:23:24 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,24 @@ int	look_in_env(t_data *data, char **paths)
 	return (0);
 }
 
+bool	is_a_directory(char *path)
+{
+	int	i;
+	int	abc;
+
+	i = 0;
+	abc = 0;
+	while (path[i])
+	{
+		if (path[i] != '/' && path[i] != '.')
+			abc++;
+		i++;
+	}
+	if (abc == 0)
+		return (true);
+	return (false);
+}
+
 int	search_path(t_data *data)
 {
 	char	**paths;
@@ -71,7 +89,7 @@ int	search_path(t_data *data)
 		return (cpy_builtin(data));
 	else if (ft_strchr(data->block->args[0], '/') != NULL)
 	{
-		if (access(data->block->args[0], F_OK) == SUCCESS)
+		if (access(data->block->args[0], X_OK) == SUCCESS)
 		{
 			data->block->path = ft_strdup(data->block->args[0]);
 			if (data->block->path == NULL)
@@ -80,6 +98,8 @@ int	search_path(t_data *data)
 	}
 	else
 	{
+		if (data->block->args[0][0] == '!')
+			return (1);
 		paths = append_cmd(data->paths, data->block->args[0]);
 		if (paths == NULL)
 			return (1);

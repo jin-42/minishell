@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 13:46:22 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/23 16:49:15 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/30 16:39:33 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ void	child_process(t_data *data, int i, int *old_pipe, int *new_pipe)
 		printf("heeeeeeeeere\n");
 		error_exec(data, old_pipe, new_pipe, NULL);
 	}
+	if (is_a_directory(data->block->args[0]))
+		error_exec(data, old_pipe, new_pipe, "is a directory");
 	if (search_path(data) != 0)
 	{
 		printf("HEEEEEERE\n");
@@ -90,16 +92,10 @@ void	child_process(t_data *data, int i, int *old_pipe, int *new_pipe)
 		error_exec(data, old_pipe, new_pipe, "dup2 in:");
 	}
 	if (dup2(data->block->out_fd, STDOUT_FILENO) == -1)
-	{
-		// printf("DUPOUT SAYS HEREEEEEEEEE");
 		error_exec(data, old_pipe, new_pipe, "dup2 out:");
-	}
 	close_all(data, old_pipe, new_pipe);
 	if (data->block->builtin == true)
-	{
-		// write(2, "entering\n\n", 9);
 		data->ret_val = exec_builtin(data, data->block->args, true);
-	}
 	else
 	{
 		// ft_printf_fd(2, "executing %s on %d (ex %d)\n\n", data->block->path, STDIN_FILENO, data->block->in_fd);
@@ -146,10 +142,7 @@ int	exec(t_data *data)
 		return (1);
 	i = 0;
 	if (data->cmd_count == 1 && is_builtin(data) == true)
-	{
-		// write(2, "hey\n", 4);
 		return (builtin_process(data, i));
-	}
 	pipe_initializer(old_pipe, new_pipe);
 	while (i < data->cmd_count)
 	{

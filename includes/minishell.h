@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:14:10 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/30 15:39:14 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/30 16:23:19 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,7 @@ void	next_block(t_data *data);
 void	close_all(t_data *data, int *old_pipe, int *new_pipe);
 
 // EXEC : PATHS
+bool	is_a_directory(char *path);
 char	**append_cmd(char **paths, char *name);
 int		look_in_env(t_data *data, char **paths);
 int		search_path(t_data *data);
