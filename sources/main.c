@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 15:54:35 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/29 14:29:38 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/30 14:46:50 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,8 +125,8 @@ int	main(int argc, char **argv, char **environ)
 			{
 				tokens = lexer(line);
 				//expender a placer ici
+				print_tokens(tokens); // A suppr
 				expander(&data, tokens);
-				//print_tokens(tokens); // A suppr
 				printf("////\n\n\n");
 				tokens = token_join(tokens);
 				//print_tokens(tokens); // A suppr

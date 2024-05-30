@@ -6,7 +6,7 @@
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:49:27 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/23 15:49:44 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/05/30 15:38:25 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,48 +86,6 @@ void	expand(t_data *data, t_token *tok)
 	expand(data, tok);
 }
 
-// void	expand_var(t_data *data, t_token *tok)
-// {
-// 	int			size_expand;
-// 	char		*tmp;
-// 	char		*val;
-
-// 	size_expand = search_env_size(data, tok->str);
-// 	tmp = malloc(sizeof(char) * size_expand + 1);
-// 	if (!tok->str)
-// 		return ;
-// 	if (ft_strcmp(tok->str, "?") == 0)
-// 		val = ft_itoa(data->ret_val);
-// 	else
-// 		val = ft_strdup(search_env(data, tok->str));
-// 	if (!val)
-// 		return (free(tmp));
-// 	ft_strlcpy(tmp, val, size_expand + 1);
-// 	free(tok->str);
-// 	tok->str = tmp;
-// }
-
-int findDollarPosition(const char *str) {
-    int length;
-	int i;
-	
-	length = ft_strlen(str);
-    if (str[0] == '$' && length == 1) 
-        return (0);
-	if (str[0] == '$' && length != 1)
-		return (1);
-    if (str[length - 1] == '$')
-        return 0;
-	i = 0;
-   while (i < length) 
-   {
-        if (str[i] == '$')
-            return (2);
-		i++;
-    }
-	return (0);
-}
-
 void	expander(t_data *data, t_token *head)
 {
 	t_token		*tok;
@@ -135,10 +93,16 @@ void	expander(t_data *data, t_token *head)
 	tok = head;
 	while (tok)
 	{
-		// if (tok->type == OP && ft_strncmp(tok->str, "<<", 2) == 0)
-		// 	tok = tok->next;
 		if (tok->type == STRING)
-			expand(data, tok);
+		{
+			if (ft_strlen(tok->str) == 1 && tok->str[0] == '$'
+				&& tok->next && tok->next->quote)
+			{
+				tok->str[0] = '\0';
+			}
+			else
+				expand(data, tok);
+		}
 		tok = tok->next;
 	}
 }

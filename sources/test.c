@@ -6,8 +6,9 @@ void print_tokens(t_token *tokens) {
     
     while (current != NULL) {
         printf("Token: %s\n", current->str);
-        printf("Token: %d\n", current->type);
-        printf("Token: %s\n", current->space ? "true" : "false" );
+        printf("Token type: %d\n", current->type);
+        printf("Token space: %s\n", current->space ? "true" : "false" );
+		 printf("Token quote : %s\n", current->quote ? "true" : "false" );
         printf("\n");
         current = current->next;
 		i++;
