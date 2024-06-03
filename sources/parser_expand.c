@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parser_expand.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/23 15:49:27 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/30 16:48:54 by sponthus         ###   ########lyon.fr   */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   parser_expand.c									:+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: sponthus <sponthus@student.42lyon.fr>	  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2024/05/23 15:49:27 by sponthus		  #+#	#+#			 */
+/*   Updated: 2024/06/03 13:45:56 by sponthus		 ###   ########lyon.fr   */
+/*																			*/
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
@@ -25,13 +25,18 @@ char	*expand_find_name(char *str)
 	name = ft_strchr(str, '$');
 	if (name == NULL || ft_strlen(name) == 1)
 		return (NULL);
-	i = name - str + 1;
+	i = name - str + 1; // position du deb du nom
 	if (str[i] == '?')
 		return (ft_strdup("?"));
 	while (str[i] && is_charset(str[i], EXP_CHAR) == 1)
 	{
 		i++;
 		j++;
+	}
+	if (j == 0)
+	{
+		str[i - 1] = -36;
+		return (expand_find_name(str));
 	}
 	var = malloc (sizeof (char) * (j + 1));
 	if (!var)
@@ -88,6 +93,19 @@ void	expand(t_data *data, t_token *tok)
 	expand(data, tok);
 }
 
+void	untok(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] < 0)
+			str[i] *= -1;
+		i++;
+	}
+}
+
 void	expander(t_data *data, t_token *head)
 {
 	t_token		*tok;
@@ -97,13 +115,18 @@ void	expander(t_data *data, t_token *head)
 	{
 		if (tok->type == STRING)
 		{
+			printf("expanding %s\n", tok->str);
 			if (ft_strlen(tok->str) == 1 && tok->str[0] == '$'
 				&& tok->next && tok->next->quote)
 			{
 				tok->str[0] = '\0';
 			}
 			else
+			{
 				expand(data, tok);
+				untok(tok->str);
+			}
+			printf("result %s\n", tok->str);
 		}
 		tok = tok->next;
 	}

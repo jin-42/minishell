@@ -82,31 +82,31 @@ void free_tok(t_token *head)
 
 int handle_quote(t_token **token, char *s, int *i)
 {
-    int flag;
+	int flag;
 
-    if (s[*i] == '\'')
-    {
-        if (s[*i + 1] != '\0' && s[*i + 1] != '\'')
-        {
-            (*i)++;
-            flag = _lstadd(token, simple_quote(s, i));
-            (*i)++;
-        }
-        else
-            *i += 2;
-    }
-    else if (s[*i] == '\"')
-    {
-        if (s[*i + 1] != '\0' && s[*i + 1] != '\"')
-        {
-            (*i)++;
-            flag = _lstadd(token, double_quote(s, i));
-            (*i)++;
-        }
-        else
-            *i += 2;
-    }
-    return (flag);
+	if (s[*i] == '\'')
+	{
+		if (s[*i + 1] != '\0' && s[*i + 1] != '\'')
+		{
+			(*i)++;
+			flag = _lstadd(token, simple_quote(s, i));
+			(*i)++;
+		}
+		else
+			*i += 2;
+	}
+	else if (s[*i] == '\"')
+	{
+		if (s[*i + 1] != '\0' && s[*i + 1] != '\"')
+		{
+			(*i)++;
+			flag = _lstadd(token, double_quote(s, i));
+			(*i)++;
+		}
+		else
+			*i += 2;
+	}
+	return (flag);
 }
 
 t_token	*lexer(char *s)
@@ -123,7 +123,7 @@ t_token	*lexer(char *s)
 		if (s[i] == ' ')
 			i++;
 		else if (s[i] == '\'' || s[i] == '\"')
-            flag = handle_quote(&token, s, &i);
+			flag = handle_quote(&token, s, &i);
 		else if (s[i] == '<' || s[i] == '>')
 			flag = _lstadd(&token, redir(s, &i));
 		else if (s[i] == '|')

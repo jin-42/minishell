@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   builtin_echo.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/03 12:53:57 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/15 17:59:30 by sponthus         ###   ########lyon.fr   */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   builtin_echo.c									 :+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: sponthus <sponthus@student.42lyon.fr>	  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2024/04/03 12:53:57 by sponthus		  #+#	#+#			 */
+/*   Updated: 2024/06/03 14:37:21 by sponthus		 ###   ########lyon.fr   */
+/*																			*/
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
@@ -29,7 +29,7 @@ bool	echo_is_option(char *arg)
 		i++;
 	while (arg[i] == 'n')
 		i++;
-	if (i == ft_strlen(arg))
+	if (i != 0 && i == ft_strlen(arg))
 		return (true);
 	return (false);
 }
@@ -56,8 +56,8 @@ int	bt_echo(t_data *data, char **args)
 	option = false;
 	while(args && args[j] && echo_is_option(args[j]) == true)
 	{
-		j++;
 		option = true;
+		j++;
 	}
 	i = count_args(args);
 	// printf("i = %d, j = %d\n", i, j);

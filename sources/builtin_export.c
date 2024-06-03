@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   builtin_export.c                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/20 16:35:12 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/28 13:17:47 by sponthus         ###   ########lyon.fr   */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   builtin_export.c								   :+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: sponthus <sponthus@student.42lyon.fr>	  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2024/03/20 16:35:12 by sponthus		  #+#	#+#			 */
+/*   Updated: 2024/06/03 16:50:35 by sponthus		 ###   ########lyon.fr   */
+/*																			*/
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
@@ -34,7 +34,7 @@ int	export_apply(t_data *data, char *name, char *val, bool add)
 	}
 	else
 	{
-		if (check_var_name(name, "export") == 0)
+		if (check_var_name(name, val, "export") == 0)
 			return (env_add_back(&data->env, env_new(val, name)));
 		else
 		{
@@ -125,14 +125,22 @@ int	export(t_data *data, char **args)
 	i = 1;
 	while (args[i])
 	{
-		if (args[i] && export_arg(data, args[i]) != 0)
+		if (ft_strlen(args[1]) > 2 && args[1][0] == '-')
+		{
+			args[1][2] = '\0';
+			return (printf("export: `%s': invalid option\n", args[1]), 2);
+		}
+		else if (ft_strchr(args[i], '!'))
+		{
+			printf("%s: event not found\n",
+				args[i] + (ft_strchr(args[i], '!') - args[i]));
+			return (0);
+		}
+		else if (args[i] && export_arg(data, args[i]) != 0)
 			return (1);
 		i++;
 	}
-	if (i == 1)
-	{
-		if (export_print(data) != 0)
-			return (1);
-	}
+	if (i == 1 && export_print(data))
+		return (1);
 	return (0);
 }

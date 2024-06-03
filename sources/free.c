@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/28 11:07:31 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/23 16:54:54 by sponthus         ###   ########lyon.fr   */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   free.c											 :+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: sponthus <sponthus@student.42lyon.fr>	  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2024/03/28 11:07:31 by sponthus		  #+#	#+#			 */
+/*   Updated: 2024/06/03 17:42:36 by sponthus		 ###   ########lyon.fr   */
+/*																			*/
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
@@ -51,7 +51,7 @@ void	free_env(t_env *env) // Ne pas free val, pas malloc
 	env = NULL;
 }
 
-void	free_data(t_data *data) // Ajouter blocks quand seront ajoutes
+void	free_data(t_data *data)
 {
 	if (data->environ)
 		free_env_char(data);
@@ -66,6 +66,7 @@ void	free_data(t_data *data) // Ajouter blocks quand seront ajoutes
 void	leave_minishell(t_data *data, int val)
 {
 	free_data(data);
+	// write(2, "clear histo\n", 12);
 	rl_clear_history();
 	if (val >= 0)
 		exit(val);

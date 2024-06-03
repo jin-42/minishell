@@ -1,30 +1,30 @@
 #include "../includes/minishell.h"
 
 void custom_perror(const char *prefix, const char *filename) {
-    if (prefix)
-        fprintf(stderr, "%s", prefix);
-    if (filename)
-        perror(filename);
-    else
-        perror(NULL);
+	if (prefix)
+		fprintf(stderr, "%s", prefix);
+	if (filename)
+		perror(filename);
+	else
+		perror(NULL);
 }
 
 void parse_operators(t_data *data, t_token *tok, int i) {
-    t_block *block = data->block;
-    while (block->next) {
-        block = block->next;
-    }
-    if (ft_strncmp(tok->str, ">>", 2) == 0) {
-        handle_append_redirection(block, tok);
-    } else if (ft_strncmp(tok->str, "<<", 2) == 0) {
-        handle_here_document(block, tok);
-    } else if (ft_strncmp(tok->str, ">", 1) == 0) {
-        handle_output_redirection(block, tok);
-    } else if (ft_strncmp(tok->str, "<", 1) == 0) {
-        handle_input_redirection(block, tok);
-    } else if (ft_strncmp(tok->str, "|", 1) == 0) {
-        handle_pipe(data, block, tok, i);
-    }
+	t_block *block = data->block;
+	while (block->next) {
+		block = block->next;
+	}
+	if (ft_strncmp(tok->str, ">>", 2) == 0) {
+		handle_append_redirection(block, tok);
+	} else if (ft_strncmp(tok->str, "<<", 2) == 0) {
+		handle_here_document(block, tok);
+	} else if (ft_strncmp(tok->str, ">", 1) == 0) {
+		handle_output_redirection(block, tok);
+	} else if (ft_strncmp(tok->str, "<", 1) == 0) {
+		handle_input_redirection(block, tok);
+	} else if (ft_strncmp(tok->str, "|", 1) == 0) {
+		handle_pipe(data, block, tok, i);
+	}
 }
 
 
@@ -45,9 +45,9 @@ void parse_operators(t_data *data, t_token *tok, int i) {
 
 // void parser(t_data *data, t_token *tok)
 // {
-//     t_block *head;
+//	 t_block *head;
 // 	t_block *for_print;
-//     int i = 0;
+//	 int i = 0;
 // 	t_token *copy;
 
 // 	copy = tok;
@@ -110,8 +110,8 @@ void parse_tokens(t_data *data, t_token *copy, t_block *head)
 				i = 0;
 				head = head->next;
 			}
-		    else
-			    copy = copy->next;
+			else
+				copy = copy->next;
 		}
 		else
 			head->args[i++] = ft_strdup(copy->str);
@@ -122,23 +122,23 @@ void parse_tokens(t_data *data, t_token *copy, t_block *head)
 
 void parser(t_data *data, t_token *tok)
 {
-    t_block *head;
-    t_token     *cpy;
+	t_block *head;
+	t_token	 *cpy;
 
-    cpy = tok;
-    if (cpy == NULL || !operator_crash(cpy))
-        return ;
-    if (init_parser(data) == (-1))
-        return ;
-    head = data->block;
+	cpy = tok;
+	if (cpy == NULL || !operator_crash(cpy))
+		return ;
+	if (init_parser(data) == (-1))
+		return ;
+	head = data->block;
 	t_block *for_print = data->block;
-    if (head == NULL)
-        return (free(tok));
-    if (count_av(cpy) != 0)
-        head->args =  malloc(sizeof(char *) * (count_av(cpy) + 1));
-    if (!head->args)
-        return (free(tok));
-    parse_tokens(data, cpy, head);
+	if (head == NULL)
+		return (free(tok));
+	if (count_av(cpy) != 0)
+		head->args =  malloc(sizeof(char *) * (count_av(cpy) + 1));
+	if (!head->args)
+		return (free(tok));
+	parse_tokens(data, cpy, head);
 	print_block(for_print);
 	free_tok(tok);
 }

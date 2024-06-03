@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   exec.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/25 13:46:22 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/30 16:39:33 by sponthus         ###   ########lyon.fr   */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   exec.c											 :+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: sponthus <sponthus@student.42lyon.fr>	  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2024/03/25 13:46:22 by sponthus		  #+#	#+#			 */
+/*   Updated: 2024/06/03 16:11:27 by sponthus		 ###   ########lyon.fr   */
+/*																			*/
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
@@ -43,6 +43,8 @@ void	close_all(t_data *data, int *old_pipe, int *new_pipe)
 			close (block->out_fd);
 		block = block->next;
 	}
+	// write(2, "clear histo\n", 12);
+	// rl_clear_history();
 }
 
 void	next_block(t_data *data)
@@ -67,7 +69,7 @@ void	next_block(t_data *data)
 
 void	child_process(t_data *data, int i, int *old_pipe, int *new_pipe)
 {
-	// printf("child no %d - pipes old 0 = %d / old 1 = %d / new 0 = %d / new 1 = %d\n", i, old_pipe[0], old_pipe[1], new_pipe[0], new_pipe[1]);
+	printf("child no %d - pipes old 0 = %d / old 1 = %d / new 0 = %d / new 1 = %d\n", i, old_pipe[0], old_pipe[1], new_pipe[0], new_pipe[1]);
 	if (check_files(data, i, old_pipe, new_pipe) != 0)
 	{
 		printf("heeeeeeeeere\n");
@@ -75,12 +77,15 @@ void	child_process(t_data *data, int i, int *old_pipe, int *new_pipe)
 	}
 	if (is_a_directory(data->block->args[0]))
 		error_exec(data, old_pipe, new_pipe, "is a directory");
+	if (!data->block->args[0])
+		error_exec(data, old_pipe, new_pipe, "empty");
 	if (search_path(data) != 0)
 	{
 		printf("HEEEEEERE\n");
 		error_exec(data, old_pipe, new_pipe, NULL);
 	}
-	if (data->block->path == NULL)
+	printf("path found = /%s/")
+	if (data->block->path == NULL || data->block->path[0] == '\0')
 	{
 		printf("THEREEEEE");
 		error_exec(data, old_pipe, new_pipe, "not found");
@@ -94,6 +99,8 @@ void	child_process(t_data *data, int i, int *old_pipe, int *new_pipe)
 	if (dup2(data->block->out_fd, STDOUT_FILENO) == -1)
 		error_exec(data, old_pipe, new_pipe, "dup2 out:");
 	close_all(data, old_pipe, new_pipe);
+	// write(2, "clearing\n", 9);
+	// rl_clear_history();
 	if (data->block->builtin == true)
 		data->ret_val = exec_builtin(data, data->block->args, true);
 	else
@@ -101,6 +108,8 @@ void	child_process(t_data *data, int i, int *old_pipe, int *new_pipe)
 		// ft_printf_fd(2, "executing %s on %d (ex %d)\n\n", data->block->path, STDIN_FILENO, data->block->in_fd);
 		execve(data->block->path, data->block->args, data->environ);
 		// ft_printf_fd(2, "IN THE END\n");
+		// write(2, "clearing\n", 9);
+		// rl_clear_history();
 		error_exec(data, NULL, NULL, "execve:");
 	}
 }
@@ -122,7 +131,11 @@ void	parent_process(t_data *data, int pid, int *old_pipe, int *new_pipe)
 			if (WIFEXITED(status))
 				value = WEXITSTATUS(status);
 			else if (WIFSIGNALED(status))
+			{
 				value = 128 + WTERMSIG(status);
+				if (WTERMSIG(status) == SIGQUIT)
+					write(2, "Quit (core dumped)\n", 19);
+			}
 		}
 	}
 	data->ret_val = value;

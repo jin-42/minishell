@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/14 14:14:10 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/30 16:23:19 by sponthus         ###   ########lyon.fr   */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   minishell.h										:+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: sponthus <sponthus@student.42lyon.fr>	  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2024/03/14 14:14:10 by sponthus		  #+#	#+#			 */
+/*   Updated: 2024/06/03 16:35:23 by sponthus		 ###   ########lyon.fr   */
+/*																			*/
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
@@ -201,7 +201,7 @@ int		export_print(t_data *data);
 char	*export_find_name(char *arg, char *equal, bool add, bool val);
 int		export_arg(t_data *data, char *arg);
 int		export_apply(t_data *data, char *name, char *val, bool add);
-int		check_var_name(char *name, char *f);
+int		check_var_name(char *name, char *val, char *f);
 int		export_replace_val(t_env *node, char *name, char *val, bool add);
 
 int		bt_echo(t_data *data, char **args);

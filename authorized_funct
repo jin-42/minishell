@@ -79,9 +79,9 @@ The state of the History library is encapsulated into a single structure:
  */
 typedef struct _hist_state {
   HIST_ENTRY **entries; /* Pointer to the entries themselves. */
-  int offset;           /* The location pointer within this array. */
-  int length;           /* Number of elements within this array. */
-  int size;             /* Number of slots allocated to this array. */
+  int offset;		   /* The location pointer within this array. */
+  int length;		   /* Number of elements within this array. */
+  int size;			 /* Number of slots allocated to this array. */
   int flags;
 } HISTORY_STATE;
 
@@ -91,10 +91,10 @@ typedef struct _hist_state {
 readline  #include <stdio.h>
 char *readline (const char *prompt);
 	read a line from the terminal and return it, using
-    prompt as a prompt.  If prompt is NULL or the empty string, no
+	prompt as a prompt.  If prompt is NULL or the empty string, no
 	prompt is issued.  The line returned is allocated with malloc(3);
-    the caller must free it when finished.  The line returned has the
-    final newline removed, so only the text of the line remains.
+	the caller must free it when finished.  The line returned has the
+	final newline removed, so only the text of the line remains.
 	- A blank line returns the empty string.  
 	- If EOF is encountered while reading a line, and the line is empty, 
 		NULL is returned.  
@@ -165,13 +165,13 @@ pid_t wait3(int *status, int options, struct rusage *rusage);
 	Equivalent de  waitpid(-1, status, options);
 	peut être utilisé pour sélectionner un ou des fils spécifique(s) à attendre, 
 	et retourne  également  des  informations  sur  l’utilisation  des
-    ressources par le fils dans la structure pointée par rusage.
+	ressources par le fils dans la structure pointée par rusage.
 
 wait4 #include <sys/types.h> #include <sys/wait.h>   #include <sys/resource.h> +/- #include <sys/time.h>
 pid_t wait4(pid_t pid, int *status, int options, struct rusage *rusage);
 	Equivalent de waitpid(pid, status, options);
 	attend n’importe quel fils et retourne  également  des  informations  sur  l’utilisation  des
-    ressources par le fils dans la structure pointée par rusage.
+	ressources par le fils dans la structure pointée par rusage.
 
 execve
 
@@ -280,31 +280,31 @@ int stat(const char *path, struct stat *buf);
 	En cas d'échec, -1 est renvoyé, et errno contient le code de l'erreur.  
 
 struct stat {
-    dev_t     st_dev;      /* ID du périphérique contenant le fichier */
-    ino_t     st_ino;      /* Numéro inœud */
-    mode_t    st_mode;     /* Protection */
-    nlink_t   st_nlink;    /* Nb liens matériels */
-    uid_t     st_uid;      /* UID propriétaire */
-    gid_t     st_gid;      /* GID propriétaire */
-    dev_t     st_rdev;     /* ID périphérique (si fichier spécial) */
-    off_t     st_size;     /* Taille totale en octets */
-    blksize_t st_blksize;  /* Taille de bloc pour E/S */
-    blkcnt_t  st_blocks;   /* Nombre de blocs alloués */
-    time_t    st_atime;    /* Heure dernier accès */
-    time_t    st_mtime;    /* Heure dernière modification */
-    time_t    st_ctime;    /* Heure dernier changement état */
+	dev_t	 st_dev;	  /* ID du périphérique contenant le fichier */
+	ino_t	 st_ino;	  /* Numéro inœud */
+	mode_t	st_mode;	 /* Protection */
+	nlink_t   st_nlink;	/* Nb liens matériels */
+	uid_t	 st_uid;	  /* UID propriétaire */
+	gid_t	 st_gid;	  /* GID propriétaire */
+	dev_t	 st_rdev;	 /* ID périphérique (si fichier spécial) */
+	off_t	 st_size;	 /* Taille totale en octets */
+	blksize_t st_blksize;  /* Taille de bloc pour E/S */
+	blkcnt_t  st_blocks;   /* Nombre de blocs alloués */
+	time_t	st_atime;	/* Heure dernier accès */
+	time_t	st_mtime;	/* Heure dernière modification */
+	time_t	st_ctime;	/* Heure dernier changement état */
 };
 
 lstat #include <sys/types.h> #include <sys/stat.h> #include <unistd.h>
 int lstat(const char *path, struct stat *buf);
 	est  identique  à stat(), sauf que dans le cas où path est un lien symbolique, il
-    donne l'état du lien lui-même plutôt que celui du fichier visé.
+	donne l'état du lien lui-même plutôt que celui du fichier visé.
 
 
 fstat #include <sys/types.h> #include <sys/stat.h> #include <unistd.h>
 int fstat(int fd, struct stat *buf);
 	est identique à stat(), sauf que le  fichier  dont  l'état  est  donné  est  celui
-    référencé par le descripteur de fichier fd.
+	référencé par le descripteur de fichier fd.
 
 unlink #include <unistd.h>
 int unlink(const char *pathname);  
@@ -334,11 +334,11 @@ int readdir(DIR *dir, struct dirent *entry, struct dirent **result);
 	Elle renvoie NULL à la fin du répertoire, ou en cas d'erreur. 
 
 struct dirent {
-    ino_t          d_ino;       /* numéro d'inœud */
-    off_t          d_off;       /* décalage jusqu'à la dirent suivante */
-    unsigned short d_reclen;    /* longueur de cet enregistrement */
-    unsigned char  d_type;      /* type du fichier */
-    char           d_name[256]; /* nom du fichier */
+	ino_t		  d_ino;	   /* numéro d'inœud */
+	off_t		  d_off;	   /* décalage jusqu'à la dirent suivante */
+	unsigned short d_reclen;	/* longueur de cet enregistrement */
+	unsigned char  d_type;	  /* type du fichier */
+	char		   d_name[256]; /* nom du fichier */
 };
 
 
@@ -354,11 +354,11 @@ Etablissent une interface générale sous forme de terminal, permettant de contr
 
 Structure termios contenant au moins : 
 
-tcflag_t c_iflag;      /* modes d'entrée */
-tcflag_t c_oflag;      /* modes de sortie */
-tcflag_t c_cflag;      /* modes de contrôle */
-tcflag_t c_lflag;      /* modes locaux */
-cc_t     c_cc[NCCS];   /* caractères de contrôle */
+tcflag_t c_iflag;	  /* modes d'entrée */
+tcflag_t c_oflag;	  /* modes de sortie */
+tcflag_t c_cflag;	  /* modes de contrôle */
+tcflag_t c_lflag;	  /* modes locaux */
+cc_t	 c_cc[NCCS];   /* caractères de contrôle */
 
 
 tcsetattr #include <termios.h> #include <unistd.h>

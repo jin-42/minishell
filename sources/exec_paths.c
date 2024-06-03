@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   exec_paths.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/27 15:33:26 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/30 16:23:24 by sponthus         ###   ########lyon.fr   */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   exec_paths.c									   :+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: sponthus <sponthus@student.42lyon.fr>	  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2024/03/27 15:33:26 by sponthus		  #+#	#+#			 */
+/*   Updated: 2024/06/03 14:46:33 by sponthus		 ###   ########lyon.fr   */
+/*																			*/
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
@@ -70,13 +70,15 @@ bool	is_a_directory(char *path)
 
 	i = 0;
 	abc = 0;
+	if (path[0] == '/')
+		return (true);
 	while (path[i])
 	{
 		if (path[i] != '/' && path[i] != '.')
 			abc++;
 		i++;
 	}
-	if (abc == 0)
+	if (abc == 0 && ft_strlen(path) != 0)
 		return (true);
 	return (false);
 }

@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/14 15:54:35 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/30 15:44:26 by sponthus         ###   ########lyon.fr   */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   main.c											 :+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: sponthus <sponthus@student.42lyon.fr>	  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2024/03/14 15:54:35 by sponthus		  #+#	#+#			 */
+/*   Updated: 2024/06/03 17:43:16 by sponthus		 ###   ########lyon.fr   */
+/*																			*/
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
@@ -48,6 +48,7 @@ void	signal_handler(int sig)
 	{
 		if (g_signal == 0 || g_signal == -1 || g_signal > 2) // dans readline
 		{
+			// write(2, "there\n", 6);
 			write(STDIN_FILENO, "^C\n", 3);
 			rl_on_new_line(); // Nouvelle ligne
 			rl_redisplay(); // Remet le prompt
@@ -55,6 +56,7 @@ void	signal_handler(int sig)
 		}
 		if (g_signal == 1) // On est dans l'exec
 		{
+			// write(2, "here\n", 5);
 			write(STDIN_FILENO, "\n", 1);
 			rl_redisplay();
 		}
@@ -68,6 +70,7 @@ void	signal_handler(int sig)
 void	signal_init(void)
 {
 	struct sigaction	sa;
+
 	rl_catch_signals = 0; // Desactive la gestion de signaux de readline
 	sa.sa_handler = &signal_handler; // Redirige les signaux vers signal handler
 	sigemptyset(&sa.sa_mask); // Vide les signaux masques
@@ -92,7 +95,7 @@ char	*input(t_data *data)
 	}
 	if (!line)
 	{
-		ret_val = data->ret_val;
+		ret_val = 0;
 		free_data(data);
 		rl_clear_history();
 		write(2, "exit\n", 5);

@@ -1,31 +1,40 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   builtin_export_utils.c                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/23 15:45:59 by sponthus          #+#    #+#             */
-/*   Updated: 2024/05/23 16:54:10 by sponthus         ###   ########lyon.fr   */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   builtin_export_utils.c							 :+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: sponthus <sponthus@student.42lyon.fr>	  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2024/05/23 15:45:59 by sponthus		  #+#	#+#			 */
+/*   Updated: 2024/06/03 17:41:44 by sponthus		 ###   ########lyon.fr   */
+/*																			*/
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	check_var_name(char *name, char *f)
+int	check_var_name(char *name, char *val, char *f)
 {
 	int	i;
 
 	i = 0;
 	if (ft_isdigit(name[0]) == 1 || ft_strlen(name) == 0)
 	{
-		printf("%s: `%s': not a valid identifier\n", f, name);
+		if (val)
+			printf("%s: `%s=%s': not a valid identifier\n", f, name, val);
+		else
+			printf("%s: `%s': not a valid identifier\n", f, name);
 		return (1);
 	}
 	while (name[i])
 	{
 		if (ft_strchr(EXP_CHAR, name[i]) == NULL)
-			return (printf("%s: `%s': not a valid identifier\n", f, name), 1);
+		{
+			if (val)
+				printf("%s: `%s=%s': not a valid identifier\n", f, name, val);
+			else
+				printf("%s: `%s': not a valid identifier\n", f, name);
+			return (1);
+		}
 		i++;
 	}
 	return (0);
@@ -42,17 +51,17 @@ int	export_replace_val(t_env *node, char *name, char *val, bool add)
 	}
 	else
 	{
-		tmp = ft_strjoin(node->val, val);
+		if (node->val)
+			tmp = ft_strjoin(node->val, val);
+		else
+			tmp = ft_strdup(val);
 		if (!tmp)
-		{
-			free(name);
-			free(val);
-			return (1);
-		}
+			return (free(val), free(name), 1);
 		free(node->val);
+		free(val);
 		node->val = tmp;
 	}
-	node->val_len = ft_strlen(val);
+	node->val_len = ft_strlen(node->val);
 	free(name);
 	return (0);
 }

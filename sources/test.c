@@ -1,18 +1,18 @@
 #include "../includes/minishell.h"
 
 void print_tokens(t_token *tokens) {
-    t_token *current = tokens;
+	t_token *current = tokens;
 	int i = 0;
-    
-    while (current != NULL) {
-        printf("Token: %s\n", current->str);
-        printf("Token type: %d\n", current->type);
-        printf("Token space: %s\n", current->space ? "true" : "false" );
+	
+	while (current != NULL) {
+		printf("Token: %s\n", current->str);
+		printf("Token type: %d\n", current->type);
+		printf("Token space: %s\n", current->space ? "true" : "false" );
 		 printf("Token quote : %s\n", current->quote ? "true" : "false" );
-        printf("\n");
-        current = current->next;
+		printf("\n");
+		current = current->next;
 		i++;
-    }
+	}
 }
 
 void	print_data(t_data *data)
@@ -68,14 +68,14 @@ void print_block(t_block *block) {
 
 while(block != NULL)
 {
-    printf("in_fd: %d\n", block->in_fd);
-    printf("out_fd: %d\n", block->out_fd);
-    printf("here_doc: %s\n", block->here_doc ? "true" : "false");
-    printf("hd_quote: %s\n", block->hd_quote ? "true" : "false");
-    printf("limiter: %s\n", block->limiter != NULL ? block->limiter : "NULL");
+	printf("in_fd: %d\n", block->in_fd);
+	printf("out_fd: %d\n", block->out_fd);
+	printf("here_doc: %s\n", block->here_doc ? "true" : "false");
+	printf("hd_quote: %s\n", block->hd_quote ? "true" : "false");
+	printf("limiter: %s\n", block->limiter != NULL ? block->limiter : "NULL");
 	for (int i = 0; block->args[i] != NULL; ++i) {
-        printf("agrs[%i] = //%s//\n",i, block->args[i]);
-    }
+		printf("agrs[%i] = //%s//\n",i, block->args[i]);
+	}
 	printf("\n");
 	block = block->next;
 }

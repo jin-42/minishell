@@ -3,36 +3,36 @@
 
 int count_av(t_token *head)
 {
-    t_token *curr = head;
-    int             i;
+	t_token *curr = head;
+	int			 i;
 
-    i = 0;
-    while (curr)
-    {
-        if (ft_strncmp("|", curr->str, 1) == 0 && curr->type == OP)
-            break ;
-        if (curr->type == OP)
-            curr = curr->next;
-        else 
-            i++;
-        curr = curr->next;
-    }
-    return (i);
+	i = 0;
+	while (curr)
+	{
+		if (ft_strncmp("|", curr->str, 1) == 0 && curr->type == OP)
+			break ;
+		if (curr->type == OP)
+			curr = curr->next;
+		else 
+			i++;
+		curr = curr->next;
+	}
+	return (i);
 }
 
 bool operator_crash(t_token *head)
 {
-    t_token *curr = head;
+	t_token *curr = head;
 
-    while (curr != NULL)
-    {
-        if (curr->type == OP && curr->next == NULL)
-            return (false);
-        else if ((curr->type == OP) && (ft_strncmp(curr->next->str, "<<", 2) != 0) && (curr->next->type == OP))
-            return (false);
-        curr = curr->next;
-    }
-    return (true);
+	while (curr != NULL)
+	{
+		if (curr->type == OP && curr->next == NULL)
+			return (false);
+		else if ((curr->type == OP) && (ft_strncmp(curr->next->str, "<<", 2) != 0) && (curr->next->type == OP))
+			return (false);
+		curr = curr->next;
+	}
+	return (true);
 }
 
 
@@ -71,9 +71,9 @@ t_token	*free_tok_go_next(t_token *tok)
 
 int init_parser(t_data *data)
 {
-    data->block = init_block();
-    if (!data->block)
-        return (0);
-    data->cmd_count = data->cmd_count + 1;
-    return (1);
+	data->block = init_block();
+	if (!data->block)
+		return (0);
+	data->cmd_count = data->cmd_count + 1;
+	return (1);
 }
