@@ -87,10 +87,11 @@ typedef struct s_stack
 } Stack; // parser count quote
 
 //Stack Utils
-void	initStack(Stack *s);
-void	push(Stack *s, char value);
-char	pop(Stack *s);
-bool	quotes_closed(const char* str);
+void	initStack(Stack *s); // a voir
+void	push(Stack *s, char value); // a voir si necessaire
+char	pop(Stack *s); // a voir
+char	*close_quotes(t_data *data, char *str);
+char	quotes_closed(const char *str);
 
 // PARSER UTILS
 bool	operator_crash(t_token *head);

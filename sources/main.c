@@ -102,8 +102,9 @@ char	*input(t_data *data)
 	}
 	if (ft_strlen(line) > 0)
 		add_history(line);
-	if (quotes_closed(line) == 0)
-		return (free(line), NULL);
+	line = close_quotes(data, line);
+	if (!line)
+		return (NULL);
 	return (line);
 }
 
@@ -119,6 +120,8 @@ int	main(int argc, char **argv, char **environ)
 	while (42)
 	{
 		line = input(&data);
+		if (!line)
+			continue ;
 		if (line && line[0] != '\0')
 		{
 			tokens = lexer(line);
