@@ -12,9 +12,10 @@
 
 #include "../includes/minishell.h"
 
-t_env	*env_new(char *val, char *name)
+t_env	*env_new(char *val, char *name, bool export)
 {
 	t_env	*new;
+	char	*tmp;
 
 	new = malloc (sizeof (t_env) * 1);
 	if (!new)
@@ -26,10 +27,16 @@ t_env	*env_new(char *val, char *name)
 		return (NULL);
 	}
 	new->val = val;
-	new->val_len = ft_strlen(val);
 	new->name = name;
 	new->name_len = ft_strlen(name);
 	new->next = NULL;
+	if (export == true && ft_strchr(val, ' '))
+	{
+		tmp = ft_strtrim(val, " ");
+		if (!val)
+			return (new);
+		new->val = tmp;
+	}
 	return (new);
 }
 
@@ -62,7 +69,6 @@ int	parse_paths(t_data *data)
 	path_str = getenv("PATH");
 	if (path_str == NULL)
 	{
-		// write(2, "Warning : PATH not set.\n", 24);
 		data->paths = NULL;
 		return (0);
 	}
@@ -86,13 +92,13 @@ int	parse_env(t_data *data, char **env)
 	{
 		val = ft_strchr(env[i], '=') + 1;
 		equal = val - 1 - env[i];
-		val = ft_strdup(val); // Ou enlever si pas besoin d'etre malloc
+		val = ft_strdup(val);
 		if (val == NULL)
 			return (2);
 		name = ft_substr(env[i], 0, equal);
 		if (!name)
 			return (free(val), 3);
-		if (env_add_back(&data->env, env_new(val, name)) != 0)
+		if (env_add_back(&data->env, env_new(val, name, false)) != 0)
 			return (4);
 		i++;
 	}

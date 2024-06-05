@@ -14,6 +14,8 @@
 
 // A REECRIRE QUAND ON AURA GARDE LE $ DEVANT LES VAR
 
+// position du deb du nom = i
+
 char	*expand_find_name(char *str)
 {
 	int		i;
@@ -25,14 +27,11 @@ char	*expand_find_name(char *str)
 	name = ft_strchr(str, '$');
 	if (name == NULL || ft_strlen(name) == 1)
 		return (NULL);
-	i = name - str + 1; // position du deb du nom
+	i = name - str + 1;
 	if (str[i] == '?')
 		return (ft_strdup("?"));
-	while (str[i] && is_charset(str[i], EXP_CHAR) == 1)
-	{
-		i++;
+	while (str[i] && is_charset(str[i], EXP_CHAR) == 1 && i++)
 		j++;
-	}
 	if (j == 0)
 	{
 		str[i - 1] = -36;
@@ -45,6 +44,13 @@ char	*expand_find_name(char *str)
 	return (var);
 }
 
+// Copie de ce aui est avant le $
+// On se place a la fin de ce qui a ete copie
+// Et apres le $NAME
+// Copie de ce qui est dans la variable
+// On se place de nouveau a la fin de ce qui a ete copie
+// On copie ce qui reste dans la str
+
 char	*expand_copy(t_data *data, t_token *tok, char *new, char *name)
 {
 	int		i;
@@ -52,18 +58,18 @@ char	*expand_copy(t_data *data, t_token *tok, char *new, char *name)
 	char	*val;
 
 	val = search_env(data, name);
-	ft_strlcpy(new, tok->str, ft_strchr(tok->str, '$') - tok->str + 1); // Copie de ce aui est avant le $
-	i = ft_strlen(new); // On se place a la fin de ce qui a ete copie
-	j = i + 1 + ft_strlen(name); // Et apres le $NAME
+	ft_strlcpy(new, tok->str, ft_strchr(tok->str, '$') - tok->str + 1);
+	i = ft_strlen(new);
+	j = i + 1 + ft_strlen(name);
 	if (val != NULL)
 	{
-		ft_strlcpy(new + i, val, search_env_size(data, name) + 1); // Copie de ce qui est dans la variable
-		i = ft_strlen(new); // On se place de nouveau a la fin de ce qui a ete copie
+		ft_strlcpy(new + i, val, search_env_size(data, name) + 1); 
+		i = ft_strlen(new);
 	}
 	if (ft_strcmp(name, "?") == 0)
 		free(val);
 	while (tok->str[j])
-		new[i++] = tok->str[j++]; // On copie ce qui reste dans la str
+		new[i++] = tok->str[j++];
 	new[i] = 0;
 	return (new);
 }
@@ -115,7 +121,6 @@ void	expander(t_data *data, t_token *head)
 	{
 		if (tok->type == STRING)
 		{
-			printf("expanding %s\n", tok->str);
 			if (ft_strlen(tok->str) == 1 && tok->str[0] == '$'
 				&& tok->next && tok->next->quote)
 			{
@@ -126,7 +131,6 @@ void	expander(t_data *data, t_token *head)
 				expand(data, tok);
 				untok(tok->str);
 			}
-			printf("result %s\n", tok->str);
 		}
 		tok = tok->next;
 	}

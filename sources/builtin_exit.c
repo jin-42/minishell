@@ -99,7 +99,6 @@ int	bt_exit(t_data *data, char **args)
 	int	i;
 
 	i = 0;
-	printf("exit\n");
 	if (args[0] != NULL)
 	{
 		if (check_exit_argument(args[0]) != 0)
@@ -111,6 +110,7 @@ int	bt_exit(t_data *data, char **args)
 			return (printf("exit: too many argyments\n"), 1);
 		i++;
 	}
+	printf("exit\n");
 	if (i != 0 && i != 2)
 		i = bt_atoi(args[0]);
 	leave_minishell(data, i);

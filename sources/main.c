@@ -14,19 +14,6 @@
 
 int	g_signal;
 
-// void	print_eenv(char **env)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (env[i])
-// 	{
-// 		printf("%d =", i);
-// 		printf("/%s/\n", env[i]);
-// 		i++;
-// 	}
-// }
-
 t_data	init_data(char **env)
 {
 	t_data	data;
@@ -42,44 +29,56 @@ t_data	init_data(char **env)
 	return (data);
 }
 
+// g_signal = 1 = On est dans l'exec
+// rl on newline = Nouvelle ligne
+// rl_redisplay = Remet le prompt
+// Ctlr backlash = SIGQUIT ne fait R
+// ctrl C = SIGINT
+
 void	signal_handler(int sig)
 {
-	if (sig == SIGINT) // ctrl C
+	if (sig == SIGINT)
 	{
-		if (g_signal == 0 || g_signal == -1 || g_signal > 2) // dans readline
+		if (g_signal == 0 || g_signal == -1 || g_signal > 2)
 		{
-			// write(2, "there\n", 6);
 			write(STDIN_FILENO, "^C\n", 3);
-			rl_on_new_line(); // Nouvelle ligne
-			rl_redisplay(); // Remet le prompt
+			rl_on_new_line();
+			rl_redisplay();
 			g_signal = -1;
 		}
-		if (g_signal == 1) // On est dans l'exec
+		if (g_signal == 1)
 		{
-			// write(2, "here\n", 5);
 			write(STDIN_FILENO, "\n", 1);
+			rl_on_new_line();
 			rl_redisplay();
 		}
 	}
-	if (sig == SIGQUIT) // Ctlr backlash ne fait R
-	{
+	if (sig == SIGQUIT)
 		return ;
-	}
 }
+
+// Desactive la gestion de signaux de readline
+// Redirige les signaux vers signal handler
+// Vide les signaux masques
+// sa flags -> OU 0 ? = options, voir man sigaction
+// Annule Ctrl C
+// Annule Ctlr backslash
 
 void	signal_init(void)
 {
 	struct sigaction	sa;
 
-	rl_catch_signals = 0; // Desactive la gestion de signaux de readline
-	sa.sa_handler = &signal_handler; // Redirige les signaux vers signal handler
-	sigemptyset(&sa.sa_mask); // Vide les signaux masques
-	sa.sa_flags = SA_RESTART; // OU 0 ? = options, voir man sigaction
-	if (sigaction(SIGINT, &sa, NULL) == -1) // Ctrl C
+	rl_catch_signals = 0;
+	sa.sa_handler = &signal_handler;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_RESTART;
+	if (sigaction(SIGINT, &sa, NULL) == -1)
 		perror("SIGINT error\n");
-	if (sigaction(SIGQUIT, &sa, NULL) == -1) // Ctlr backslash
+	if (sigaction(SIGQUIT, &sa, NULL) == -1)
 		perror("SIGQUIT error\n");
 }
+
+// Gere la mise a 130 du code de retour si ctrl C
 
 char	*input(t_data *data)
 {
@@ -91,7 +90,7 @@ char	*input(t_data *data)
 	if (g_signal == -1)
 	{
 		data->ret_val = 130;
-		g_signal = 0; // Permet de mettre la ret val a 130 apres un ctrl C
+		g_signal = 0;
 	}
 	if (!line)
 	{
@@ -104,7 +103,7 @@ char	*input(t_data *data)
 	if (ft_strlen(line) > 0)
 		add_history(line);
 	if (quotes_closed(line) == 0)
-		return (free(line), NULL); // Add msg error
+		return (free(line), NULL);
 	return (line);
 }
 
@@ -112,7 +111,7 @@ int	main(int argc, char **argv, char **environ)
 {
 	char	*line;
 	t_data	data;
-	t_token *tokens;
+	t_token	*tokens;
 
 	g_signal = 0;
 	signal_init();
@@ -122,26 +121,15 @@ int	main(int argc, char **argv, char **environ)
 		line = input(&data);
 		if (line && line[0] != '\0')
 		{
-			if (ft_strncmp(line, "stop", 5) == 0)
-				break ; // A supprimer quand signaux
-			else // On n'en aura pas besoin du else, simplement noter les instructions
-			{
-				tokens = lexer(line);
-				//expender a placer ici
-				// print_tokens(tokens); // A suppr
-				expander(&data, tokens);
-				// printf("////\n\n\n");
-				tokens = token_join(tokens);
-				//print_tokens(tokens); // A suppr
-				parser(&data, tokens);
-				// print_data(&data);
-			}
-			free(line);
-			exec(&data);
+			tokens = lexer(line);
+			expander(&data, tokens);
+			tokens = token_join(tokens);
+			parser(&data, tokens);
 		}
-		// Signaux
+		if (line)
+			free(line);
+		exec(&data);
 	}
-	// free(line);
 	free_data(&data);
 	rl_clear_history();
 }

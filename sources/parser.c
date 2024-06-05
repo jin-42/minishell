@@ -139,6 +139,6 @@ void parser(t_data *data, t_token *tok)
 	if (!head->args)
 		return (free(tok));
 	parse_tokens(data, cpy, head);
-	print_block(for_print);
+	// print_block(for_print);
 	free_tok(tok);
 }
