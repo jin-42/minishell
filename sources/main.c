@@ -125,6 +125,7 @@ int	main(int argc, char **argv, char **environ)
 		if (line && line[0] != '\0')
 		{
 			tokens = lexer(line);
+			// print_tokens(tokens);
 			expander(&data, tokens);
 			tokens = token_join(tokens);
 			parser(&data, tokens);

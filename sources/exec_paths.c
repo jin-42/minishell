@@ -70,6 +70,8 @@ bool	is_a_directory(char *path)
 
 	i = 0;
 	abc = 0;
+	if (!path)
+		return (false);
 	if (path[0] == '/')
 		return (true);
 	while (path[i])
@@ -78,7 +80,7 @@ bool	is_a_directory(char *path)
 			abc++;
 		i++;
 	}
-	if (abc == 0 && ft_strlen(path) != 0)
+	if (abc == 0 && ft_strlen(path) != 0 && ft_strchr(path, '/'))
 		return (true);
 	return (false);
 }

@@ -35,11 +35,17 @@ void handle_output_redirection(t_block *block, t_token *tok) {
 	}
 }
 
-void handle_input_redirection(t_block *block, t_token *tok) {
+void handle_input_redirection(t_block *block, t_token *tok) 
+{
+	char	*str;
+
+	str = NULL;
 	if (tok->next != 0) {
 		block->in_fd = open(tok->next->str, O_RDONLY);
 		if (block->in_fd == -1) {
-			perror(custom_error("open: ", tok->next->str));
+			str = custom_error("open: ", tok->next->str);
+			perror(str);
+			free(str);
 		}
 	}
 }

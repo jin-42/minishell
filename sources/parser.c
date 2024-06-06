@@ -114,7 +114,11 @@ void parse_tokens(t_data *data, t_token *copy, t_block *head)
 				copy = copy->next;
 		}
 		else
-			head->args[i++] = ft_strdup(copy->str);
+		{
+			if (copy->str && copy->str[0] == '\0' && copy->quote == false) ;
+			else if (copy->str)
+				head->args[i++] = ft_strdup(copy->str);
+		}
 		copy = copy->next;
 	}
 	head->args[i] = NULL;

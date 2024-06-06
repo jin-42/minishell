@@ -128,8 +128,10 @@ void	expander(t_data *data, t_token *head)
 			}
 			else
 			{
+				// printf("expanding token /%s/ (addr tok->str=%x)\n", tok->str, tok->str);
 				expand(data, tok);
 				untok(tok->str);
+				// printf("result /%s/ (addr tok->str=%x)\n", tok->str, tok->str);
 			}
 		}
 		tok = tok->next;

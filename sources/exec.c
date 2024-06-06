@@ -27,7 +27,8 @@ void	next_block(t_data *data)
 		unlink(data->block->limiter);
 	if (data->block->limiter)
 		free(data->block->limiter);
-	free_full_split(data->block->args);
+	if (data->block->args)
+		free_full_split(data->block->args);
 	free(data->block);
 	data->block = block;
 }
@@ -36,7 +37,7 @@ void	next_block(t_data *data)
 // new 1 = %d\n", 
 //i, old_pipe[0], old_pipe[1], new_pipe[0], new_pipe[1]);
 // printf("d->block->args[0] = /%s/", d->block->args[0]);
-// printf("path found = /%s/");
+// printf("path found = /%s/", d->block->path);
 // printf("child no %d determined in_fd = %d / out_fd = %d\n", 
 // i, d->block->in_fd, d->block->out_fd);
 
@@ -52,6 +53,7 @@ void	child_process(t_data *d, int i, int *old_pipe, int *new_pipe)
 		error_exec(d, old_pipe, new_pipe, "empty");
 	if (search_path(d) != 0)
 		error_exec(d, old_pipe, new_pipe, NULL);
+	// printf("path found = /%s/", d->block->path);
 	if (!d->block->path || d->block->args[0][0] == '\0'
 		|| d->block->path[0] == '\0')
 		error_exec(d, old_pipe, new_pipe, "not found");
@@ -111,6 +113,7 @@ int	exec(t_data *data)
 	if (data->cmd_count == 1 && is_builtin(data) == true)
 		return (builtin_process(data, i));
 	pipe_initializer(old_pipe, new_pipe);
+	heredoc(data);
 	while (i < data->cmd_count)
 	{
 		pipe(new_pipe);
