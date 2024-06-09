@@ -24,15 +24,15 @@ t_token *token_join(t_token *tok)
 		{
 			str = ft_strjoin(tok->str, tok->next->str);  // Join the two strings
 			if (!str)
-				return (perror("Error:"), free_tok(head), NULL);  // If the join fails, free memory and return NULL
+				return (ft_printf_fd(2, "Error: allocation"), free_tok(head), NULL);  // If the join fails, free memory and return NULL
 			free(tok->str);
 			tok->str = str;
 			if (tok->next->next != NULL && (tok->next->type != OP))
 			{
-				tmp = tok->next->next;  // Save the pointer to the next of the next token
+				tmp = tok->next->next; 
 				tok->space = tok->next->space;
-				tok_del(tok->next);	 // Delete the next token
-				tok->next = tmp;		// Update the next pointer to skip the deleted token
+				tok_del(tok->next);	
+				tok->next = tmp;
 			}
 			else if ((tok->next != NULL) && (tok->next->next == NULL) && (tok->next->type != OP))
 			{

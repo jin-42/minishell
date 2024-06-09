@@ -36,6 +36,7 @@ extern int	g_signal;
 typedef struct s_env
 {
 	char			*val;
+	int				val_len;
 	char			*name;
 	int				name_len;
 	struct s_env	*next;
@@ -50,7 +51,7 @@ typedef struct s_block
 	char			*limiter;
 	bool			builtin; // Initialiser a faux
 	char			*path; // Initialiser a NULL
-	char			**args; // args/options de cmd, 1er = cmd, dernier NULL
+	char			**args; // args/options de la cmd, 1er = la cmd, dernier = NULL
 	struct s_block	*next; // chainer
 }	t_block;
 
@@ -69,7 +70,7 @@ typedef enum e_bash_op
 	OP,
 	STRING,
 	QUOTE
-}	e_token_type;
+} e_token_type;
 
 typedef struct s_token
 {
@@ -80,27 +81,28 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
-typedef struct s_stack
+typedef struct 
 {
 	char	items[100];
 	int		top;
 } Stack; // parser count quote
 
 //Stack Utils
-void	initStack(Stack *s); // a voir
-void	push(Stack *s, char value); // a voir si necessaire
-char	pop(Stack *s); // a voir
-char	*close_quotes(t_data *data, char *str);
-char	quotes_closed(const char *str);
+void	initStack(Stack *s);
+void	push(Stack *s, char value);
+char	pop(Stack *s);
+bool	quotes_closed(const char* str);
 
 // PARSER UTILS
 bool	operator_crash(t_token *head);
 int		count_av(t_token *head);
+bool last_back_slash(t_token *tok);
+void replace_escape(t_token *tok);
 
 // PARSER UTILS
 bool	operator_crash(t_token *head);
 int		count_av(t_token *head);
-t_block	*init_block(void);
+t_block	*init_block();
 t_token	*free_tok_go_next(t_token *tok);
 int		init_parser(t_data *data);
 
@@ -134,7 +136,7 @@ int		count_back_slash(char *s);
 // ENV PARSING
 
 int		search_env_size(t_data *data, char *name);
-t_env	*env_new(char *val, char *name, bool export);
+t_env	*env_new(char *val, char *name);
 int		env_add_back(t_env **env, t_env *new);
 int		parse_paths(t_data *data);
 int		parse_env(t_data *data, char **env);
@@ -152,6 +154,7 @@ int		exec(t_data *data);
 void	child_process(t_data *data, int i, int *old_pipe, int *new_pipe);
 void	parent_process(t_data *data, int pid, int *old_pipe, int *new_pipe);
 void	next_block(t_data *data);
+void	close_all(t_data *data, int *old_pipe, int *new_pipe);
 
 // EXEC : PATHS
 bool	is_a_directory(char *path);
@@ -163,8 +166,6 @@ int		maj_env_paths(t_data *data);
 // EXEC : PIPES
 void	pipe_manager(int *old_pipe, int *new_pipe);
 void	pipe_initializer(int *old_pipe, int *new_pipe);
-void	close_all(t_data *data, int *old_pipe, int *new_pipe);
-void	close_pipe(int *pipe);
 
 // EXEC : FILES
 void	child_infile(t_data *data, int i, int *old_pipe, int *new_pipe);

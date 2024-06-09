@@ -22,29 +22,10 @@
 // prend en compte arg[0] = export
 // a verifier avec la PEC de plusieurs args
 
-char	*export_trim(char *val)
-{
-	char	*trim;
-
-	trim = NULL;
-	if (val && ft_strchr(val, ' '))
-	{
-		trim = ft_strtrim(val, " ");
-		if (!trim)
-			return (val);
-		free(val);
-		val = trim;
-	}
-	return (val);
-}
-
 int	export_apply(t_data *data, char *name, char *val, bool add)
 {
 	t_env	*env_node;
-	char	*trim;
-	t_env	*node;
 
-	val = export_trim(val);
 	env_node = search_env_node(data->env, name);
 	if (env_node)
 	{
@@ -54,12 +35,13 @@ int	export_apply(t_data *data, char *name, char *val, bool add)
 	else
 	{
 		if (check_var_name(name, val, "export") == 0)
-		{
-			node = env_new(val, name, true);
-			return (env_add_back(&data->env, node));
-		}
+			return (env_add_back(&data->env, env_new(val, name)));
 		else
-			return (free(name), free(val), 1);
+		{
+			free(name);
+			free(val);
+			return (1);
+		}
 	}
 	return (0);
 }
@@ -114,6 +96,27 @@ int	export_arg(t_data *data, char *arg)
 	}
 	return (export_apply(data, name, val, add));
 }
+
+	// if (val != NULL && ft_strlen(arg) > 1 && val != arg)
+	// {
+	// 	if (add == true)
+	// 		name = ft_substr(arg, 0, val - arg - 1);
+	// 	else
+	// 		name = ft_substr(arg, 0, val - arg);
+	// 	if (!name)
+	// 		return (1);
+	// 	val = ft_strdup(val + 1);
+	// 	if (!val)
+	// 		return (free(name), 1);
+	// }
+	// else
+	// {
+	// 	name = ft_strdup(arg);
+	// 	if (!name)
+	// 		return (1);
+	// 	if (ft_strlen(arg) < 1 || val == arg)
+	// 		val = NULL;
+	// }
 
 int	export(t_data *data, char **args)
 {

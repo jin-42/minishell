@@ -61,7 +61,9 @@ int	export_replace_val(t_env *node, char *name, char *val, bool add)
 		free(val);
 		node->val = tmp;
 	}
-	return (free(name), 0);
+	node->val_len = ft_strlen(node->val);
+	free(name);
+	return (0);
 }
 
 int	export_print(t_data *data)
