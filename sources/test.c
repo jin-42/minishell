@@ -64,19 +64,62 @@ void	print_data(t_data *data)
 	printf("\n\n");
 }
 
-void print_block(t_block *block) {
+// void print_block(t_block *block) {
 
-while(block != NULL)
-{
-	printf("in_fd: %d\n", block->in_fd);
-	printf("out_fd: %d\n", block->out_fd);
-	printf("here_doc: %s\n", block->here_doc ? "true" : "false");
-	printf("hd_quote: %s\n", block->hd_quote ? "true" : "false");
-	printf("limiter: %s\n", block->limiter != NULL ? block->limiter : "NULL");
-	for (int i = 0; block->args[i] != NULL; ++i) {
-		printf("agrs[%i] = //%s//\n",i, block->args[i]);
-	}
-	printf("\n");
-	block = block->next;
-}
-}
+// while(block != NULL)
+// {
+// 	printf("in_fd: %d\n", block->in_fd);
+// 	printf("out_fd: %d\n", block->out_fd);
+// 	printf("here_doc: %s\n", block->here_doc ? "true" : "false");
+// 	printf("hd_quote: %s\n", block->hd_quote ? "true" : "false");
+// 	printf("limiter: %s\n", block->limiter != NULL ? block->limiter : "NULL");
+// 	for (int i = 0; block->args[i] != NULL; ++i) {
+// 		printf("agrs[%i] = //%s//\n",i, block->args[i]);
+// 	}
+// 	printf("\n");
+// 	block = block->next;
+// }
+// }
+
+// #include <stdbool.h>
+// #include <stdio.h>
+
+// bool	quotes_closed(const char *str)
+// {
+// 	int		i;
+// 	bool	res;
+// 	char	c;
+
+// 	res = true;
+// 	i = 0;
+// 	while (str[i])
+// 	{
+// 		if (str[i] == '"' || str[i] == '\'')
+// 		{
+// 			c = str[i++];
+// 			res = false;
+// 			while (str[i])
+// 			{
+// 				if (str[i++] == c)
+// 				{
+// 					res = true;
+// 					break ;
+// 				}
+// 			}
+// 		}
+// 		if (str[i])
+// 			i++;
+// 	}
+// 	return (res);
+// }
+
+// int	main(int argc, char **argv)
+// {
+// 	(void)argc;
+// 	while(argc)
+// 	{
+// 		printf("quotes %s is %d\n", argv[0], quotes_closed(argv[0]));
+// 		argv++;
+// 		argc--;
+// 	}
+// }

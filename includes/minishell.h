@@ -51,7 +51,7 @@ typedef struct s_block
 	char			*limiter;
 	bool			builtin; // Initialiser a faux
 	char			*path; // Initialiser a NULL
-	char			**args; // args/options de la cmd, 1er = la cmd, dernier = NULL
+	char			**args; // 1er = la cmd, dernier = NULL
 	struct s_block	*next; // chainer
 }	t_block;
 
@@ -81,40 +81,30 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
-typedef struct 
-{
-	char	items[100];
-	int		top;
-} Stack; // parser count quote
-
 // Signals
 void	signal_handler(int sig);
 void	signal_init(void);
 
 //Stack Utils
-void	init_stack(Stack *s);
-void	push(Stack *s, char value);
-char	pop(Stack *s);
-bool	quotes_closed(const char* str);
+bool	quotes_closed(const char *str); // To update at school
 
 // PARSER UTILS
 bool	operator_crash(t_token *head);
 int		count_av(t_token *head);
-bool last_back_slash(t_token *tok);
-void replace_escape(t_token *tok);
+bool	last_back_slash(t_token *tok);
+void	replace_escape(t_token *tok);
 
 // PARSER UTILS
 bool	operator_crash(t_token *head);
 int		count_av(t_token *head);
-t_block	*init_block();
+t_block	*init_block(void);
 t_token	*free_tok_go_next(t_token *tok);
 int		init_parser(t_data *data);
 
 // Parser redir
 void	handle_append_redirection(t_block *block, t_token *tok);
-void	handle_here_document(t_block *block, t_token *tok);
+void	handle_here_document(t_data *data, t_block *block, t_token *tok);
 void	handle_output_redirection(t_block *block, t_token *tok);
-void	handle_input_redirection(t_block *block, t_token *tok);
 void	handle_input_redirection(t_block *block, t_token *tok);
 void	handle_pipe(t_data *data, t_block *block, t_token *tok, int i);
 
@@ -136,6 +126,7 @@ int		_lstadd(t_token **lst, t_token *new);
 t_token	*token_join(t_token *tok);
 char	*ft_strjoin(char const *s1, char const *s2);
 int		count_back_slash(char *s);
+int		handle_quote(t_token **token, char *s, int *i);
 
 // ENV PARSING
 
@@ -180,7 +171,7 @@ int		check_builtin_files(t_data *data);
 
 // EXEC : HEREDOC
 
-int		heredoc(t_data *data);
+int		heredoc(t_data *data, t_block *block);
 int		fill_heredoc(t_data *data, t_block *block, int fd);
 char	*expand_heredoc(t_data *data, char *line);
 
@@ -220,12 +211,12 @@ int		check_exit_argument(char *arg);
 int		contains_digits(char *arg);
 int		bt_atoi(char *nptr);
 
-
 // ERROR
 char	*custom_error(char *function, char *arg);
 void	error_parsing(t_data *data, char *type);
 void	error_exec(t_data *data, int *old_pipe, int *new_pipe, char *str);
 void	error_heredoc(t_block *block);
+void	error_parser(t_data *data, t_token *tok, int errno);
 
 // FREE
 void	free_env_char(t_data *data);

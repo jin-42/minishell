@@ -51,3 +51,50 @@ t_token	*double_quote(char *s, int *i)
 	tok->quote = true;
 	return (tok);
 }
+
+int	apply_single_quote(t_token **token, char *s, int *i)
+{
+	int	flag;
+
+	flag = 0;
+	if (s[*i + 1] != '\0' && s[*i + 1] != '\'')
+	{
+		(*i)++;
+		flag = _lstadd(token, simple_quote(s, i));
+		(*i)++;
+	}
+	else
+		*i += 2;
+	return (flag);
+}
+
+int	apply_double_quote(t_token **token, char *s, int *i)
+{
+	int	flag;
+
+	flag = 0;
+	if (s[*i + 1] != '\0')
+	{
+		(*i)++;
+		flag = _lstadd(token, double_quote(s, i));
+		(*i)++;
+	}
+	else
+		*i += 2;
+}
+
+int	handle_quote(t_token **token, char *s, int *i)
+{
+	int	flag;
+
+	flag = 0;
+	if (s[*i] == '\'')
+	{
+		apply_single_quote(token, s, i);
+	}
+	else if (s[*i] == '\"')
+	{
+		apply_double_quote(token, s, i);
+	}
+	return (flag);
+}

@@ -60,8 +60,8 @@ int	check_builtin_files(t_data *data)
 		data->block->in_fd = 0;
 	if (data->block->out_fd == -2)
 		data->block->out_fd = 1;
-	if (data->block->here_doc == true)
-		heredoc(data);
+	// if (data->block->here_doc == true)
+	// 	heredoc(data);
 	if (data->block->in_fd == -1 || data->block->out_fd == -1)
 		return (1);
 	return (SUCCESS);

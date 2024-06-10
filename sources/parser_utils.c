@@ -1,6 +1,5 @@
 #include "../includes/minishell.h"
 
-
 int	count_av(t_token *head)
 {
 	t_token	*curr;
@@ -39,12 +38,11 @@ bool	operator_crash(t_token *head)
 	return (true);
 }
 
-
 t_block	*init_block(void)
 {
 	t_block	*block;
 
-	block = malloc(sizeof (t_block ));
+	block = malloc(sizeof (t_block));
 	if (!block)
 		return (NULL);
 	block->in_fd = -2;
@@ -57,7 +55,6 @@ t_block	*init_block(void)
 	block->args = NULL;
 	block->next = NULL;
 	return (block);
-
 }
 
 t_token	*free_tok_go_next(t_token *tok)

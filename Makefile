@@ -42,7 +42,7 @@ SRC = $(SRC_DIR)main.c \
 	$(SRC_DIR)parser.c \
 	$(SRC_DIR)parser_utils.c \
 	$(SRC_DIR)parser_expand.c \
-	$(SRC_DIR)exec_heredoc.c \
+	$(SRC_DIR)parser_heredoc.c \
 	$(SRC_DIR)exec_files.c \
 	$(SRC_DIR)backslash.c \
 	$(SRC_DIR)parser_redir.c 

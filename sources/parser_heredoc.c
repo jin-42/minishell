@@ -120,41 +120,69 @@ char	*random_name(void)
 	return (rand);
 }
 
-int	heredoc(t_data *data)
+// int	heredoc(t_data *data)
+// {
+// 	int		fd;
+// 	char	*name;
+// 	t_block	*block;
+
+// 	block = data->block;
+// 	while (block)
+// 	{
+// 		if (data->block->here_doc == true)
+// 		{
+// 			if (block->in_fd > 2)
+// 				close(block->in_fd);
+// 			name = random_name();
+// 			if (!name)
+// 				return (1);
+// 			fd = open(name, O_RDWR | O_TRUNC | O_CREAT, 00644);
+// 			if (fd < 0)
+// 				return (1);
+// 			if (fill_heredoc(data, block, fd) < 0)
+// 			{
+// 				block->limiter = name;
+// 				block->in_fd = -2;
+// 				return (close(fd), 1);
+// 			}
+// 			close(fd);
+// 			fd = open(name, O_RDONLY, 00644);
+// 			if (fd < 0)
+// 				return (1);
+// 			block->in_fd = fd;
+// 			if (block->limiter)
+// 				free(block->limiter);
+// 			block->limiter = name;
+// 		}
+// 		block = block->next;
+// 	}
+// 	return (0);
+// }
+
+int	heredoc(t_data *data, t_block *block)
 {
 	int		fd;
 	char	*name;
-	t_block	*block;
 
-	block = data->block;
-	while (block)
+	name = random_name();
+	if (!name)
+		return (1);
+	fd = open(name, O_RDWR | O_TRUNC | O_CREAT, 00644);
+	if (fd < 0)
+		return (1);
+	if (fill_heredoc(data, block, fd) < 0)
 	{
-		if (data->block->here_doc == true)
-		{
-			if (block->in_fd > 2)
-				close(block->in_fd);
-			name = random_name();
-			if (!name)
-				return (1);
-			fd = open(name, O_RDWR | O_TRUNC | O_CREAT, 00644);
-			if (fd < 0)
-				return (1);
-			if (fill_heredoc(data, block, fd) < 0)
-			{
-				block->limiter = name;
-				block->in_fd = -2;
-				return (close(fd), 1);
-			}
-			close(fd);
-			fd = open(name, O_RDONLY, 00644);
-			if (fd < 0)
-				return (1);
-			block->in_fd = fd;
-			if (block->limiter)
-				free(block->limiter);
-			block->limiter = name;
-		}
-		block = block->next;
+		block->limiter = name;
+		block->in_fd = -2;
+		return (close(fd), 1);
 	}
+	close(fd);
+	fd = open(name, O_RDONLY, 00644);
+	if (fd < 0)
+		return (1);
+	block->in_fd = fd;
+	if (block->limiter)
+		free(block->limiter);
+	block->limiter = name;
 	return (0);
 }

@@ -23,7 +23,7 @@ void	parse_operators(t_data *data, t_token *tok, int i)
 	}
 	else if (ft_strncmp(tok->str, "<<", 2) == 0)
 	{
-		handle_here_document(block, tok);
+		handle_here_document(data, block, tok);
 	}
 	else if (ft_strncmp(tok->str, ">", 1) == 0)
 	{
@@ -59,25 +59,13 @@ void	parse_tokens(t_data *data, t_token *copy, t_block *head)
 		}
 		else
 		{
-			if (copy->str && copy->str[0] == '\0' && copy->quote == false) ;
-			else if (copy->str)
+			if (copy->str
+				|| (copy->str && copy->str[0] != '\0' && copy->quote == false))
 				head->args[i++] = ft_strdup(copy->str);
 		}
 		copy = copy->next;
 	}
 	head->args[i] = NULL;
-}
-
-void	error_parser(t_data *data, t_token *tok, int errno)
-{
-	if (errno > 0)
-		free_tok(tok);
-	if (errno == 1)
-		return ((void)ft_printf_fd(2, "Error: syntax operator\n"));
-	else if (errno == 2)
-		return ((void)ft_printf_fd(2, "Error: syntaxe backslash\n"));
-	else
-		return ((void)ft_printf_fd(2, "Error: allocation\n"));
 }
 
 void	parser(t_data *data, t_token *tok)

@@ -16,7 +16,7 @@ void	error_heredoc(t_block *block)
 {
 	write(2, "warning: here-document delimited by end-of-file(wanted `", 56);
 	write(2, block->limiter, ft_strlen(block->limiter));
-	write(2, "\"\n", 2);
+	write(2, "\")\n", 3);
 }
 
 // ex util : perror(custom_error("cd: ", arg));
@@ -67,4 +67,16 @@ void	error_parsing(t_data *data, char *type)
 		write(2, "Error parsing env.\n", 19);
 	}
 	leave_minishell(data, -1);
+}
+
+void	error_parser(t_data *data, t_token *tok, int errno)
+{
+	if (errno > 0)
+		free_tok(tok);
+	if (errno == 1)
+		return ((void)ft_printf_fd(2, "Error: syntax operator\n"));
+	else if (errno == 2)
+		return ((void)ft_printf_fd(2, "Error: syntaxe backslash\n"));
+	else
+		return ((void)ft_printf_fd(2, "Error: allocation\n"));
 }
