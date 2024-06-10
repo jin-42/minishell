@@ -62,47 +62,43 @@ void	next_block(t_data *data)
 		unlink(data->block->limiter);
 	if (data->block->limiter)
 		free(data->block->limiter);
-	free_full_split(data->block->args);
+	if (data->block->args)
+		free_full_split(data->block->args);
 	free(data->block);
 	data->block = block;
 }
 
-void	child_process(t_data *data, int i, int *old_pipe, int *new_pipe)
+// printf("child no %d - pipes old 0 = %d / old 1 = %d / new 0 = %d 
+// new 1 = %d\n", 
+//i, old_pipe[0], old_pipe[1], new_pipe[0], new_pipe[1]);
+// printf("d->block->args[0] = /%s/", d->block->args[0]);
+// printf("path found = /%s/", d->block->path);
+// printf("child no %d determined in_fd = %d / out_fd = %d\n", 
+// i, d->block->in_fd, d->block->out_fd);
+
+void	child_process(t_data *d, int i, int *old_pipe, int *new_pipe)
 {
-	printf("child no %d - pipes old 0 = %d / old 1 = %d / new 0 = %d / new 1 = %d\n", i, old_pipe[0], old_pipe[1], new_pipe[0], new_pipe[1]);
-	if (check_files(data, i, old_pipe, new_pipe) != 0)
-	{
-		printf("heeeeeeeeere\n");
-		error_exec(data, old_pipe, new_pipe, NULL);
-	}
-	if (is_a_directory(data->block->args[0]))
-		error_exec(data, old_pipe, new_pipe, "is a directory");
-	if (!data->block->args[0])
-		error_exec(data, old_pipe, new_pipe, "empty");
-	if (search_path(data) != 0)
-	{
-		printf("HEEEEEERE\n");
-		error_exec(data, old_pipe, new_pipe, NULL);
-	}
-	printf("path found = /%s/");
-	if (data->block->path == NULL || data->block->path[0] == '\0')
-	{
-		printf("THEREEEEE");
-		error_exec(data, old_pipe, new_pipe, "not found");
-	}
-	// printf("child no %d determined in_fd = %d / out_fd = %d\n", i, data->block->in_fd, data->block->out_fd);
-	if (dup2(data->block->in_fd, STDIN_FILENO) == -1)
-	{
-		// printf("DUPIN SAYS THEEEEEEEERE");
-		error_exec(data, old_pipe, new_pipe, "dup2 in:");
-	}
-	if (dup2(data->block->out_fd, STDOUT_FILENO) == -1)
-		error_exec(data, old_pipe, new_pipe, "dup2 out:");
-	close_all(data, old_pipe, new_pipe);
-	// write(2, "clearing\n", 9);
-	// rl_clear_history();
-	if (data->block->builtin == true)
-		data->ret_val = exec_builtin(data, data->block->args, true);
+	if (!d->block->args[0])
+		leave_minishell(d, 0);
+	if (check_files(d, i, old_pipe, new_pipe) != 0)
+		error_exec(d, old_pipe, new_pipe, NULL);
+	if (is_a_directory(d->block->args[0]))
+		error_exec(d, old_pipe, new_pipe, "is a directory");
+	if (!d->block->args[0])
+		error_exec(d, old_pipe, new_pipe, "empty");
+	if (search_path(d) != 0)
+		error_exec(d, old_pipe, new_pipe, NULL);
+	// printf("path found = /%s/", d->block->path);
+	if (!d->block->path || d->block->args[0][0] == '\0'
+		|| d->block->path[0] == '\0')
+		error_exec(d, old_pipe, new_pipe, "not found");
+	if (dup2(d->block->in_fd, STDIN_FILENO) == -1)
+		error_exec(d, old_pipe, new_pipe, "dup2 in:");
+	if (dup2(d->block->out_fd, STDOUT_FILENO) == -1)
+		error_exec(d, old_pipe, new_pipe, "dup2 out:");
+	close_all(d, old_pipe, new_pipe);
+	if (d->block->builtin == true)
+		d->ret_val = exec_builtin(d, d->block->args, true);
 	else
 	{
 		// ft_printf_fd(2, "executing %s on %d (ex %d)\n\n", data->block->path, STDIN_FILENO, data->block->in_fd);
@@ -157,6 +153,7 @@ int	exec(t_data *data)
 	if (data->cmd_count == 1 && is_builtin(data) == true)
 		return (builtin_process(data, i));
 	pipe_initializer(old_pipe, new_pipe);
+	heredoc(data);
 	while (i < data->cmd_count)
 	{
 		pipe(new_pipe);

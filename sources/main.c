@@ -122,26 +122,20 @@ int	main(int argc, char **argv, char **environ)
 		line = input(&data);
 		if (line && line[0] != '\0')
 		{
-			if (ft_strncmp(line, "stop", 5) == 0)
-				break ; // A supprimer quand signaux
-			else // On n'en aura pas besoin du else, simplement noter les instructions
-			{
-				tokens = lexer(line);
-				if (!tokens)
+			tokens = lexer(line);
+      if (!tokens)
 				{
 					free(line);
 					continue;
 				}
-				print_tokens(tokens);
-				replace_escape(tokens);
-				expander(&data, tokens);
-				tokens = token_join(tokens);
-				free(line);
-				parser(&data, tokens);
-			}
+			// print_tokens(tokens);
+      replace_escape(tokens);
+			expander(&data, tokens);
+			tokens = token_join(tokens);
+			parser(&data, tokens);
+      free(line);
 			exec(&data);
 		}
-		// Signaux
 	}
 	free_data(&data);
 	rl_clear_history();

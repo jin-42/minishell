@@ -176,7 +176,7 @@ int		check_builtin_files(t_data *data);
 // EXEC : HEREDOC
 
 int		heredoc(t_data *data);
-int		fill_heredoc(t_data *data, int fd);
+int		fill_heredoc(t_data *data, t_block *block, int fd);
 char	*expand_heredoc(t_data *data, char *line);
 
 // BUILTIN
@@ -220,6 +220,7 @@ int		bt_atoi(char *nptr);
 char	*custom_error(char *function, char *arg);
 void	error_parsing(t_data *data, char *type);
 void	error_exec(t_data *data, int *old_pipe, int *new_pipe, char *str);
+void	error_heredoc(t_block *block);
 
 // FREE
 void	free_env_char(t_data *data);

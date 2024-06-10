@@ -97,7 +97,7 @@ int handle_quote(t_token **token, char *s, int *i)
 	}
 	else if (s[*i] == '\"')
 	{
-		if (s[*i + 1] != '\0' && s[*i + 1] != '\"')
+		if (s[*i + 1] != '\0')// && s[*i + 1] != '\"')
 		{
 			(*i)++;
 			flag = _lstadd(token, double_quote(s, i));

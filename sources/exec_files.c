@@ -25,8 +25,8 @@ void	child_infile(t_data *data, int i, int *old_pipe, int *new_pipe)
 		if (data->block->in_fd == -2)
 			data->block->in_fd = old_pipe[0];
 	}
-	if (data->block->here_doc == true)
-		heredoc(data);
+	// if (data->block->here_doc == true)
+	// 	heredoc(data);
 	// printf("in_fd apres choix = %d\n", data->block->in_fd);
 }
 

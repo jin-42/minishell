@@ -12,7 +12,15 @@
 
 #include "../includes/minishell.h"
 
-char	*custom_error(char *function, char *arg) // exemple util : perror(custom_error("cd: ", arg));
+void	error_heredoc(t_block *block)
+{
+	write(2, "warning: here-document delimited by end-of-file(wanted `", 56);
+	write(2, block->limiter, ft_strlen(block->limiter));
+	write(2, "\"\n", 2);
+}
+
+// exemple util : perror(custom_error("cd: ", arg));
+char	*custom_error(char *function, char *arg)
 {
 	char	*str;
 
@@ -33,15 +41,22 @@ void	error_exec(t_data *data, int *old_pipe, int *new_pipe, char *str)
 		printf("%s: command not found\n", data->block->args[0]);
 		value = 127;
 	}
-	else if (ft_strcmp(str, "is a directory") == 0)
+	else if (str && ft_strcmp(str, "is a directory") == 0)
 	{
 		printf("%s: Is a directory\n", data->block->args[0]);
 		value = 126;
 	}
-	else if (ft_strcmp(str, "empty") == 0)
+	else if (str && ft_strcmp(str, "empty") == 0)
 		value = 0;
+	else if (str && ft_strcmp(str, "execve:"))
+	{
+		printf("%s: %s", str, data->block->args[0]);
+		perror("");
+	}
 	else if (str)
+	{
 		perror(str);
+	}
 	leave_minishell(data, value);
 }
 
@@ -53,5 +68,4 @@ void	error_parsing(t_data *data, char *type)
 		write(2, "Error parsing env.\n", 19);
 	}
 	leave_minishell(data, -1);
-	// exit(EXIT_FAILURE);
 }
