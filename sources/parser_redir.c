@@ -1,5 +1,4 @@
-
-# include "../includes/minishell.h"
+#include "../includes/minishell.h"
 
 void	handle_append_redirection(t_block *block, t_token *tok)
 {
@@ -79,7 +78,7 @@ void	handle_pipe(t_data *data, t_block *block, t_token *tok, int i)
 {
 	t_block	*bl;
 
-	if (tok->next != 0) 
+	if (tok->next != 0)
 	{
 		bl = init_block();
 		if (!bl)

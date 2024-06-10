@@ -70,12 +70,12 @@ typedef enum e_bash_op
 	OP,
 	STRING,
 	QUOTE
-} e_token_type;
+}	t_token_type;
 
 typedef struct s_token
 {
 	char			*str;
-	e_token_type	type;
+	t_token_type	type;
 	bool			space;
 	bool			quote;
 	struct s_token	*next;

@@ -56,7 +56,7 @@ void	signal_init(void)
 	rl_catch_signals = 0;
 	sa.sa_handler = &signal_handler;
 	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_RESTART; 
+	sa.sa_flags = SA_RESTART;
 	if (sigaction(SIGINT, &sa, NULL) == -1)
 		perror("SIGINT error\n");
 	if (sigaction(SIGQUIT, &sa, NULL) == -1)

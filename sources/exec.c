@@ -127,7 +127,6 @@ int	exec(t_data *data)
 	g_signal = 1;
 	if (maj_env_paths(data) != 0 || data->cmd_count == 0)
 		return (1);
-	// heredoc(data);
 	i = 0;
 	if (data->cmd_count == 1 && is_builtin(data) == true)
 		return (builtin_process(data, i));

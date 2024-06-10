@@ -59,6 +59,3 @@ t_token	*token_join(t_token *tok)
 	}
 	return (head);
 }
-
-
-

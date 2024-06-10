@@ -1,4 +1,4 @@
-#include	"../includes/minishell.h"
+#include "../includes/minishell.h"
 
 static int	check_last_back_slash(char *s)
 {
@@ -33,7 +33,6 @@ bool	last_back_slash(t_token *tok)
 	}
 	return (false);
 }
-
 
 static void	replace_escapes(char *str)
 {
