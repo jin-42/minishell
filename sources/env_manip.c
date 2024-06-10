@@ -67,20 +67,14 @@ char	*env_join(t_env *env, bool exp)
 	tmp = ft_strjoin(env->name, "=");
 	if (!tmp)
 		return (NULL);
-	if (env->val && ft_strlen(env->val) > 0)
-	{
-		res = ft_strjoin(tmp, env->val);
-		free(tmp);
-		if (!res)
-			return (NULL);
-	}
-	else
-		res = tmp;
+	res = ft_strjoin(tmp, env->val);
+	free(tmp);
+	if (!res)
+		return (NULL);
 	return (res);
 }
 
-// Recree char** de l'env avant bloc d'exec
-char	**env_to_char(t_data *data, bool exp)
+char	**env_to_char(t_data *data, bool exp) // Utile pour recreer le char** de l'env avant chaque bloc d'exec
 {
 	char	**res;
 	t_env	*env;
