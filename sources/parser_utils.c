@@ -1,11 +1,12 @@
 #include "../includes/minishell.h"
 
 
-int count_av(t_token *head)
+int	count_av(t_token *head)
 {
-	t_token *curr = head;
-	int			 i;
+	t_token	*curr;
+	int		i;
 
+	curr = head;
 	i = 0;
 	while (curr)
 	{
@@ -13,22 +14,25 @@ int count_av(t_token *head)
 			break ;
 		if (curr->type == OP)
 			curr = curr->next;
-		else 
+		else
 			i++;
 		curr = curr->next;
 	}
 	return (i);
 }
 
-bool operator_crash(t_token *head)
+bool	operator_crash(t_token *head)
 {
-	t_token *curr = head;
+	t_token	*curr;
 
+	curr = head;
 	while (curr != NULL)
 	{
 		if (curr->type == OP && curr->next == NULL)
 			return (false);
-		else if ((curr->type == OP) && (ft_strncmp(curr->next->str, "<<", 2) != 0) && (curr->next->type == OP))
+		else if ((curr->type == OP)
+			&& (ft_strncmp(curr->next->str, "<<", 2) != 0)
+			&& (curr->next->type == OP))
 			return (false);
 		curr = curr->next;
 	}
@@ -36,7 +40,7 @@ bool operator_crash(t_token *head)
 }
 
 
-t_block	*init_block()
+t_block	*init_block(void)
 {
 	t_block	*block;
 
@@ -58,7 +62,7 @@ t_block	*init_block()
 
 t_token	*free_tok_go_next(t_token *tok)
 {
-	t_token *tmp;
+	t_token	*tmp;
 
 	if (!tok)
 		return (NULL);
@@ -69,7 +73,7 @@ t_token	*free_tok_go_next(t_token *tok)
 	return (tmp);
 }
 
-int init_parser(t_data *data)
+int	init_parser(t_data *data)
 {
 	data->block = init_block();
 	if (!data->block)

@@ -12,13 +12,13 @@
 
 #include "../includes/minishell.h"
 
-// Option -n = ne pas afficher le \n final
-// prend en compte -nnnn tant que pas d'autre caractere croise, autant que necessaire
-// MAIS s'arrete quand on a plus une option, le reste est des args
-// Espaces entre les args affiches
-// exemple : echo hola -n = pas d'optionm affiche hola -n
-// ATTENTION envoyer args + 1
-// Check a priori ok
+// Option -n = do not write final \n
+// -nnnnn is an option until another char is recognized
+// BUT stops when next arg is not an option anymore, ex -nn hey -nn
+// Spaces between args are shown
+// ex : echo hola -n = no option shows hola -n
+// CAREFUL : seng args + 1
+// Check ok
 
 bool	echo_is_option(char *arg)
 {
@@ -52,15 +52,13 @@ int	bt_echo(t_data *data, char **args)
 
 	j = 0;
 	(void)data;
-	// printf("enter echo");
 	option = false;
-	while(args && args[j] && echo_is_option(args[j]) == true)
+	while (args && args[j] && echo_is_option(args[j]) == true)
 	{
 		option = true;
 		j++;
 	}
 	i = count_args(args);
-	// printf("i = %d, j = %d\n", i, j);
 	while (args && args[j] && j <= i - 1)
 	{
 		printf("%s", args[j]);
@@ -72,5 +70,3 @@ int	bt_echo(t_data *data, char **args)
 		printf("\n");
 	return (SUCCESS);
 }
-
-// RECTIF A FAIRE Si null ne pas mettre d'espace supplementaire

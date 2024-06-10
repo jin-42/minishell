@@ -12,9 +12,9 @@
 
 #include "../includes/minishell.h"
 
-// Prend en compte arg[0] = unset
-// verifier maintenant que traite une liste, marche pour 1 arg
-// Securiser le fait de vider l'environnement
+// arg[0] = unset
+// Check list of args
+// Empty env = checked, ok
 
 void	env_delone(t_data *data, t_env *node)
 {

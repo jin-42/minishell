@@ -17,20 +17,8 @@ void	close_all(t_data *data, int *old_pipe, int *new_pipe)
 	t_block	*block;
 
 	block = data->block;
-	if (old_pipe)
-	{
-		if (old_pipe[0] > 2)
-			close(old_pipe[0]);
-		if (old_pipe[1] > 2)
-			close(old_pipe[1]);
-	}
-	if (new_pipe)
-	{
-		if (new_pipe[0] > 2)
-			close(new_pipe[0]);
-		if (new_pipe[1] > 2)
-			close(new_pipe[1]);
-	}
+	close_pipe(old_pipe);
+	close_pipe(new_pipe);
 	while (block)
 	{
 		if (block->in_fd > 2)
@@ -43,8 +31,6 @@ void	close_all(t_data *data, int *old_pipe, int *new_pipe)
 			close (block->out_fd);
 		block = block->next;
 	}
-	// write(2, "clear histo\n", 12);
-	// rl_clear_history();
 }
 
 void	next_block(t_data *data)
@@ -79,16 +65,13 @@ void	next_block(t_data *data)
 void	child_process(t_data *d, int i, int *old_pipe, int *new_pipe)
 {
 	if (!d->block->args[0])
-		leave_minishell(d, 0);
+		error_exec(d, old_pipe, new_pipe, "empty");
 	if (check_files(d, i, old_pipe, new_pipe) != 0)
 		error_exec(d, old_pipe, new_pipe, NULL);
 	if (is_a_directory(d->block->args[0]))
 		error_exec(d, old_pipe, new_pipe, "is a directory");
-	if (!d->block->args[0])
-		error_exec(d, old_pipe, new_pipe, "empty");
 	if (search_path(d) != 0)
 		error_exec(d, old_pipe, new_pipe, NULL);
-	// printf("path found = /%s/", d->block->path);
 	if (!d->block->path || d->block->args[0][0] == '\0'
 		|| d->block->path[0] == '\0')
 		error_exec(d, old_pipe, new_pipe, "not found");
@@ -101,12 +84,8 @@ void	child_process(t_data *d, int i, int *old_pipe, int *new_pipe)
 		d->ret_val = exec_builtin(d, d->block->args, true);
 	else
 	{
-		// ft_printf_fd(2, "executing %s on %d (ex %d)\n\n", data->block->path, STDIN_FILENO, data->block->in_fd);
-		execve(data->block->path, data->block->args, data->environ);
-		// ft_printf_fd(2, "IN THE END\n");
-		// write(2, "clearing\n", 9);
-		// rl_clear_history();
-		error_exec(data, NULL, NULL, "execve:");
+		execve(d->block->path, d->block->args, d->environ);
+		error_exec(d, NULL, NULL, "execve:");
 	}
 }
 
@@ -118,7 +97,6 @@ void	parent_process(t_data *data, int pid, int *old_pipe, int *new_pipe)
 
 	w = 0;
 	close_all(data, old_pipe, new_pipe);
-	// printf("in the very end\n");
 	while (w != -1)
 	{
 		w = wait(&status);
@@ -149,11 +127,11 @@ int	exec(t_data *data)
 	g_signal = 1;
 	if (maj_env_paths(data) != 0 || data->cmd_count == 0)
 		return (1);
+	heredoc(data);
 	i = 0;
 	if (data->cmd_count == 1 && is_builtin(data) == true)
 		return (builtin_process(data, i));
 	pipe_initializer(old_pipe, new_pipe);
-	heredoc(data);
 	while (i < data->cmd_count)
 	{
 		pipe(new_pipe);
@@ -165,7 +143,5 @@ int	exec(t_data *data)
 		i++;
 	}
 	parent_process(data, fd, old_pipe, new_pipe);
-	// close_all(data, old_pipe, new_pipe);
-	// data->cmd_count = 0;
 	return (0);
 }

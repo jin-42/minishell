@@ -12,15 +12,15 @@
 
 #include "../includes/minishell.h"
 
-// Rend un (int)((i + 256) % 256)
-// Realiser un atoi acceptant 1 seul signe
-// Sans arg code = 0
-// Arguments numeriques code erreur 2 (check en 1er prio sur erreur 1)
-// Si plusieurs signes ou lettres : --abc: numeric argument required
-// Ne prend que un seul argument sinon trop d'arguments et code erreur 1
+// Returns an (int)((i + 256) % 256)
+// Modified atoi takes only 1 sign (+/-)
+// Without args code = 0
+// Numeric args error code = 2 (check is prioritary)
+// If several signs or letters ex: --abc, numeric argument required
+// Takes only 1 arg, else error code 1 too many args
 // 9223372036854775808 overflow numeric argument required
-// -9223372036854775809 underflow idem
-// CHECK OK SAUF GUILLEMETS
+// -9223372036854775809 underflow numeric argument reauired
+// CHECK OK
 
 int	bt_atoi(char *nptr)
 {

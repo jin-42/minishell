@@ -87,8 +87,12 @@ typedef struct
 	int		top;
 } Stack; // parser count quote
 
+// Signals
+void	signal_handler(int sig);
+void	signal_init(void);
+
 //Stack Utils
-void	initStack(Stack *s);
+void	init_stack(Stack *s);
 void	push(Stack *s, char value);
 char	pop(Stack *s);
 bool	quotes_closed(const char* str);
@@ -166,6 +170,7 @@ int		maj_env_paths(t_data *data);
 // EXEC : PIPES
 void	pipe_manager(int *old_pipe, int *new_pipe);
 void	pipe_initializer(int *old_pipe, int *new_pipe);
+void	close_pipe(int pipe[2]);
 
 // EXEC : FILES
 void	child_infile(t_data *data, int i, int *old_pipe, int *new_pipe);

@@ -44,7 +44,8 @@ t_token	*redir(char *s, int *i)
 	tok = allocate_token(3);
 	if (!tok)
 		return (NULL);
-	if ((s[*i] == '<' && s[*i + 1] == '<') || (s[*i] == '>' && s[*i + 1] == '>'))
+	if ((s[*i] == '<' && s[*i + 1] == '<')
+		|| (s[*i] == '>' && s[*i + 1] == '>'))
 		handle_double_redir(s, i, tok);
 	else
 		handle_single_redir(s[*i], tok);

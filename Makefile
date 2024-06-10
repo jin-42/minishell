@@ -16,6 +16,7 @@ SRC_DIR = sources/
 #SRC_BON_DIR = bonus/
 
 SRC = $(SRC_DIR)main.c \
+	$(SRC_DIR)signals.c \
 	$(SRC_DIR)free.c \
 	$(SRC_DIR)error.c \
 	$(SRC_DIR)env_parsing.c \

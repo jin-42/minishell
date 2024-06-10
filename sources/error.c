@@ -19,7 +19,8 @@ void	error_heredoc(t_block *block)
 	write(2, "\"\n", 2);
 }
 
-// exemple util : perror(custom_error("cd: ", arg));
+// ex util : perror(custom_error("cd: ", arg));
+
 char	*custom_error(char *function, char *arg)
 {
 	char	*str;
@@ -54,9 +55,7 @@ void	error_exec(t_data *data, int *old_pipe, int *new_pipe, char *str)
 		perror("");
 	}
 	else if (str)
-	{
 		perror(str);
-	}
 	leave_minishell(data, value);
 }
 

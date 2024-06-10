@@ -74,7 +74,9 @@ char	*env_join(t_env *env, bool exp)
 	return (res);
 }
 
-char	**env_to_char(t_data *data, bool exp) // Utile pour recreer le char** de l'env avant chaque bloc d'exec
+// Useful to create back char** before each exec
+
+char	**env_to_char(t_data *data, bool exp)
 {
 	char	**res;
 	t_env	*env;

@@ -62,7 +62,6 @@ int	parse_paths(t_data *data)
 	path_str = getenv("PATH");
 	if (path_str == NULL)
 	{
-		// write(2, "Warning : PATH not set.\n", 24);
 		data->paths = NULL;
 		return (0);
 	}
@@ -86,7 +85,7 @@ int	parse_env(t_data *data, char **env)
 	{
 		val = ft_strchr(env[i], '=') + 1;
 		equal = val - 1 - env[i];
-		val = ft_strdup(val); // Ou enlever si pas besoin d'etre malloc
+		val = ft_strdup(val);
 		if (val == NULL)
 			return (2);
 		name = ft_substr(env[i], 0, equal);

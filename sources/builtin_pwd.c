@@ -12,8 +12,8 @@
 
 #include "../includes/minishell.h"
 
-// Check depuis les ajouts des args, OK
-// prend en compte arg[0] = pwd
+// Check OK
+// arg[0] = pwd
 
 int	pwd(t_data *data, char **args)
 {

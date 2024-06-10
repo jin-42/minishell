@@ -29,3 +29,13 @@ void	pipe_initializer(int *old_pipe, int *new_pipe)
 	new_pipe[0] = -2;
 	new_pipe[1] = -2;
 }
+
+void	close_pipe(int pipe[2])
+{
+	if (!pipe)
+		return ;
+	if (pipe[0] > 2)
+		close(pipe[0]);
+	if (pipe[1] > 2)
+		close(pipe[1]);
+}

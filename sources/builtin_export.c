@@ -12,15 +12,17 @@
 
 #include "../includes/minishell.h"
 
-// Sans options : affiche env dans l'ordre ASCII, avec les variables sans valeur, met des "" autour de la valeur
-// Avec option : ajoute l'option au contenu
-// Si on a un = la cree gentiment, meme si contenu estnul
-// Si il n y a pas de = ajoute le nom sans contenu assoie donc pas de =""
-// Si plusieurs arg traite tous les arg individuellement ...
-// Accepte en 1er caractere un alpha ou unixcase, pas un chiffre
+// Without options : shows env in ASCII order with variables without value
+// Puts "" around value
+// Wth option : adds option to env
+// If SPACE = creates var with name and value
+// If NO SPACE = Adds var with NULL value (so no VAR="")
+// If + SPACE = Adds value to the var value or creates it if doesnt exist
+// If several args = Treats every arg individually
+// Accepts only 1st caract to be alpha or UNIX, not a number
 
-// prend en compte arg[0] = export
-// a verifier avec la PEC de plusieurs args
+// WARNING : arg[0] = export
+// checks ok
 
 int	export_apply(t_data *data, char *name, char *val, bool add)
 {
@@ -96,27 +98,6 @@ int	export_arg(t_data *data, char *arg)
 	}
 	return (export_apply(data, name, val, add));
 }
-
-	// if (val != NULL && ft_strlen(arg) > 1 && val != arg)
-	// {
-	// 	if (add == true)
-	// 		name = ft_substr(arg, 0, val - arg - 1);
-	// 	else
-	// 		name = ft_substr(arg, 0, val - arg);
-	// 	if (!name)
-	// 		return (1);
-	// 	val = ft_strdup(val + 1);
-	// 	if (!val)
-	// 		return (free(name), 1);
-	// }
-	// else
-	// {
-	// 	name = ft_strdup(arg);
-	// 	if (!name)
-	// 		return (1);
-	// 	if (ft_strlen(arg) < 1 || val == arg)
-	// 		val = NULL;
-	// }
 
 int	export(t_data *data, char **args)
 {

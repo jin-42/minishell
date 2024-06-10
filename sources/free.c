@@ -30,7 +30,9 @@ void	free_env_char(t_data *data)
 	free(data->environ);
 }
 
-void	free_env(t_env *env) // Ne pas free val, pas malloc
+// Val is not malloc, do not free
+
+void	free_env(t_env *env)
 {
 	t_env	*ptr;
 	t_env	*tmp;
@@ -63,10 +65,12 @@ void	free_data(t_data *data)
 		next_block(data);
 }
 
+// during test don't hesitate to write clear history to prove its exec
+// write(2, "clear history\n", 14)'
+
 void	leave_minishell(t_data *data, int val)
 {
 	free_data(data);
-	// write(2, "clear histo\n", 12);
 	rl_clear_history();
 	if (val >= 0)
 		exit(val);

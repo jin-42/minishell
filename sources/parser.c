@@ -1,6 +1,7 @@
 #include "../includes/minishell.h"
 
-void custom_perror(const char *prefix, const char *filename) {
+void	custom_perror(const char *prefix, const char *filename)
+{
 	if (prefix)
 		fprintf(stderr, "%s", prefix);
 	if (filename)
@@ -9,26 +10,36 @@ void custom_perror(const char *prefix, const char *filename) {
 		perror(NULL);
 }
 
-void parse_operators(t_data *data, t_token *tok, int i) 
+void	parse_operators(t_data *data, t_token *tok, int i)
 {
-	t_block *block = data->block;
+	t_block	*block;
 
+	block = data->block;
 	while (block->next)
 		block = block->next;
-	if (ft_strncmp(tok->str, ">>", 2) == 0) {
+	if (ft_strncmp(tok->str, ">>", 2) == 0)
+	{
 		handle_append_redirection(block, tok);
-	} else if (ft_strncmp(tok->str, "<<", 2) == 0) {
+	}
+	else if (ft_strncmp(tok->str, "<<", 2) == 0)
+	{
 		handle_here_document(block, tok);
-	} else if (ft_strncmp(tok->str, ">", 1) == 0) {
+	}
+	else if (ft_strncmp(tok->str, ">", 1) == 0)
+	{
 		handle_output_redirection(block, tok);
-	} else if (ft_strncmp(tok->str, "<", 1) == 0) {
+	}
+	else if (ft_strncmp(tok->str, "<", 1) == 0)
+	{
 		handle_input_redirection(block, tok);
-	} else if (ft_strncmp(tok->str, "|", 1) == 0) {
+	}
+	else if (ft_strncmp(tok->str, "|", 1) == 0)
+	{
 		handle_pipe(data, block, tok, i);
 	}
 }
 
-void parse_tokens(t_data *data, t_token *copy, t_block *head)
+void	parse_tokens(t_data *data, t_token *copy, t_block *head)
 {
 	int	i;
 
@@ -57,29 +68,39 @@ void parse_tokens(t_data *data, t_token *copy, t_block *head)
 	head->args[i] = NULL;
 }
 
-void parser(t_data *data, t_token *tok)
+void	error_parser(t_data *data, t_token *tok, int errno)
 {
-	t_block *head;
-	t_token	 *cpy;
-	int errno;
+	if (errno > 0)
+		free_tok(tok);
+	if (errno == 1)
+		return ((void)ft_printf_fd(2, "Error: syntax operator\n"));
+	else if (errno == 2)
+		return ((void)ft_printf_fd(2, "Error: syntaxe backslash\n"));
+	else
+		return ((void)ft_printf_fd(2, "Error: allocation\n"));
+}
+
+void	parser(t_data *data, t_token *tok)
+{
+	t_block	*head;
+	t_token	*cpy;
 
 	cpy = tok;
-	errno = 0;
 	if (cpy == NULL)
-		return ((void)ft_printf_fd(2, "Error: allocation\n"));
+		return (error_parser(data, tok, -1));
 	if (!operator_crash(cpy))
-		return (free_tok(tok), (void)ft_printf_fd(2, "Error: syntaxe operator\n"));
+		return (error_parser(data, tok, 1));
 	if (last_back_slash(cpy) == true)
-		return (free_tok(tok), (void)ft_printf_fd(2, "Error: syntaxe backslash\n"));
+		return (error_parser(data, tok, 2));
 	if (init_parser(data) == (-1))
-		return (free_tok(tok), (void)ft_printf_fd(2, "Error: allocation\n"));
+		return (error_parser(data, tok, 3));
 	head = data->block;
 	if (head == NULL)
-		return (free(tok), (void)ft_printf_fd(2, "Error: allocation\n"));
+		return (error_parser(data, tok, 3));
 	if (count_av(cpy) != 0)
-		head->args =  malloc(sizeof(char *) * (count_av(cpy) + 1));
+		head->args = malloc(sizeof(char *) * (count_av(cpy) + 1));
 	if (!head->args)
-		return (free(tok), ((void)ft_printf_fd(2, "Error: allocation\n")));
+		return (error_parser(data, tok, 3));
 	parse_tokens(data, cpy, head);
 	free_tok(tok);
 }

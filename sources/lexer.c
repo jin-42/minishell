@@ -29,14 +29,14 @@ static t_token	*_space(char *s, int *i)
 		return (NULL);
 	j = *i;
 	while (s[j] && s[j] != ' ' && s[j] != '|'
-		&& s[j] != '>' && s[j] != '<' && s[j] != '\'' && s[j] != '\"') 
+		&& s[j] != '>' && s[j] != '<' && s[j] != '\'' && s[j] != '\"')
 		j++;
 	tok->str = malloc(sizeof(char) * (j - (*i) + 1));
 	if (!tok->str)
 		return (free(tok), NULL);
 	j = 0;
-	while (s[(*i)] && s[(*i)] != ' ' && s[(*i)] != '|'
-		&& s[(*i)] != '>' && s[(*i)] != '<' && s[(*i)] != '\'' && s[(*i)] != '\"') 
+	while (s[(*i)] && s[(*i)] != ' ' && s[(*i)] != '|' && s[(*i)] != '>'
+		&& s[(*i)] != '<' && s[(*i)] != '\'' && s[(*i)] != '\"')
 		tok->str[j++] = s[(*i)++];
 	tok->str[j] = '\0';
 	tok->space = false;
@@ -65,11 +65,12 @@ static t_token	*_pipe(int *i, char *s)
 	return (tok->quote = false, tok);
 }
 
-void free_tok(t_token *head)
+void	free_tok(t_token *head)
 {
-	t_token *current = head;
-	t_token *temp;
+	t_token	*current;
+	t_token	*temp;
 
+	current = head;
 	while (current != NULL)
 	{
 		if (current->str)
@@ -80,10 +81,11 @@ void free_tok(t_token *head)
 	}
 }
 
-int handle_quote(t_token **token, char *s, int *i)
+int	handle_quote(t_token **token, char *s, int *i)
 {
-	int flag;
+	int	flag;
 
+	flag = 0;
 	if (s[*i] == '\'')
 	{
 		if (s[*i + 1] != '\0' && s[*i + 1] != '\'')
@@ -97,7 +99,7 @@ int handle_quote(t_token **token, char *s, int *i)
 	}
 	else if (s[*i] == '\"')
 	{
-		if (s[*i + 1] != '\0')// && s[*i + 1] != '\"')
+		if (s[*i + 1] != '\0')
 		{
 			(*i)++;
 			flag = _lstadd(token, double_quote(s, i));
@@ -113,7 +115,7 @@ t_token	*lexer(char *s)
 {
 	int		i;
 	t_token	*token;
-	int flag;
+	int		flag;
 
 	i = 0;
 	token = NULL;

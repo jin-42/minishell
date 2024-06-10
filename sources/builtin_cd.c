@@ -12,8 +12,9 @@
 
 #include "../includes/minishell.h" // utiliser chdir
 
-// Check a priori ok
-// prend en compte arg[0] = cd, indique comme le vrai pas >1 argument
+// Check seems ok
+// arg[0] = "cd"
+// Like bash cd, uses 1 arg exactly not more
 
 char	*search_cd_path(t_data *data, char *arg)
 {
@@ -63,15 +64,9 @@ int	maj_pwd(t_data *data, char *old_path)
 	args[3] = NULL;
 	free(path);
 	if (args[0] == NULL || args[1] == NULL || args[2] == NULL)
-	{
-		free_pwd_args(args);
-		return (1);
-	}
+		return (free_pwd_args(args), 1);
 	if (export(data, args) != 0)
-	{
-		free_pwd_args(args);
-		return (1);
-	}
+		return (free_pwd_args(args), 1);
 	free_pwd_args(args);
 	return (0);
 }

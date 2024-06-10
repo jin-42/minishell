@@ -14,19 +14,6 @@
 
 int	g_signal;
 
-// void	print_eenv(char **env)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (env[i])
-// 	{
-// 		printf("%d =", i);
-// 		printf("/%s/\n", env[i]);
-// 		i++;
-// 	}
-// }
-
 t_data	init_data(char **env)
 {
 	t_data	data;
@@ -42,44 +29,7 @@ t_data	init_data(char **env)
 	return (data);
 }
 
-void	signal_handler(int sig)
-{
-	if (sig == SIGINT) // ctrl C
-	{
-		if (g_signal == 0 || g_signal == -1 || g_signal > 2) // dans readline
-		{
-			// write(2, "there\n", 6);
-			write(STDIN_FILENO, "^C\n", 3);
-			rl_on_new_line(); // Nouvelle ligne
-			rl_redisplay(); // Remet le prompt
-			g_signal = -1;
-		}
-		if (g_signal == 1) // On est dans l'exec
-		{
-			// write(2, "here\n", 5);
-			write(STDIN_FILENO, "\n", 1);
-			rl_redisplay();
-		}
-	}
-	if (sig == SIGQUIT) // Ctlr backlash ne fait R
-	{
-		return ;
-	}
-}
-
-void	signal_init(void)
-{
-	struct sigaction	sa;
-
-	rl_catch_signals = 0; // Desactive la gestion de signaux de readline
-	sa.sa_handler = &signal_handler; // Redirige les signaux vers signal handler
-	sigemptyset(&sa.sa_mask); // Vide les signaux masques
-	sa.sa_flags = SA_RESTART; // OU 0 ? = options, voir man sigaction
-	if (sigaction(SIGINT, &sa, NULL) == -1) // Ctrl C
-		perror("SIGINT error\n");
-	if (sigaction(SIGQUIT, &sa, NULL) == -1) // Ctlr backslash
-		perror("SIGQUIT error\n");
-}
+// g_signal = 0 allows to put ret val to 130 after ctrl C
 
 char	*input(t_data *data)
 {
@@ -91,7 +41,7 @@ char	*input(t_data *data)
 	if (g_signal == -1)
 	{
 		data->ret_val = 130;
-		g_signal = 0; // Permet de mettre la ret val a 130 apres un ctrl C
+		g_signal = 0;
 	}
 	if (!line)
 	{
@@ -104,15 +54,35 @@ char	*input(t_data *data)
 	if (ft_strlen(line) > 0)
 		add_history(line);
 	if (quotes_closed(line) == 0)
-		return (free(line), NULL); // Add msg error
+		return (free(line), NULL);
 	return (line);
+}
+
+int	update_data_from_line(t_data *data, char *line)
+{
+	t_token	*tokens;
+
+	tokens = lexer(line);
+	if (!tokens)
+	{
+		free(line);
+		write(2, "Error: lexer\n", 13);
+		return (1);
+	}
+	replace_escape(tokens);
+	expander(data, tokens);
+	tokens = token_join(tokens);
+	parser(data, tokens);
+	free(line);
+	print_data(data);
+	return (0);
 }
 
 int	main(int argc, char **argv, char **environ)
 {
 	char	*line;
 	t_data	data;
-	t_token *tokens;
+	t_token	*tokens;
 
 	g_signal = 0;
 	signal_init();
@@ -122,19 +92,10 @@ int	main(int argc, char **argv, char **environ)
 		line = input(&data);
 		if (line && line[0] != '\0')
 		{
-			tokens = lexer(line);
-      if (!tokens)
-				{
-					free(line);
-					continue;
-				}
-			// print_tokens(tokens);
-      replace_escape(tokens);
-			expander(&data, tokens);
-			tokens = token_join(tokens);
-			parser(&data, tokens);
-      free(line);
-			exec(&data);
+			if (update_data_from_line(&data, line) != 0)
+				data.ret_val = 1;
+			else
+				exec(&data);
 		}
 	}
 	free_data(&data);
