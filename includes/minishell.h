@@ -86,7 +86,8 @@ void	signal_handler(int sig);
 void	signal_init(void);
 
 //Stack Utils
-bool	quotes_closed(const char *str); // To update at school
+char	quotes_closed(const char *str); // To update at school
+char	*close_quotes(t_data *data, char *str);
 
 // PARSER UTILS
 bool	operator_crash(t_token *head);

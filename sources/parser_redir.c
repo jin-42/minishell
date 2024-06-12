@@ -84,7 +84,7 @@ void	handle_pipe(t_data *data, t_block *block, t_token *tok, int i)
 		if (!bl)
 			return ;
 		data->cmd_count += 1;
-		block->args[i] = '\0';
+		block->args[i] = NULL;
 		bl->args = malloc(sizeof(char *) * (count_av(tok->next) + 1));
 		if (!bl->args)
 			return ;

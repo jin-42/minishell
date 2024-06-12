@@ -51,10 +51,11 @@ char	*input(t_data *data)
 		write(2, "exit\n", 5);
 		exit(ret_val);
 	}
-	if (ft_strlen(line) > 0)
+	line = close_quotes(data, line);
+	if (line && ft_strlen(line) > 0)
 		add_history(line);
-	if (quotes_closed(line) == 0)
-		return (free(line), NULL);
+	if (!line)
+		return (NULL);
 	return (line);
 }
 
@@ -74,7 +75,6 @@ int	update_data_from_line(t_data *data, char *line)
 	tokens = token_join(tokens);
 	parser(data, tokens);
 	free(line);
-	print_data(data);
 	return (0);
 }
 
