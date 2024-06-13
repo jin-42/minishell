@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsulvac <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 11:59:13 by fsulvac           #+#    #+#             */
-/*   Updated: 2024/06/12 11:59:14 by fsulvac          ###   ########.fr       */
+/*   Updated: 2024/06/13 13:47:40 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,15 @@ bool	operator_crash(t_token *head)
 	t_token	*curr;
 
 	curr = head;
+	if (((curr->type == OP) || (curr->type == PIPE)) && (curr->next == NULL))
+		return (false);
 	while (curr != NULL)
 	{
-		if (curr->type == OP && curr->next == NULL)
+		if (curr->type == OP && curr->next != NULL && curr->next->type == PIPE)
 			return (false);
-		else if ((curr->type == OP)
-			&& (ft_strncmp(curr->next->str, "<<", 2) != 0)
-			&& (curr->next->type == OP))
+		else if (curr->type == OP && curr->next == NULL)
+			return (false);
+		else if (curr->type == PIPE && curr->next == NULL)
 			return (false);
 		curr = curr->next;
 	}

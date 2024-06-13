@@ -26,30 +26,26 @@ t_data	init_data(char **env)
 	data.ret_val = 0;
 	if (parse_env(&data, env) != 0)
 		error_parsing(&data, "env");
+	signal_init(&data);
 	return (data);
 }
-
-// g_signal = 0 allows to put ret val to 130 after ctrl C
 
 char	*input(t_data *data)
 {
 	char	*line;
-	int		ret_val;
 
-	g_signal = 0;
 	line = readline("minishell> ");
-	if (g_signal == -1)
+	if (g_signal == 130)
 	{
 		data->ret_val = 130;
 		g_signal = 0;
 	}
 	if (!line)
 	{
-		ret_val = 0;
 		free_data(data);
 		rl_clear_history();
 		write(2, "exit\n", 5);
-		exit(ret_val);
+		exit(data->ret_val);
 	}
 	line = close_quotes(data, line);
 	if (line && ft_strlen(line) > 0)
@@ -82,13 +78,15 @@ int	main(int argc, char **argv, char **environ)
 {
 	char	*line;
 	t_data	data;
-	t_token	*tokens;
 
+	(void)argv;
+	if (argc != 1)
+		return (write(2, "Error: no args required\n", 24), 1);
 	g_signal = 0;
-	signal_init();
 	data = init_data(environ);
 	while (42)
 	{
+		signal_init(&data);
 		line = input(&data);
 		if (line && line[0] != '\0')
 		{

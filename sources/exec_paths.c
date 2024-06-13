@@ -18,6 +18,8 @@ char	**append_cmd(char **paths, char *name)
 	char	*tmp;
 
 	i = 0;
+	if (!paths)
+		return (NULL);
 	while (paths[i])
 	{
 		tmp = ft_strjoin(paths[i], "/");
@@ -120,7 +122,7 @@ int	maj_env_paths(t_data *data)
 	data->environ = env_to_char(data, false);
 	if (data->environ == NULL)
 		return (1);
-	if (parse_paths(data) != SUCCESS)
+	if (parse_paths(data, true) != SUCCESS)
 		return (free_full_split(data->environ), 2);
 	return (SUCCESS);
 }

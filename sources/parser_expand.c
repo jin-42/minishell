@@ -131,6 +131,8 @@ void	expander(t_data *data, t_token *head)
 			{
 				expand(data, tok);
 				untok(tok->str);
+				// if (tok->quote == false)
+				// 	split_token(tok);
 			}
 		}
 		tok = tok->next;

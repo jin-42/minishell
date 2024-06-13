@@ -29,7 +29,7 @@ bool	echo_is_option(char *arg)
 		i++;
 	while (arg[i] == 'n')
 		i++;
-	if (i > 1 && i == ft_strlen(arg))
+	if (i > 1 && i == (int)ft_strlen(arg))
 		return (true);
 	return (false);
 }

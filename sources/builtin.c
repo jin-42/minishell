@@ -62,7 +62,7 @@ int	exec_builtin(t_data *data, char **args, bool ex)
 	else if (ft_strcmp(data->block->args[0], "echo") == 0)
 		val = bt_echo(data, args + 1);
 	else if (ft_strcmp(data->block->args[0], "exit") == 0)
-		val = bt_exit(data, args + 1);
+		val = bt_exit(data, args + 1, ex);
 	if (ex == true)
 		leave_minishell(data, val);
 	return (val);
@@ -70,9 +70,14 @@ int	exec_builtin(t_data *data, char **args, bool ex)
 
 int	builtin_process(t_data *data, int i)
 {
+	(void)i;
 	data->ret_val = 0;
 	if (!data->block->args)
+	{
+		next_block(data);
+		data->cmd_count = 0;
 		return (0);
+	}
 	if (check_builtin_files(data) != 0)
 		data->ret_val = 1;
 	if (dup2(data->block->out_fd, STDOUT_FILENO) == -1 && data->ret_val == 0)

@@ -66,16 +66,17 @@ int	fill_heredoc(t_data *data, t_block *block, int fd)
 	char	*line;
 
 	line = NULL;
-	while (42)
+	while (g_signal != 130)
 	{
-		g_signal = fd;
+		if (line)
+			free(line);
 		line = readline("> ");
 		if (!line)
 		{
 			error_heredoc(block);
 			break ;
 		}
-		if (line && strcmp(line, block->limiter) == 0)
+		if (strcmp(line, block->limiter) == 0)
 			break ;
 		line = expand_heredoc(data, line);
 		if (line == NULL)
@@ -83,7 +84,6 @@ int	fill_heredoc(t_data *data, t_block *block, int fd)
 		if (strcmp(line, block->limiter) == 0)
 			break ;
 		ft_printf_fd(fd, "%s\n", line);
-		free(line);
 	}
 	if (line)
 		free(line);
@@ -120,62 +120,21 @@ char	*random_name(void)
 	return (rand);
 }
 
-// int	heredoc(t_data *data)
-// {
-// 	int		fd;
-// 	char	*name;
-// 	t_block	*block;
-
-// 	block = data->block;
-// 	while (block)
-// 	{
-// 		if (data->block->here_doc == true)
-// 		{
-// 			if (block->in_fd > 2)
-// 				close(block->in_fd);
-// 			name = random_name();
-// 			if (!name)
-// 				return (1);
-// 			fd = open(name, O_RDWR | O_TRUNC | O_CREAT, 00644);
-// 			if (fd < 0)
-// 				return (1);
-// 			if (fill_heredoc(data, block, fd) < 0)
-// 			{
-// 				block->limiter = name;
-// 				block->in_fd = -2;
-// 				return (close(fd), 1);
-// 			}
-// 			close(fd);
-// 			fd = open(name, O_RDONLY, 00644);
-// 			if (fd < 0)
-// 				return (1);
-// 			block->in_fd = fd;
-// 			if (block->limiter)
-// 				free(block->limiter);
-// 			block->limiter = name;
-// 		}
-// 		block = block->next;
-// 	}
-// 	return (0);
-// }
-
 int	heredoc(t_data *data, t_block *block)
 {
 	int		fd;
 	char	*name;
 
+	g_signal = 0;
+	signal(SIGINT, signals_heredoc);
 	name = random_name();
 	if (!name)
 		return (1);
 	fd = open(name, O_RDWR | O_TRUNC | O_CREAT, 00644);
 	if (fd < 0)
 		return (1);
-	if (fill_heredoc(data, block, fd) < 0)
-	{
-		block->limiter = name;
-		block->in_fd = -2;
-		return (close(fd), 1);
-	}
+	if (fill_heredoc(data, block, fd) != 0 || g_signal == 130)
+		return (error_filling_heredoc(data, block, fd, name));
 	close(fd);
 	fd = open(name, O_RDONLY, 00644);
 	if (fd < 0)

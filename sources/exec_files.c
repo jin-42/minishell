@@ -12,7 +12,7 @@
 
 #include "../includes/minishell.h"
 
-void	child_infile(t_data *data, int i, int *old_pipe, int *new_pipe)
+void	child_infile(t_data *data, int i, int *old_pipe)
 {
 	if (i == 0)
 	{
@@ -26,7 +26,7 @@ void	child_infile(t_data *data, int i, int *old_pipe, int *new_pipe)
 	}
 }
 
-void	child_outfile(t_data *data, int i, int *old_pipe, int *new_pipe)
+void	child_outfile(t_data *data, int i, int *new_pipe)
 {
 	if (i == data->cmd_count - 1)
 	{
@@ -44,8 +44,8 @@ void	child_outfile(t_data *data, int i, int *old_pipe, int *new_pipe)
 
 int	check_files(t_data *data, int i, int *old_pipe, int *new_pipe)
 {
-	child_infile(data, i, old_pipe, new_pipe);
-	child_outfile(data, i, old_pipe, new_pipe);
+	child_infile(data, i, old_pipe);
+	child_outfile(data, i, new_pipe);
 	if (data->block->in_fd == -1 || data->block->in_fd == -2)
 		return (1);
 	if (data->block->out_fd == -1 || data->block->out_fd == -2)

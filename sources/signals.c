@@ -14,51 +14,55 @@
 
 // SIGINT = ctrl+C
 // SIGQUIT = Ctrl+backslash does nothing
-// g_signal allows to know where we are in the program when signal catched
-// g_signal = 1 = exec
+// g_signal allows to know when ctrl+C happened
 // else = readline or heredoc
 // rl_on_new_line(); = New line
 // rl_redisplay(); = gives prompt back
 
-void	signal_handler(int sig)
+void	signal_init(t_data *data)
 {
-	if (sig == SIGINT)
+	signal(SIGINT, signals_parent);
+	signal(SIGQUIT, SIG_IGN);
+	if (data->ret_val < 0)
+		data->ret_val = 0;
+}
+
+void	signals_parent(int signal_code)
+{
+	if (signal_code == SIGINT)
 	{
-		if (g_signal == 0 || g_signal == -1 || g_signal > 2)
-		{
-			write(STDIN_FILENO, "^C\n", 3);
-			rl_on_new_line();
-			rl_redisplay();
-			g_signal = -1;
-		}
-		if (g_signal == 1)
-		{
-			write(STDIN_FILENO, "\n", 1);
-			rl_redisplay();
-		}
-	}
-	if (sig == SIGQUIT)
-	{
-		return ;
+		write(1, "\n", 1);
+		g_signal = 130;
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
 	}
 }
 
-// RL signals gestion off
-// redirects signals to signal handler
-// Empty masked signals
-// SA_RESTART or 0 ? = options, see man sigaction
-// SIGINT = Ctrl+Cm SIGQUIT = ctrl+backslask
-
-void	signal_init(void)
+void	signals_child(int signal_code)
 {
-	struct sigaction	sa;
+	if (signal_code == SIGINT)
+	{
+		write(1, "\n", 1);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		g_signal = 130;
+	}
+	else if (signal_code == SIGQUIT)
+	{
+		rl_replace_line("", 0);
+		g_signal = 131;
+		rl_on_new_line();
+	}
+}
 
-	rl_catch_signals = 0;
-	sa.sa_handler = &signal_handler;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_RESTART;
-	if (sigaction(SIGINT, &sa, NULL) == -1)
-		perror("SIGINT error\n");
-	if (sigaction(SIGQUIT, &sa, NULL) == -1)
-		perror("SIGQUIT error\n");
+void	signals_heredoc(int signal_code)
+{
+	if (signal_code == SIGINT)
+	{
+		g_signal = 130;
+		ioctl(0, TIOCSTI, "\n");
+		rl_replace_line("", 0);
+		rl_on_new_line();
+	}
 }

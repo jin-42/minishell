@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_quote.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsulvac <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 11:57:46 by fsulvac           #+#    #+#             */
-/*   Updated: 2024/06/12 11:57:48 by fsulvac          ###   ########.fr       */
+/*   Updated: 2024/06/12 12:30:15 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ int	apply_double_quote(t_token **token, char *s, int *i)
 	}
 	else
 		*i += 2;
+	return (flag);
 }
 
 int	handle_quote(t_token **token, char *s, int *i)

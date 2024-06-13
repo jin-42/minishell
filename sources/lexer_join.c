@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_join.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsulvac <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 11:57:37 by fsulvac           #+#    #+#             */
-/*   Updated: 2024/06/12 11:57:38 by fsulvac          ###   ########.fr       */
+/*   Updated: 2024/06/13 13:17:47 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,6 @@ static void	tok_del(t_token *tok)
 		free(tok->str);
 	free(tok);
 }
-
-// Join the two strings
-// If the join fails, free memory and return NULL
-// Move to the next token
 
 int	token_join_while(t_token *tok)
 {

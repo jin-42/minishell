@@ -12,40 +12,6 @@
 
 #include "../includes/minishell.h"
 
-static int	check_last_back_slash(char *s)
-{
-	int	count;
-	int	i;
-
-	count = 0;
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == '\\')
-			count++;
-		else
-			count = 0;
-		i++;
-	}
-	if (count % 2 == 0)
-		return (0);
-	return (-1);
-}
-
-bool	last_back_slash(t_token *tok)
-{
-	t_token	*cpy;
-
-	cpy = tok;
-	while (cpy)
-	{
-		if (check_last_back_slash(cpy->str) == (-1))
-			return (true);
-		cpy = cpy->next;
-	}
-	return (false);
-}
-
 static void	replace_escapes(char *str)
 {
 	int	len;

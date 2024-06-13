@@ -51,7 +51,7 @@ int	env_add_back(t_env **env, t_env *new)
 	return (0);
 }
 
-int	parse_paths(t_data *data)
+int	parse_paths(t_data *data, bool exec)
 {
 	char	*path_str;
 	char	**path_split;
@@ -59,7 +59,10 @@ int	parse_paths(t_data *data)
 	if (data->paths != NULL)
 		free_full_split(data->paths);
 	path_split = NULL;
-	path_str = getenv("PATH");
+	if (exec == false)
+		path_str = getenv("PATH");
+	else
+		path_str = search_env(data, "PATH");
 	if (path_str == NULL)
 	{
 		data->paths = NULL;
@@ -95,8 +98,9 @@ int	parse_env(t_data *data, char **env)
 			return (4);
 		i++;
 	}
-	if (parse_paths(data) != 0)
-		return (5);
+	if (i == 0 && parse_empty_env(data) != 0)
+		return (1);
+	update_shlvl(data);
 	return (0);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsulvac <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 11:58:34 by fsulvac           #+#    #+#             */
-/*   Updated: 2024/06/12 11:58:35 by fsulvac          ###   ########.fr       */
+/*   Updated: 2024/06/13 13:50:27 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,33 +51,33 @@ void	parse_operators(t_data *data, t_token *tok, int i)
 	}
 }
 
-void	parse_tokens(t_data *data, t_token *copy, t_block *head)
+void	parse_tokens(t_data *data, t_token *co, t_block *head)
 {
 	int	i;
 
 	i = 0;
-	while (copy)
+	while (co)
 	{
-		if (copy->type == OP)
+		if (co->type == OP || co->type == PIPE)
 		{
-			parse_operators(data, copy, i);
-			if (ft_strncmp("|", copy->str, 1) == 0)
+			parse_operators(data, co, i);
+			if (ft_strncmp("|", co->str, 1) == 0)
 			{
 				i = 0;
 				head = head->next;
 			}
 			else
-				copy = copy->next;
+				co = co->next;
 		}
 		else
 		{
-			if (copy->str
-				|| (copy->str && copy->str[0] != '\0' && copy->quote == false))
-				head->args[i++] = ft_strdup(copy->str);
+			if (co->str || (co->str && co->str[0] != 0 && co->quote == 0))
+				head->args[i++] = ft_strdup(co->str);
 		}
-		copy = copy->next;
+		co = co->next;
 	}
-	head->args[i] = NULL;
+	if (head->args)
+		head->args[i] = NULL;
 }
 
 void	parser(t_data *data, t_token *tok)
@@ -87,20 +87,22 @@ void	parser(t_data *data, t_token *tok)
 
 	cpy = tok;
 	if (cpy == NULL)
-		return (error_parser(data, tok, -1));
+		return (error_parser(tok, -1));
 	if (!operator_crash(cpy))
-		return (error_parser(data, tok, 1));
-	if (last_back_slash(cpy) == true)
-		return (error_parser(data, tok, 2));
+		return (error_parser(tok, 1));
 	if (init_parser(data) == (-1))
-		return (error_parser(data, tok, 3));
+		return (error_parser(tok, 3));
 	head = data->block;
 	if (head == NULL)
-		return (error_parser(data, tok, 3));
+		return (error_parser(tok, 3));
 	if (count_av(cpy) != 0)
+	{
 		head->args = malloc(sizeof(char *) * (count_av(cpy) + 1));
-	if (!head->args)
-		return (error_parser(data, tok, 3));
+		if (!head->args)
+			return (error_parser(tok, 3));
+	}
+	else
+		head->args = NULL;
 	parse_tokens(data, cpy, head);
 	free_tok(tok);
 }

@@ -26,6 +26,7 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <signal.h>
+# include <sys/ioctl.h>
 
 # define EXP_CHAR "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\
 0123456789_"
@@ -69,7 +70,8 @@ typedef enum e_bash_op
 {
 	OP,
 	STRING,
-	QUOTE
+	QUOTE,
+	PIPE
 }	t_token_type;
 
 typedef struct s_token
@@ -82,10 +84,12 @@ typedef struct s_token
 }	t_token;
 
 // Signals
-void	signal_handler(int sig);
-void	signal_init(void);
+void	signal_init(t_data *data);
+void	signals_parent(int signal_code);
+void	signals_child(int signal_code);
+void	signals_heredoc(int signal_code);
 
-//Stack Utils
+// Close quotes
 char	quotes_closed(const char *str); // To update at school
 char	*close_quotes(t_data *data, char *str);
 
@@ -134,7 +138,7 @@ int		handle_quote(t_token **token, char *s, int *i);
 int		search_env_size(t_data *data, char *name);
 t_env	*env_new(char *val, char *name);
 int		env_add_back(t_env **env, t_env *new);
-int		parse_paths(t_data *data);
+int		parse_paths(t_data *data, bool exec);
 int		parse_env(t_data *data, char **env);
 
 // ENV MANIP
@@ -143,6 +147,12 @@ int		env_size(t_data *data);
 char	*env_join(t_env *env, bool exp);
 char	**env_to_char(t_data *data, bool exp);
 char	**sort_env(t_data *data);
+
+// ENV UTILS
+
+int		parse_empty_env(t_data *data);
+void	update_shlvl(t_data *data);
+t_env	*search_env_node(t_env *env, char *name);
 
 // EXEC
 
@@ -165,8 +175,8 @@ void	pipe_initializer(int *old_pipe, int *new_pipe);
 void	close_pipe(int pipe[2]);
 
 // EXEC : FILES
-void	child_infile(t_data *data, int i, int *old_pipe, int *new_pipe);
-void	child_outfile(t_data *data, int i, int *old_pipe, int *new_pipe);
+void	child_infile(t_data *data, int i, int *old_pipe);
+void	child_outfile(t_data *data, int i, int *new_pipe);
 int		check_files(t_data *data, int i, int *old_pipe, int *new_pipe);
 int		check_builtin_files(t_data *data);
 
@@ -175,6 +185,7 @@ int		check_builtin_files(t_data *data);
 int		heredoc(t_data *data, t_block *block);
 int		fill_heredoc(t_data *data, t_block *block, int fd);
 char	*expand_heredoc(t_data *data, char *line);
+int		error_filling_heredoc(t_data *data, t_block *block, int fd, char *name);
 
 // BUILTIN
 int		builtin_process(t_data *data, int i);
@@ -190,7 +201,6 @@ void	free_pwd_args(char **args);
 char	*search_cd_path(t_data *data, char *arg);
 
 int		unset(t_data *data, char **args);
-t_env	*search_env_node(t_env *env, char *name);
 void	env_delone(t_data *data, t_env *node);
 
 int		env(t_data *data, char **args);
@@ -207,7 +217,7 @@ int		bt_echo(t_data *data, char **args);
 int		count_args(char **args);
 bool	echo_is_option(char *arg);
 
-int		bt_exit(t_data *data, char **args);
+int		bt_exit(t_data *data, char **args, bool print);
 int		check_exit_argument(char *arg);
 int		contains_digits(char *arg);
 int		bt_atoi(char *nptr);
@@ -217,16 +227,12 @@ char	*custom_error(char *function, char *arg);
 void	error_parsing(t_data *data, char *type);
 void	error_exec(t_data *data, int *old_pipe, int *new_pipe, char *str);
 void	error_heredoc(t_block *block);
-void	error_parser(t_data *data, t_token *tok, int errno);
+void	error_parser(t_token *tok, int errno);
 
 // FREE
 void	free_env_char(t_data *data);
 void	leave_minishell(t_data *data, int val);
 void	free_env(t_env *env);
 void	free_data(t_data *data);
-
-// test
-void	print_data(t_data *data); // A RETIRER
-void	print_block(t_block *block);
 
 #endif

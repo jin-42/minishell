@@ -45,22 +45,6 @@ void	env_delone(t_data *data, t_env *node)
 	free(env);
 }
 
-t_env	*search_env_node(t_env *env, char *name)
-{
-	int		len;
-
-	len = ft_strlen(name);
-	if (len == 0)
-		return (NULL);
-	while (env)
-	{
-		if (ft_strcmp(env->name, name) == 0)
-			return (env);
-		env = env->next;
-	}
-	return (NULL);
-}
-
 int	unset(t_data *data, char **args)
 {
 	t_env	*node;

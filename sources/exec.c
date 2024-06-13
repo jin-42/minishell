@@ -37,20 +37,25 @@ void	next_block(t_data *data)
 {
 	t_block	*block;
 
-	block = data->block->next;
-	if (data->block->in_fd > 2)
-		close(data->block->in_fd);
-	if (data->block->out_fd > 2)
-		close(data->block->out_fd);
-	if (data->block->path)
-		free(data->block->path);
-	if (data->block->here_doc == true)
-		unlink(data->block->limiter);
-	if (data->block->limiter)
-		free(data->block->limiter);
-	if (data->block->args)
-		free_full_split(data->block->args);
-	free(data->block);
+	block = NULL;
+	if (data->block)
+	{
+		if (data->block->next)
+			block = data->block->next;
+		if (data->block->in_fd > 2)
+			close(data->block->in_fd);
+		if (data->block->out_fd > 2)
+			close(data->block->out_fd);
+		if (data->block->path)
+			free(data->block->path);
+		if (data->block->here_doc == true)
+			unlink(data->block->limiter);
+		if (data->block->limiter)
+			free(data->block->limiter);
+		if (data->block->args)
+			free_full_split(data->block->args);
+		free(data->block);
+	}
 	data->block = block;
 }
 
@@ -64,13 +69,15 @@ void	next_block(t_data *data)
 
 void	child_process(t_data *d, int i, int *old_pipe, int *new_pipe)
 {
-	if (!d->block->args[0])
+	signal(SIGINT, signals_child);
+	signal(SIGQUIT, signals_child);
+	if (!d->block || !d->block->args || !d->block->args[0])
 		error_exec(d, old_pipe, new_pipe, "empty");
 	if (check_files(d, i, old_pipe, new_pipe) != 0)
 		error_exec(d, old_pipe, new_pipe, NULL);
 	if (is_a_directory(d->block->args[0]))
 		error_exec(d, old_pipe, new_pipe, "is a directory");
-	if (search_path(d) != 0)
+	if (d->paths && search_path(d) != 0)
 		error_exec(d, old_pipe, new_pipe, NULL);
 	if (!d->block->path || d->block->args[0][0] == '\0'
 		|| d->block->path[0] == '\0')
@@ -106,6 +113,7 @@ void	parent_process(t_data *data, int pid, int *old_pipe, int *new_pipe)
 				value = WEXITSTATUS(status);
 			else if (WIFSIGNALED(status))
 			{
+				signals_child(WTERMSIG(status));
 				value = 128 + WTERMSIG(status);
 				if (WTERMSIG(status) == SIGQUIT)
 					write(2, "Quit (core dumped)\n", 19);
@@ -124,7 +132,6 @@ int	exec(t_data *data)
 	int		i;
 	int		fd;
 
-	g_signal = 1;
 	if (maj_env_paths(data) != 0 || data->cmd_count == 0)
 		return (1);
 	i = 0;
@@ -141,6 +148,8 @@ int	exec(t_data *data)
 		pipe_manager(old_pipe, new_pipe);
 		i++;
 	}
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	parent_process(data, fd, old_pipe, new_pipe);
 	return (0);
 }

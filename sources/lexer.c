@@ -69,7 +69,7 @@ static t_token	*_pipe(int *i, char *s)
 		return (free(tok), NULL);
 	tok->str[0] = '|';
 	tok->str[1] = '\0';
-	tok->type = OP;
+	tok->type = PIPE;
 	(*i) += 1;
 	tok->space = false;
 	if (s[(*i)] != '\0' && s[(*i)] == ' ')

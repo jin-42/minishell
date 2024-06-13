@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   stack_utils.c                                      :+:      :+:    :+:   */
+/*   close_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 10:59:28 by sponthus          #+#    #+#             */
-/*   Updated: 2024/06/12 11:45:28 by sponthus         ###   ########lyon.fr   */
+/*   Updated: 2024/06/13 12:08:30 by sponthus         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*get_quote(t_data *data, char *str, char closed)
 		data->ret_val = 2;
 		ft_printf_fd(2, "unexpected EOF while looking for matching `%c\"\n",
 			closed);
-		return (free(str), free(bn), NULL);
+		return (free(bn), NULL);
 	}
 	res = ft_strjoin(bn, line);
 	free(bn);
@@ -39,7 +39,6 @@ char	*get_quote(t_data *data, char *str, char closed)
 char	*close_quotes(t_data *data, char *str)
 {
 	char	closed;
-	char	*res;
 	char	*line;
 
 	closed = quotes_closed(str);
@@ -47,6 +46,7 @@ char	*close_quotes(t_data *data, char *str)
 		return (str);
 	while (closed != 0)
 	{
+		g_signal = 0;
 		line = get_quote(data, str, closed);
 		if (!line)
 			return (NULL);

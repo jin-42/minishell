@@ -45,7 +45,7 @@ void	error_exec(t_data *data, int *old_pipe, int *new_pipe, char *str)
 	else if (str && ft_strcmp(str, "is a directory") == 0)
 	{
 		printf("%s: Is a directory\n", data->block->args[0]);
-		value = 126;
+		value = 127;
 	}
 	else if (str && ft_strcmp(str, "empty") == 0)
 		value = 0;
@@ -69,7 +69,7 @@ void	error_parsing(t_data *data, char *type)
 	leave_minishell(data, -1);
 }
 
-void	error_parser(t_data *data, t_token *tok, int errno)
+void	error_parser(t_token *tok, int errno)
 {
 	if (errno > 0)
 		free_tok(tok);

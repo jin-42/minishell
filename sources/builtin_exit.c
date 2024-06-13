@@ -94,12 +94,13 @@ int	check_exit_argument(char *arg)
 	return (0);
 }
 
-int	bt_exit(t_data *data, char **args)
+int	bt_exit(t_data *data, char **args, bool print)
 {
 	int	i;
 
 	i = 0;
-	printf("exit\n");
+	if (print == false)
+		printf("exit\n");
 	if (args[0] != NULL)
 	{
 		if (check_exit_argument(args[0]) != 0)
