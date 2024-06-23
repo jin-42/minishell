@@ -54,7 +54,8 @@ int	handle_here_document(t_data *data, t_block *block, t_token *tok)
 
 int	handle_output_redirection(t_block *block, t_token *tok)
 {
-	int	fd;
+	int		fd;
+	char	*error;
 
 	if (tok->next != 0)
 	{
@@ -64,8 +65,9 @@ int	handle_output_redirection(t_block *block, t_token *tok)
 		block->out_fd = fd;
 		if (block->out_fd == -1)
 		{
-			perror(custom_error("open: ", tok->next->str));
-			return (1);
+			error = custom_error("open: ", tok->next->str);
+			perror(error);
+			return (free(error), 1);
 		}
 	}
 	return (0);
