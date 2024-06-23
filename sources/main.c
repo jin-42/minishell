@@ -73,7 +73,9 @@ bool	contain_char(char *str)
 int	update_data_from_line(t_data *data, char *line)
 {
 	t_token	*tokens;
+	int		val;
 
+	val = 0;
 	tokens = lexer(line);
 	if (!tokens && contain_char(line) == true)
 	{
@@ -81,12 +83,15 @@ int	update_data_from_line(t_data *data, char *line)
 		write(2, "Error: lexer\n", 13);
 		return (1);
 	}
+	free(line);
 	check_limiter(tokens);
 	replace_escape(tokens);
 	expander(data, tokens);
 	tokens = token_join(tokens);
-	free(line);
-	return (parser(data, tokens));
+	if (tokens == NULL)
+		return (error_parser(data, tokens, 3));
+	val = parser(data, tokens);
+	return (val);
 }
 
 int	main(int argc, char **argv, char **environ)

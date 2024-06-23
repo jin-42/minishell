@@ -90,8 +90,6 @@ int	parser(t_data *data, t_token *tok)
 	int		val;
 
 	cpy = tok;
-	if (cpy == NULL)
-		return (error_parser(data, tok, 3));
 	if (!operator_crash(cpy))
 		return (error_parser(data, tok, 2));
 	if (init_parser(data) == 0)
