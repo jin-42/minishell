@@ -70,10 +70,14 @@ int	error_parser(t_data *data, t_token *tok, int errno)
 		next_block(data);
 	data->cmd_count = 0;
 	if (errno == 2)
+	{
 		ft_printf_fd(2, "Error: syntax operator\n");
-	// else if (errno == 1)
-	// 	ft_printf_fd(2, "Error: syntax backslash\n");
+		errno = 1;
+	}
 	else if (errno == 3)
+	{
 		ft_printf_fd(2, "Error: allocation\n");
+		errno = 1;
+	}
 	return (errno);
 }
