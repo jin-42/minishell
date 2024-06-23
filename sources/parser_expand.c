@@ -30,7 +30,7 @@ char	*expand_find_name(char *str)
 		return (ft_strdup("?"));
 	while (str[i] && is_charset(str[i], EXP_CHAR) == 1)
 		i++;
-	j += i;
+	j = (i - 1) - (int)(ft_strchr(str, '$') - str);
 	if (j == 0)
 	{
 		str[i - 1] = -36;
@@ -127,12 +127,12 @@ void	expander(t_data *data, t_token *head)
 			{
 				tok->str[0] = '\0';
 			}
-			else
+			else if (tok->lim != true)
 			{
 				expand(data, tok);
 				untok(tok->str);
-				// if (tok->quote == false)
-				// 	split_token(tok);
+				if (tok->quote == false)
+					split_token(tok);
 			}
 		}
 		tok = tok->next;

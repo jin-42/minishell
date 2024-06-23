@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parser_utils.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/12 11:59:13 by fsulvac           #+#    #+#             */
-/*   Updated: 2024/06/13 13:47:40 by sponthus         ###   ########lyon.fr   */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   parser_utils.c									 :+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: sponthus <sponthus@student.42lyon.fr>	  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2024/06/12 11:59:13 by fsulvac		   #+#	#+#			 */
+/*   Updated: 2024/06/13 13:47:40 by sponthus		 ###   ########lyon.fr   */
+/*																			*/
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
@@ -37,6 +37,8 @@ bool	operator_crash(t_token *head)
 	t_token	*curr;
 
 	curr = head;
+	if (curr->type == PIPE)
+		return (false);
 	if (((curr->type == OP) || (curr->type == PIPE)) && (curr->next == NULL))
 		return (false);
 	while (curr != NULL)

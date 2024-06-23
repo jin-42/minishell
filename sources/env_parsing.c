@@ -58,6 +58,7 @@ int	parse_paths(t_data *data, bool exec)
 
 	if (data->paths != NULL)
 		free_full_split(data->paths);
+	data->paths = NULL;
 	path_split = NULL;
 	if (exec == false)
 		path_str = getenv("PATH");

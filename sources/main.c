@@ -55,29 +55,45 @@ char	*input(t_data *data)
 	return (line);
 }
 
+bool	contain_char(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] != ' ' && str[i] != '\n' && str[i] != '\t'
+			&& str[i] != '\v' && str[i] != '\f' && str[i] != '\r')
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
 int	update_data_from_line(t_data *data, char *line)
 {
 	t_token	*tokens;
 
 	tokens = lexer(line);
-	if (!tokens)
+	if (!tokens && contain_char(line) == true)
 	{
 		free(line);
 		write(2, "Error: lexer\n", 13);
 		return (1);
 	}
+	check_limiter(tokens);
 	replace_escape(tokens);
 	expander(data, tokens);
 	tokens = token_join(tokens);
-	parser(data, tokens);
 	free(line);
-	return (0);
+	return (parser(data, tokens));
 }
 
 int	main(int argc, char **argv, char **environ)
 {
 	char	*line;
 	t_data	data;
+	int		val;
 
 	(void)argv;
 	if (argc != 1)
@@ -90,8 +106,9 @@ int	main(int argc, char **argv, char **environ)
 		line = input(&data);
 		if (line && line[0] != '\0')
 		{
-			if (update_data_from_line(&data, line) != 0)
-				data.ret_val = 1;
+			val = update_data_from_line(&data, line);
+			if (val != 0)
+				data.ret_val = val;
 			else
 				exec(&data);
 		}

@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   backslash.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: fsulvac <marvin@42.fr>                     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/12 11:58:53 by fsulvac           #+#    #+#             */
-/*   Updated: 2024/06/12 11:58:54 by fsulvac          ###   ########.fr       */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   backslash.c										:+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: sponthus <sponthus@student.42lyon.fr>	  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2024/06/12 11:58:53 by fsulvac		   #+#	#+#			 */
+/*   Updated: 2024/06/17 14:05:33 by sponthus		 ###   ########lyon.fr   */
+/*																			*/
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
@@ -23,8 +23,8 @@ static void	replace_escapes(char *str)
 	{
 		if (str[i] == '\\' && i + 1 < len)
 		{
-			str[i] = str[i + 1];
-			memmove(&str[i + 1], &str[i + 2], len - i - 1);
+			str[i] = -str[i + 1];
+			ft_memmove(&str[i + 1], &str[i + 2], len - i - 1);
 			str[--len] = '\0';
 		}
 		i++;

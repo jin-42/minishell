@@ -1,27 +1,43 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   lexer_redir.c                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: fsulvac <marvin@42.fr>                     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/12 11:57:54 by fsulvac           #+#    #+#             */
-/*   Updated: 2024/06/12 11:57:55 by fsulvac          ###   ########.fr       */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   lexer_redir.c									  :+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: sponthus <sponthus@student.42lyon.fr>	  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2024/06/12 11:57:54 by fsulvac		   #+#	#+#			 */
+/*   Updated: 2024/06/17 13:48:02 by sponthus		 ###   ########lyon.fr   */
+/*																			*/
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	check_limiter(t_token *tok)
+{
+	t_token	*cpy;
+
+	cpy = tok;
+	while (cpy)
+	{
+		if (cpy->type == OP && ft_strncmp(cpy->str, "<<", 2) == 0)
+		{
+			if (cpy->next != NULL)
+				cpy->next->lim = true;
+		}
+		cpy = cpy->next;
+	}
+}
 
 static void	handle_double_redir(char *s, int *i, t_token *tok)
 {
 	if (s[*i] == '<' && s[*i + 1] == '<')
 	{
-		strncpy(tok->str, "<<", 3);
+		ft_strlcpy(tok->str, "<<", 3);
 		tok->str[2] = '\0';
 	}
 	else if (s[*i] == '>' && s[*i + 1] == '>')
 	{
-		strncpy(tok->str, ">>", 3);
+		ft_strlcpy(tok->str, ">>", 3);
 		tok->str[2] = '\0';
 	}
 	(*i)++;
@@ -64,7 +80,7 @@ t_token	*redir(char *s, int *i)
 	(*i)++;
 	tok->type = OP;
 	tok->space = false;
-	if (s[(*i)] != '\0' && s[(*i)] == ' ')
+	if (s[(*i)] != '\0' && (s[(*i)] == ' ' || s[(*i)] == '\t'))
 		tok->space = true;
 	tok->quote = false;
 	return (tok);

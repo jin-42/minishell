@@ -67,22 +67,11 @@ int	look_in_env(t_data *data, char **paths)
 
 bool	is_a_directory(char *path)
 {
-	int	i;
-	int	abc;
+	struct stat	path_stat;
 
-	i = 0;
-	abc = 0;
-	if (!path)
+	if (stat(path, &path_stat) != 0)
 		return (false);
-	if (path[0] == '/')
-		return (true);
-	while (path[i])
-	{
-		if (path[i] != '/' && path[i] != '.')
-			abc++;
-		i++;
-	}
-	if (abc == 0 && ft_strlen(path) != 0 && ft_strchr(path, '/'))
+	if (S_ISDIR(path_stat.st_mode))
 		return (true);
 	return (false);
 }
@@ -91,17 +80,17 @@ int	search_path(t_data *data)
 {
 	char	**paths;
 
+	data->block->builtin = false;
 	if (is_builtin(data) == true)
 		return (cpy_builtin(data));
 	else if (ft_strchr(data->block->args[0], '/') != NULL)
 	{
-		if (access(data->block->args[0], X_OK) == SUCCESS)
-		{
-			data->block->path = ft_strdup(data->block->args[0]);
-			if (data->block->path == NULL)
-				return (1);
-		}
+		data->block->path = ft_strdup(data->block->args[0]);
+		if (access(data->block->args[0], X_OK) != SUCCESS)
+			return (data->ret_val = 126, perror(data->block->args[0]), 2);
 	}
+	else if (data->paths == NULL)
+		return (0);
 	else
 	{
 		if (data->block->args[0][0] == '!')

@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   lexer_quote.c                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sponthus <sponthus@student.42lyon.fr>      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/12 11:57:46 by fsulvac           #+#    #+#             */
-/*   Updated: 2024/06/12 12:30:15 by sponthus         ###   ########lyon.fr   */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   lexer_quote.c									  :+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: sponthus <sponthus@student.42lyon.fr>	  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2024/06/12 11:57:46 by fsulvac		   #+#	#+#			 */
+/*   Updated: 2024/06/12 12:30:15 by sponthus		 ###   ########lyon.fr   */
+/*																			*/
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
@@ -32,7 +32,7 @@ t_token	*simple_quote(char *s, int *i)
 	tok->str[j] = '\0';
 	tok->type = QUOTE;
 	tok->space = false;
-	if (s[(*i + 1)] != '\0' && s[(*i + 1)] == ' ')
+	if (s[(*i + 1)] != '\0' && (s[(*i + 1)] == ' ' || s[(*i + 1)] == '\t'))
 		tok->space = true;
 	tok->quote = true;
 	return (tok);
@@ -58,7 +58,7 @@ t_token	*double_quote(char *s, int *i)
 	tok->type = STRING;
 	tok->str[j] = '\0';
 	tok->space = false;
-	if (s[(*i + 1)] != '\0' && s[(*i + 1)] == ' ')
+	if (s[(*i + 1)] != '\0' && (s[(*i + 1)] == ' ' || s[(*i + 1)] == '\t'))
 		tok->space = true;
 	tok->quote = true;
 	return (tok);
@@ -69,7 +69,7 @@ int	apply_single_quote(t_token **token, char *s, int *i)
 	int	flag;
 
 	flag = 0;
-	if (s[*i + 1] != '\0' && s[*i + 1] != '\'')
+	if (s[*i + 1] != '\0')
 	{
 		(*i)++;
 		flag = _lstadd(token, simple_quote(s, i));

@@ -3,8 +3,8 @@
 NAME = minishell
 
 CC = cc
-CFLAGS = -g3 #-Wall -Wextra -Werror
-LIBS = -lreadline -lncurses
+CFLAGS = -Wall -Wextra -Werror -g3
+LIBS = -lreadline
 
 LIBRARY = full_libft/libft.a
 
@@ -44,7 +44,8 @@ SRC = $(SRC_DIR)main.c \
 	$(SRC_DIR)parser_redir.c \
 	$(SRC_DIR)env_utils.c \
 	$(SRC_DIR)split_token.c \
-	$(SRC_DIR)error_heredoc.c
+	$(SRC_DIR)error_heredoc.c \
+	$(SRC_DIR)split_token_utils.c
 
 OBJ_DIR = ./OBJ/
 

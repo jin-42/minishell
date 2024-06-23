@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   lexer.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: fsulvac <marvin@42.fr>                     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/12 11:57:29 by fsulvac           #+#    #+#             */
-/*   Updated: 2024/06/12 11:57:32 by fsulvac          ###   ########.fr       */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   lexer.c											:+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: fsulvac <marvin@42.fr>					 +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2024/06/12 11:57:29 by fsulvac		   #+#	#+#			 */
+/*   Updated: 2024/06/12 11:57:32 by fsulvac		  ###   ########.fr	   */
+/*																			*/
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
@@ -19,6 +19,7 @@ int	_lstadd(t_token **lst, t_token *new)
 	if (!new)
 		return (-1);
 	new->next = 0;
+	new->lim = false;
 	if (!(*lst))
 	{
 		*lst = new;
@@ -40,7 +41,7 @@ static t_token	*_space(char *s, int *i)
 	if (!tok)
 		return (NULL);
 	j = *i;
-	while (s[j] && s[j] != ' ' && s[j] != '|'
+	while (s[j] && s[j] != ' ' && s[j] != '\t' && s[j] != '|'
 		&& s[j] != '>' && s[j] != '<' && s[j] != '\'' && s[j] != '\"')
 		j++;
 	tok->str = malloc(sizeof(char) * (j - (*i) + 1));
@@ -48,11 +49,12 @@ static t_token	*_space(char *s, int *i)
 		return (free(tok), NULL);
 	j = 0;
 	while (s[(*i)] && s[(*i)] != ' ' && s[(*i)] != '|' && s[(*i)] != '>'
-		&& s[(*i)] != '<' && s[(*i)] != '\'' && s[(*i)] != '\"')
+		&& s[(*i)] != '<' && s[(*i)] != '\'' && s[(*i)] != '\"'
+		&& s[(*i)] != '\t')
 		tok->str[j++] = s[(*i)++];
 	tok->str[j] = '\0';
 	tok->space = false;
-	if (s[(*i)] != '\0' && s[(*i)] == ' ')
+	if (s[(*i)] != '\0' && (s[(*i)] == ' ' || s[(*i)] == '\t'))
 		tok->space = true;
 	return (tok->type = STRING, tok->quote = false, tok);
 }
@@ -72,7 +74,7 @@ static t_token	*_pipe(int *i, char *s)
 	tok->type = PIPE;
 	(*i) += 1;
 	tok->space = false;
-	if (s[(*i)] != '\0' && s[(*i)] == ' ')
+	if (s[(*i)] != '\0' && (s[(*i)] == ' ' || s[(*i)] == '\t'))
 		tok->space = true;
 	return (tok->quote = false, tok);
 }
@@ -104,7 +106,7 @@ t_token	*lexer(char *s)
 	flag = 0;
 	while (s[i] != '\0')
 	{
-		if (s[i] == ' ')
+		if (s[i] == ' ' || (s[i] >= 9 && s[i] <= 13))
 			i++;
 		else if (s[i] == '\'' || s[i] == '\"')
 			flag = handle_quote(&token, s, &i);

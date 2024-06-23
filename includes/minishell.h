@@ -45,14 +45,14 @@ typedef struct s_env
 
 typedef struct s_block
 {
-	int				in_fd; // Ouvrir le fichier si < sinon initialiser a -2
-	int				out_fd; // Ouvrir le fichier si > sinon initialiser a -2
-	bool			here_doc; // Vrai si << ce qui suit sera le 1er argument
-	bool			hd_quote; // Vrai si limiter du here_doc contient ' ou "
+	int				in_fd; // Open file if < else initialize -2
+	int				out_fd; // Open file if > else initialize -2
+	bool			here_doc; // True if <<
+	bool			hd_quote; // True if limiter contains ' or "
 	char			*limiter;
-	bool			builtin; // Initialiser a faux
-	char			*path; // Initialiser a NULL
-	char			**args; // 1er = la cmd, dernier = NULL
+	bool			builtin; // Initialize FALSE
+	char			*path; // Initialize to NULL
+	char			**args; // 1st = cmd, last = NULL
 	struct s_block	*next; // chainer
 }	t_block;
 
@@ -79,6 +79,7 @@ typedef struct s_token
 	char			*str;
 	t_token_type	type;
 	bool			space;
+	bool			lim;
 	bool			quote;
 	struct s_token	*next;
 }	t_token;
@@ -88,15 +89,15 @@ void	signal_init(t_data *data);
 void	signals_parent(int signal_code);
 void	signals_child(int signal_code);
 void	signals_heredoc(int signal_code);
+void	signal_exec(void);
 
 // Close quotes
-char	quotes_closed(const char *str); // To update at school
+char	quotes_closed(const char *str);
 char	*close_quotes(t_data *data, char *str);
 
 // PARSER UTILS
 bool	operator_crash(t_token *head);
 int		count_av(t_token *head);
-bool	last_back_slash(t_token *tok);
 void	replace_escape(t_token *tok);
 
 // PARSER UTILS
@@ -107,18 +108,21 @@ t_token	*free_tok_go_next(t_token *tok);
 int		init_parser(t_data *data);
 
 // Parser redir
-void	handle_append_redirection(t_block *block, t_token *tok);
-void	handle_here_document(t_data *data, t_block *block, t_token *tok);
-void	handle_output_redirection(t_block *block, t_token *tok);
-void	handle_input_redirection(t_block *block, t_token *tok);
+int		handle_append_redirection(t_block *block, t_token *tok);
+int		handle_here_document(t_data *data, t_block *block, t_token *tok);
+int		handle_output_redirection(t_block *block, t_token *tok);
+int		handle_input_redirection(t_block *block, t_token *tok);
 void	handle_pipe(t_data *data, t_block *block, t_token *tok, int i);
 
 // PARSER
-void	parser(t_data *data, t_token *tok);
+int		parser(t_data *data, t_token *tok);
 
 // PARSER - EXPAND
+t_token	*init_split_tok(void);
 char	*expand_find_name(char *str);
 void	expander(t_data *data, t_token *head);
+void	split_token(t_token *tok);
+int		len_buffer(char **s);
 
 // LEXER
 t_token	*lexer(char *s);
@@ -132,6 +136,7 @@ t_token	*token_join(t_token *tok);
 char	*ft_strjoin(char const *s1, char const *s2);
 int		count_back_slash(char *s);
 int		handle_quote(t_token **token, char *s, int *i);
+void	check_limiter(t_token *tok);
 
 // ENV PARSING
 
@@ -188,7 +193,7 @@ char	*expand_heredoc(t_data *data, char *line);
 int		error_filling_heredoc(t_data *data, t_block *block, int fd, char *name);
 
 // BUILTIN
-int		builtin_process(t_data *data, int i);
+int		builtin_process(t_data *data);
 int		exec_builtin(t_data *data, char **args, bool ex);
 int		cpy_builtin(t_data *data);
 bool	is_builtin(t_data *data);
@@ -197,8 +202,10 @@ int		pwd(t_data *data, char **args);
 
 int		cd(t_data *data, char **args);
 int		maj_pwd(t_data *data, char *old_path);
+int		apply_dotdot(t_list **list);
 void	free_pwd_args(char **args);
 char	*search_cd_path(t_data *data, char *arg);
+char	*list_to_char(t_list *list);
 
 int		unset(t_data *data, char **args);
 void	env_delone(t_data *data, t_env *node);
@@ -227,7 +234,7 @@ char	*custom_error(char *function, char *arg);
 void	error_parsing(t_data *data, char *type);
 void	error_exec(t_data *data, int *old_pipe, int *new_pipe, char *str);
 void	error_heredoc(t_block *block);
-void	error_parser(t_token *tok, int errno);
+int		error_parser(t_data *data, t_token *tok, int errno);
 
 // FREE
 void	free_env_char(t_data *data);

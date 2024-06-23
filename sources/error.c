@@ -12,13 +12,6 @@
 
 #include "../includes/minishell.h"
 
-void	error_heredoc(t_block *block)
-{
-	write(2, "warning: here-document delimited by end-of-file(wanted `", 56);
-	write(2, block->limiter, ft_strlen(block->limiter));
-	write(2, "\")\n", 3);
-}
-
 // ex util : perror(custom_error("cd: ", arg));
 
 char	*custom_error(char *function, char *arg)
@@ -35,23 +28,23 @@ void	error_exec(t_data *data, int *old_pipe, int *new_pipe, char *str)
 {
 	int	value;
 
-	value = -1;
+	value = data->ret_val;
 	close_all(data, old_pipe, new_pipe);
 	if (str && ft_strcmp(str, "not found") == 0)
 	{
-		printf("%s: command not found\n", data->block->args[0]);
+		ft_printf_fd(2, "%s: command not found\n", data->block->args[0]);
 		value = 127;
 	}
 	else if (str && ft_strcmp(str, "is a directory") == 0)
 	{
-		printf("%s: Is a directory\n", data->block->args[0]);
-		value = 127;
+		ft_printf_fd(2, "%s: Is a directory\n", data->block->args[0]);
+		value = 126;
 	}
 	else if (str && ft_strcmp(str, "empty") == 0)
 		value = 0;
 	else if (str && ft_strcmp(str, "execve:"))
 	{
-		printf("%s: %s", str, data->block->args[0]);
+		ft_printf_fd(2, "%s: %s", str, data->block->args[0]);
 		perror("");
 	}
 	else if (str)
@@ -62,21 +55,25 @@ void	error_exec(t_data *data, int *old_pipe, int *new_pipe, char *str)
 void	error_parsing(t_data *data, char *type)
 {
 	free_data(data);
-	if (ft_strncmp(type, "env", 4) == 0)
+	if (ft_strcmp(type, "env") == 0)
 	{
 		write(2, "Error parsing env.\n", 19);
 	}
 	leave_minishell(data, -1);
 }
 
-void	error_parser(t_token *tok, int errno)
+int	error_parser(t_data *data, t_token *tok, int errno)
 {
 	if (errno > 0)
 		free_tok(tok);
-	if (errno == 1)
-		return ((void)ft_printf_fd(2, "Error: syntax operator\n"));
-	else if (errno == 2)
-		return ((void)ft_printf_fd(2, "Error: syntaxe backslash\n"));
-	else
-		return ((void)ft_printf_fd(2, "Error: allocation\n"));
+	while (data->block)
+		next_block(data);
+	data->cmd_count = 0;
+	if (errno == 2)
+		ft_printf_fd(2, "Error: syntax operator\n");
+	// else if (errno == 1)
+	// 	ft_printf_fd(2, "Error: syntax backslash\n");
+	else if (errno == 3)
+		ft_printf_fd(2, "Error: allocation\n");
+	return (errno);
 }

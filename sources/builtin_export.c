@@ -102,11 +102,13 @@ int	export_arg(t_data *data, char *arg)
 int	export(t_data *data, char **args)
 {
 	int	i;
+	int	val;
 
 	i = 1;
+	val = 0;
 	while (args[i])
 	{
-		if (ft_strlen(args[1]) > 2 && args[1][0] == '-')
+		if (ft_strlen(args[1]) > 1 && args[1][0] == '-')
 		{
 			args[1][2] = '\0';
 			return (printf("export: `%s': invalid option\n", args[1]), 2);
@@ -115,13 +117,13 @@ int	export(t_data *data, char **args)
 		{
 			printf("%s: event not found\n",
 				args[i] + (ft_strchr(args[i], '!') - args[i]));
-			return (0);
+			val = 1;
 		}
 		else if (args[i] && export_arg(data, args[i]) != 0)
-			return (1);
+			val = 1;
 		i++;
 	}
 	if (i == 1 && export_print(data))
 		return (1);
-	return (0);
+	return (val);
 }

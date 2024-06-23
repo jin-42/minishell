@@ -19,8 +19,15 @@
 // rl_on_new_line(); = New line
 // rl_redisplay(); = gives prompt back
 
+void	signal_exec(void)
+{
+	signal(SIGINT, signals_child);
+	signal(SIGQUIT, SIG_IGN);
+}
+
 void	signal_init(t_data *data)
 {
+	g_signal = 0;
 	signal(SIGINT, signals_parent);
 	signal(SIGQUIT, SIG_IGN);
 	if (data->ret_val < 0)

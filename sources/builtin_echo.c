@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+#include <errno.h>
 
 // Option -n = do not write final \n
 // -nnnnn is an option until another char is recognized
@@ -44,14 +45,28 @@ int	count_args(char **args)
 	return (i);
 }
 
+// bool	is_fd_open(int fd)
+// {
+// 	char	buffer[1];
+// 	int		result;
+
+// 	result = read(fd, buffer, 0);
+// 	if (result == -1)
+// 	{
+// 		if (errno == EBADF)
+// 			return (false);
+// 	}
+// 	return (true);
+// }
+
 int	bt_echo(t_data *data, char **args)
 {
 	int		i;
 	int		j;
 	bool	option;
 
-	j = 0;
 	(void)data;
+	j = 0;
 	option = false;
 	while (args && args[j] && echo_is_option(args[j]) == true)
 	{

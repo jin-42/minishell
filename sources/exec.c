@@ -77,7 +77,7 @@ void	child_process(t_data *d, int i, int *old_pipe, int *new_pipe)
 		error_exec(d, old_pipe, new_pipe, NULL);
 	if (is_a_directory(d->block->args[0]))
 		error_exec(d, old_pipe, new_pipe, "is a directory");
-	if (d->paths && search_path(d) != 0)
+	if (search_path(d) != 0)
 		error_exec(d, old_pipe, new_pipe, NULL);
 	if (!d->block->path || d->block->args[0][0] == '\0'
 		|| d->block->path[0] == '\0')
@@ -103,6 +103,7 @@ void	parent_process(t_data *data, int pid, int *old_pipe, int *new_pipe)
 	int	value;
 
 	w = 0;
+	signal_exec();
 	close_all(data, old_pipe, new_pipe);
 	while (w != -1)
 	{
@@ -113,7 +114,6 @@ void	parent_process(t_data *data, int pid, int *old_pipe, int *new_pipe)
 				value = WEXITSTATUS(status);
 			else if (WIFSIGNALED(status))
 			{
-				signals_child(WTERMSIG(status));
 				value = 128 + WTERMSIG(status);
 				if (WTERMSIG(status) == SIGQUIT)
 					write(2, "Quit (core dumped)\n", 19);
@@ -122,7 +122,6 @@ void	parent_process(t_data *data, int pid, int *old_pipe, int *new_pipe)
 	}
 	data->ret_val = value;
 	data->cmd_count = 0;
-	g_signal = 0;
 }
 
 int	exec(t_data *data)
@@ -134,9 +133,11 @@ int	exec(t_data *data)
 
 	if (maj_env_paths(data) != 0 || data->cmd_count == 0)
 		return (1);
+	if (data->cmd_count == 1 && data->block->args && data->block->args[0]
+		&& is_builtin(data) && ft_strcmp(data->block->args[0], "echo") != 0
+		&& ft_strcmp(data->block->args[0], "pwd") != 0)
+		return (builtin_process(data));
 	i = 0;
-	if (data->cmd_count == 1 && is_builtin(data) == true)
-		return (builtin_process(data, i));
 	pipe_initializer(old_pipe, new_pipe);
 	while (i < data->cmd_count)
 	{
@@ -148,8 +149,6 @@ int	exec(t_data *data)
 		pipe_manager(old_pipe, new_pipe);
 		i++;
 	}
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
 	parent_process(data, fd, old_pipe, new_pipe);
 	return (0);
 }

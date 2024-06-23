@@ -15,7 +15,7 @@
 bool	is_builtin(t_data *data)
 {
 	if (!data->block->args)
-		return (true);
+		return (false);
 	if (ft_strcmp(data->block->args[0], "cd") == 0)
 		return (true);
 	else if (ft_strcmp(data->block->args[0], "pwd") == 0)
@@ -68,25 +68,12 @@ int	exec_builtin(t_data *data, char **args, bool ex)
 	return (val);
 }
 
-int	builtin_process(t_data *data, int i)
+int	builtin_process(t_data *data)
 {
-	(void)i;
 	data->ret_val = 0;
-	if (!data->block->args)
-	{
-		next_block(data);
-		data->cmd_count = 0;
-		return (0);
-	}
-	if (check_builtin_files(data) != 0)
-		data->ret_val = 1;
-	if (dup2(data->block->out_fd, STDOUT_FILENO) == -1 && data->ret_val == 0)
-	{
-		data->ret_val = 1;
-		perror("dup2 out: ");
-	}
-	close_all(data, NULL, NULL);
-	if (data->ret_val == 0)
+	if (ft_strcmp(data->block->args[0], "exit") == 0)
+		data->ret_val = exec_builtin(data, data->block->args, true);
+	else
 		data->ret_val = exec_builtin(data, data->block->args, false);
 	next_block(data);
 	data->cmd_count = 0;

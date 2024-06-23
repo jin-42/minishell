@@ -10,7 +10,7 @@
 /*																			*/
 /* ************************************************************************** */
 
-#include "../includes/minishell.h" // utiliser chdir
+#include "../includes/minishell.h"
 
 // Check seems ok
 // arg[0] = "cd"
@@ -21,6 +21,7 @@ char	*search_cd_path(t_data *data, char *arg)
 	t_env	*home;
 	char	*path;
 
+	path = NULL;
 	if (ft_strlen(arg) == 0)
 	{
 		home = search_env_node(data->env, "HOME");
@@ -30,7 +31,7 @@ char	*search_cd_path(t_data *data, char *arg)
 			return (NULL);
 		}
 		else
-			path = home->val;
+			path = ft_strdup(home->val);
 	}
 	else
 		path = arg;
@@ -75,13 +76,14 @@ int	cd(t_data *data, char **args)
 {
 	int		i;
 	char	*path;
+	char	*error;
 	char	old_pwd[PATH_MAX];
 
 	i = 0;
 	while (args && args[i])
 	{
 		if (i == 2)
-			return (printf("cd: too many arguments\n"), 1);
+			return (ft_printf_fd(2, "cd: too many arguments\n"), 1);
 		i++;
 	}
 	path = search_cd_path(data, args[1]);
@@ -90,8 +92,9 @@ int	cd(t_data *data, char **args)
 	getcwd(old_pwd, PATH_MAX);
 	if (chdir(path) != 0)
 	{
-		perror(custom_error("cd: ", path));
-		return (1);
+		error = custom_error("cd: ", path);
+		perror(error);
+		return (free(error), 1);
 	}
 	if (maj_pwd(data, old_pwd) != 0)
 		return (1);

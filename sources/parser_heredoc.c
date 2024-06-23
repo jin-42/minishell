@@ -76,13 +76,11 @@ int	fill_heredoc(t_data *data, t_block *block, int fd)
 			error_heredoc(block);
 			break ;
 		}
-		if (strcmp(line, block->limiter) == 0)
+		if (ft_strcmp(line, block->limiter) == 0)
 			break ;
 		line = expand_heredoc(data, line);
 		if (line == NULL)
 			return (1);
-		if (strcmp(line, block->limiter) == 0)
-			break ;
 		ft_printf_fd(fd, "%s\n", line);
 	}
 	if (line)
@@ -135,13 +133,13 @@ int	heredoc(t_data *data, t_block *block)
 		return (1);
 	if (fill_heredoc(data, block, fd) != 0 || g_signal == 130)
 		return (error_filling_heredoc(data, block, fd, name));
+	if (block->limiter)
+		free(block->limiter);
+	block->limiter = name;
 	close(fd);
 	fd = open(name, O_RDONLY, 00644);
 	if (fd < 0)
 		return (1);
 	block->in_fd = fd;
-	if (block->limiter)
-		free(block->limiter);
-	block->limiter = name;
 	return (0);
 }

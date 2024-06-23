@@ -1,18 +1,18 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parser_redir.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: fsulvac <marvin@42.fr>                     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/12 11:59:32 by fsulvac           #+#    #+#             */
-/*   Updated: 2024/06/12 11:59:34 by fsulvac          ###   ########.fr       */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   parser_redir.c									 :+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: sponthus <sponthus@student.42lyon.fr>	  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2024/06/12 11:59:32 by fsulvac		   #+#	#+#			 */
+/*   Updated: 2024/06/17 10:29:23 by sponthus		 ###   ########lyon.fr   */
+/*																			*/
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	handle_append_redirection(t_block *block, t_token *tok)
+int	handle_append_redirection(t_block *block, t_token *tok)
 {
 	int	fd;
 
@@ -24,11 +24,13 @@ void	handle_append_redirection(t_block *block, t_token *tok)
 		{
 			ft_printf_fd(2, "%s: ", tok->next->str);
 			perror(NULL);
+			return (1);
 		}
 	}
+	return (0);
 }
 
-void	handle_here_document(t_data *data, t_block *block, t_token *tok)
+int	handle_here_document(t_data *data, t_block *block, t_token *tok)
 {
 	if (tok->next != 0)
 	{
@@ -42,14 +44,15 @@ void	handle_here_document(t_data *data, t_block *block, t_token *tok)
 		{
 			ft_printf_fd(2, "%s: ", tok->next->str);
 			perror(NULL);
-			return ;
+			return (1);
 		}
-		if (heredoc(data, block) != 0)
-			ft_printf_fd(2, "Error: heredoc\n");
+		if (heredoc(data, block) == 130)
+			return (130);
 	}
+	return (0);
 }
 
-void	handle_output_redirection(t_block *block, t_token *tok)
+int	handle_output_redirection(t_block *block, t_token *tok)
 {
 	int	fd;
 
@@ -62,11 +65,13 @@ void	handle_output_redirection(t_block *block, t_token *tok)
 		if (block->out_fd == -1)
 		{
 			perror(custom_error("open: ", tok->next->str));
+			return (1);
 		}
 	}
+	return (0);
 }
 
-void	handle_input_redirection(t_block *block, t_token *tok)
+int	handle_input_redirection(t_block *block, t_token *tok)
 {
 	char	*str;
 
@@ -82,8 +87,10 @@ void	handle_input_redirection(t_block *block, t_token *tok)
 			str = custom_error("open: ", tok->next->str);
 			perror(str);
 			free(str);
+			return (1);
 		}
 	}
+	return (0);
 }
 
 void	handle_pipe(t_data *data, t_block *block, t_token *tok, int i)
